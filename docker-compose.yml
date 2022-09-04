@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: ./Dockerfile
+        container_name: client
+        volumes:
+          - ./client/src/:/app/src
+        ports:
+          - "3000:3000"
+
+  server:
+    build:
+      context: ./server
+      dockerfile: ./Dockerfile
+    container_name: server
+    volumes:
+      - ./server/src/:/app/src
+    ports:
+      - "8000:8000"
+
+  database:
+    image: mysql:8.0
+    container_name: database
+    volumes:
+      - ../.docker/database/:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+
+  proxy:
+    image: nginx:latest
+    container_name: proxy
+    volumes:
+      - ../.docker/proxy/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ../.docker/proxy/var/log/nginx:/var/log/nginx
+    ports:
+      - "80:80"
