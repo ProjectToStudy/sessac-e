@@ -1,6 +1,9 @@
 :root {
   --primary: #17A934;
   --gray-900: #3D3E3F;
+  --gray-700: #5C5E60;
+  --gray-100: #B6B7B8;
+  --error: #F05C2E;
 }
 body {
   margin: 0;
@@ -10,4 +13,11 @@ body {
 }
 a {
   text-decoration: none;
+}
+button {
+  border: none;
+}
+* {
+  box-sizing: border-box;
+  padding: 0;
 }
