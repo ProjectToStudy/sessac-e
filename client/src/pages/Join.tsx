@@ -1,5 +1,7 @@
+import JoinContainer from '../containers/Join';
+
 const Join = () => {
-    return <div>Join</div>;
+    return <JoinContainer />;
 };
 
 export default Join;
