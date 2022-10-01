@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Join from './pages/Join';
+import JoinPlanting from './pages/JoinPlanting';
 import Login from './pages/Login';
 import './App.css';
 
@@ -19,6 +20,7 @@ const App = () => {
         <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/join" element={<Join />} />
+            <Route path="/plant-seeds" element={<JoinPlanting />} />
             <Route path="/login" element={<Login />} />
         </Routes>
     );

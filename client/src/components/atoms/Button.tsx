@@ -3,7 +3,7 @@ import styles from '../../styles/Component.module.scss';
 interface ButtonProps {
     props: {
         text: string;
-        isActive: boolean;
+        isActive?: boolean;
         secondary?: boolean;
         onClick?: () => void;
     };
@@ -16,10 +16,10 @@ const Button = ({ props }: ButtonProps) => {
         <button
             type="button"
             onClick={onClick}
-            disabled={!isActive}
+            disabled={isActive ? !isActive : false}
             className={`
                 ${styles.button} 
-                ${secondary === true ? styles.secondary_btn : styles.primary_btn} 
+                ${secondary ? styles.secondary_btn : styles.primary_btn} 
                 ${isActive && styles.active}
             `}
         >
