@@ -6,10 +6,10 @@ const Home = () => {
         <div id="Home">
             <div id="container">
                 <div id="component" className={styles.component}>
-                    <div className={styles.slogan}>슬로건</div>
-                    <div className={styles.btn_area}>
-                        <Link to="/join" className={styles.start}>
-                            시작하기
+                    <div className={styles.slogan}>함께 자라나는 새싹 E</div>
+                    <div className={styles.auth_area}>
+                        <Link to="/join" className={styles.join_btn}>
+                            회원가입
                         </Link>
                         <div className={styles.login_area}>
                             <span>이미 계정이 있나요?</span>
