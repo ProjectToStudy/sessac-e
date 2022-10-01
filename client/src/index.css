@@ -1,5 +1,6 @@
 :root {
   --primary: #17A934;
+  --black: #212121;
   --gray-900: #3D3E3F;
   --gray-700: #5C5E60;
   --gray-300: #8D8E92;
@@ -20,6 +21,7 @@ a {
   text-decoration: none;
 }
 button {
+  font-family: 'Pretendard';
   border: none;
 }
 input[type="number"]::-webkit-outer-spin-button,
