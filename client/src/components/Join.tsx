@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Input, Button, Back } from './atoms/.';
 import styles from '../styles/Join.module.scss';
+import ErrorModal from './atoms/modal/Error';
 
 interface JoinComponentProps {
     screenState: number;
@@ -30,11 +31,9 @@ const JoinComponent = ({
 }: JoinComponentProps) => {
     return (
         <div id="component" className={styles.component}>
+            <ErrorModal />
             <Back />
-            <div className={styles.title_area}>
-                <span>회원가입을 위해</span>
-                <span>휴대폰 번호를 입력해주세요</span>
-            </div>
+            <p className={styles.title}>휴대폰 번호를 입력해주세요</p>
             <Input
                 props={{
                     type: 'text',
@@ -50,6 +49,7 @@ const JoinComponent = ({
                 props={{
                     text: screenState === 1 ? '인증번호 받기' : '인증번호 다시 받기',
                     isActive: isActive.getCode,
+                    secondary: true,
                     onClick: onGetCodeBtnClick,
                 }}
             />
@@ -74,7 +74,7 @@ const JoinComponent = ({
                         explanation={'어떤 경우에도 타인에게 공유하지 마세요!'}
                     />
                     <div className={styles.submit}>
-                        <Button props={{ text: '인증하기', isActive: isActive.start }} />
+                        <Button props={{ text: '회원가입', isActive: isActive.start }} />
                     </div>
                 </>
             )}
