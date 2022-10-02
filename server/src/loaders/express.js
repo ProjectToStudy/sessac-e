@@ -1,7 +1,10 @@
 const routes = require('../api');
+const { swaggerUi, specs } = require('../api/swagger');
 
 module.exports = ({ app }) => {
     console.log('expressLoader');
+
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
     app.get('/status', (req, res) => {
         res.status(200).end();
