@@ -5,9 +5,9 @@ const { errorHandler } = require('../middleware/errorHandler');
 module.exports = ({ app }) => {
     console.log('expressLoader');
 
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+    app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-    app.get('/status', (req, res) => {
+    app.get('/api/status', (req, res) => {
         res.status(200).end();
     });
 

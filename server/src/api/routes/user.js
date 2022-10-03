@@ -5,7 +5,7 @@ const route = express.Router();
 const user = require('../../controllers/user');
 
 const userRouter = ({ app }) => {
-    app.use('/v1/user', route);
+    app.use('/api/v1/user', route);
 
     // TODO: 코드 구조 리팩토링
 
