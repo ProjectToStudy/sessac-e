@@ -1,0 +1,19 @@
+/api/v1/user/cert/send:
+  post:
+    tags:
+      - user
+    description: 인증번호 전송
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              phone:
+                type: string
+    responses:
+      200:
+        description: 인증번호 전송 성공
+      400:
+

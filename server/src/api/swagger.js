@@ -6,16 +6,16 @@ const options = {
     swaggerDefinition: {
         openapi: '3.0.0',
         info: {
-            title: 'Test API',
+            title: 'sessac-e API',
             version: '1.0.0',
-            description: 'Test API with express',
+            description: 'sessac-e API with express',
         },
-        host: 'localhost:8000',
-        basePath: '/',
+        // host: 'localhost:8000',
+        // basePath: '/',
         servers: [
             {
-                url: 'dev.sessac-e.site',
-                description: '새싹이 개발중 api',
+                url: '/',
+                description: 'sessac-e development API',
             }
         ]
     },
