@@ -1,11 +1,10 @@
-const userRequiredInfo = (sequelize, Sequelize) => {
-    const UserRequiredInfo = sequelize.define('userRequiredInfo', {
+const userLoginHistory = (sequelize, Sequelize) => {
+    const UserLoginHistory = sequelize.define('userLoginHistory', {
         // id 자동생성
-        phone: {
-            type: Sequelize.STRING(20),
-            allowNull: false,
-            unique: true,
-        },
+        // userId: {
+        //     type: Sequelize.NUMBER,
+        //     allowNull: false,
+        // },
         createdAt: {
             type: Sequelize.DATE,
             allowNull: false,
@@ -23,11 +22,11 @@ const userRequiredInfo = (sequelize, Sequelize) => {
         freezeTableName: true,
     });
 
-    UserRequiredInfo.associate = models => {
-        UserRequiredInfo.hasMany(models.userLoginHistory);
+    UserLoginHistory.associate = models => {
+        UserLoginHistory.belongsTo(models.userRequiredInfo);
     };
 
-    return UserRequiredInfo;
+    return UserLoginHistory;
 }
 
-module.exports = userRequiredInfo;
+module.exports = userLoginHistory;

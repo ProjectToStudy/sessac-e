@@ -1,10 +1,17 @@
-const userRequiredInfo = (sequelize, Sequelize) => {
-    const UserRequiredInfo = sequelize.define('userRequiredInfo', {
+const userCertificationHistory = (sequelize, Sequelize) => {
+    const UserCertificationHistory = sequelize.define('userCertificationHistory', {
         // id 자동생성
         phone: {
             type: Sequelize.STRING(20),
             allowNull: false,
-            unique: true,
+        },
+        certificationNumber: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
+        isCertified: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: false,
         },
         createdAt: {
             type: Sequelize.DATE,
@@ -23,11 +30,7 @@ const userRequiredInfo = (sequelize, Sequelize) => {
         freezeTableName: true,
     });
 
-    UserRequiredInfo.associate = models => {
-        UserRequiredInfo.hasMany(models.userLoginHistory);
-    };
-
-    return UserRequiredInfo;
+    return UserCertificationHistory;
 }
 
-module.exports = userRequiredInfo;
+module.exports = userCertificationHistory;
