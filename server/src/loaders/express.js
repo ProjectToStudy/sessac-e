@@ -1,5 +1,6 @@
 const routes = require('../api');
 const { swaggerUi, specs } = require('../api/swagger');
+const { errorHandler } = require('../middleware/errorHandler');
 
 module.exports = ({ app }) => {
     console.log('expressLoader');
@@ -32,11 +33,15 @@ module.exports = ({ app }) => {
     });
 
     app.use((err, req, res, next) => {
-        res.status(err.status || 500);
-        res.json({
-            errors: {
-                message: err.message,
-            }
-        });
+        if (err.status === 500) {
+            res.json({
+                errors: {
+                    message: err.message
+                }
+            });
+        }
+        else {
+            return errorHandler(err, req, res);
+        }
     });
 };

@@ -14,6 +14,7 @@ const startServer = async () => {
         extended: true,
     }));
 
+    // 유의 : 프로덕션 모드에서는 절대 사용하지 말 것
     // sequelize.sync({ force: true })
     sequelize.sync()
         .then(() => {
