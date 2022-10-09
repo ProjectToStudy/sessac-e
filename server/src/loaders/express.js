@@ -7,8 +7,8 @@ module.exports = ({ app }) => {
 
     app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-    app.get('/api/status', (req, res) => {
-        res.status(200).end();
+    app.get('/status', (req, res) => {
+        return res.status(200).end();
     });
 
     app.use(routes.router());

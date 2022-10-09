@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const loaders = require('./loaders');
 const { sequelize } = require('./models');
@@ -9,6 +10,9 @@ const port = process.env.PORT || 8000;
 const startServer = async () => {
     const app = express();
 
+    app.use(cors({
+        origin: ['http://dev.sessac-e.site', 'http://localhost:3000']
+    }));
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({
         extended: true,
