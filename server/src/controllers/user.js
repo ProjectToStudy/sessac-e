@@ -84,6 +84,7 @@ async function checkCertNumber(data) {
             }
         }
     } catch (err) {
+        console.log(err);
         return {
             errorCode: 'ER0003',
             content: err,
