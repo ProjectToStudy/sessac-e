@@ -17,6 +17,7 @@ interface JoinComponentProps {
         start: boolean;
     };
     onChange: (e: React.ChangeEvent<HTMLInputElement>, type?: string) => void;
+    onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
     onGetCodeBtnClick: () => void;
 }
 
@@ -28,6 +29,7 @@ const JoinComponent = ({
     errors,
     isActive,
     onChange,
+    onBlur,
     onGetCodeBtnClick,
 }: JoinComponentProps) => {
     return (
@@ -42,6 +44,7 @@ const JoinComponent = ({
                     placeholder: '휴대폰 번호를 입력해주세요',
                     value: phone,
                     onChange,
+                    onBlur,
                 }}
                 error={screenState === 1 ? errors.phone : null}
             />
@@ -69,6 +72,7 @@ const JoinComponent = ({
                             placeholder: '인증번호 입력',
                             value: certification,
                             onChange,
+                            onBlur,
                         }}
                         error={errors.certification}
                         explanation={'어떤 경우에도 타인에게 공유하지 마세요!'}

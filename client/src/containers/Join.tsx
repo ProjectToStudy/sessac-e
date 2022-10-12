@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../modules';
+import { certCheckAPI, certSendAPI } from '../modules/user';
 import useInputs from '../hooks/useInputs';
 import JoinComponent from '../components/Join';
 
 const JoinContainer = () => {
+    const { certCheck, certCheckError }: any = useSelector((state: RootState) => state.user);
+    const dispatch = useDispatch();
+
     const [screenState, setScreenState] = useState(1);
     const [state, handleChange] = useInputs({
         phone: '',
@@ -29,17 +35,22 @@ const JoinContainer = () => {
         else alert('6회 이상 시도 불가');
         if (screenState === 1) setScreenState(2);
     };
-
-    useEffect(() => {
-        const regex = /^01([0])-?([0-9]{4})-?([0-9]{4})$/;
-
-        if (isValid.phone) setIsValid({ ...isValid, phone: false });
-
-        if (phone !== '') {
-            if (!regex.test(phone)) setErrors({ ...errors, phone: '잘못된 번호입니다.' });
-            else setIsValid({ ...isValid, phone: true });
+    /** 유효성 체크 함수
+     * 1. 휴대전화 번호 형식 (유효성) 체크
+     * 2. 발급된 인증 코드와 일치하는지 체크: api 통신
+     */
+    const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        const phoneRegex = /^01([0]) ?([0-9]{4}) ?([0-9]{4})$/;
+        if (e.target.name === 'phone') {
+            if (isValid.phone) setIsValid({ ...isValid, phone: false });
+            if (phone !== '') {
+                if (!phoneRegex.test(phone)) setErrors({ ...errors, phone: '잘못된 번호입니다.' });
+                else setIsValid({ ...isValid, phone: true });
+            }
+        } else if (e.target.name === 'certification') {
+            dispatch(certCheckAPI({ phone, certificationNumber: +certification }));
         }
-    }, [phone]);
+    };
 
     useEffect(() => {
         if (isValid.phone) {
@@ -52,7 +63,10 @@ const JoinContainer = () => {
     }, [isValid]);
 
     useEffect(() => {
-        if (getCodeCount > 0) setTimer(300);
+        if (getCodeCount > 0) {
+            setTimer(300);
+            dispatch(certSendAPI(phone));
+        }
     }, [getCodeCount]);
 
     useEffect(() => {
@@ -62,6 +76,14 @@ const JoinContainer = () => {
         if (timer === 0) clearInterval(handleTimer);
         return () => clearInterval(handleTimer);
     }, [timer]);
+
+    useEffect(() => {
+        if (certCheck) {
+            setErrors({ ...errors, certification: '' });
+            setIsActiveBtnState({ ...isActiveBtnState, start: true });
+        }
+        if (certCheckError) setErrors({ ...errors, certification: '인증번호가 일치하지 않습니다.' });
+    }, [certCheck, certCheckError]);
 
     return (
         <div id="container">
@@ -73,6 +95,7 @@ const JoinContainer = () => {
                 errors={errors}
                 isActive={isActiveBtnState}
                 onChange={handleChange}
+                onBlur={handleInputBlur}
                 onGetCodeBtnClick={handleGetCodeBtnClick}
             />
         </div>
