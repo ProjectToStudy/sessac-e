@@ -16,13 +16,12 @@ async function sendCertNumber (data) {
         ]
     };
 
-
     const result = await send.sendSms(body);
 
     if (result.statusCode !== '202') {
         return {
-            errorCode: 'ER0001',
-            content: result,
+            code: 400301,
+            result,
         };
     }
 
@@ -32,14 +31,15 @@ async function sendCertNumber (data) {
             certificationNumber: number,
         });
     } catch (err) {
-        console.log(err);
         return {
-            errorCode: 'ER0002',
-            content: err,
+            code: 400101,
         };
     }
 
-    return 'SUCCESS';
+    return {
+        code: 200000,
+        message: 'success',
+    };
 }
 
 async function testCertNumber(data) {
@@ -50,12 +50,14 @@ async function testCertNumber(data) {
         });
     } catch (err) {
         return {
-            errorCode: 'ER0002',
-            content: err,
+            code: 400101,
         };
     }
 
-    return 'SUCCESS';
+    return {
+        code: 200000,
+        message: 'success',
+    };
 }
 
 async function checkCertNumber(data) {
@@ -73,25 +75,28 @@ async function checkCertNumber(data) {
             raw: true,
         });
 
-        console.log(result);
-        console.log(data.certificationNumber);
+        if (!data.certificationNumber) {
+            return {
+                code: 401001,
+            }
+        }
 
         if (result[0]['certificationNumber'] !== data.certificationNumber) {
             return {
-                // 실행 오류와 / 서비스 오류 번호 구분하기
-                errorCode: 'ER1001',
-                content: '',
+                code: 401101
             }
         }
     } catch (err) {
         console.log(err);
         return {
-            errorCode: 'ER0003',
-            content: err,
+            code: 400101,
         }
     }
 
-    return 'SUCCESS';
+    return {
+        code: 200000,
+        message: 'success',
+    };
 }
 
 function generateRandomNumber() {

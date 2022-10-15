@@ -34,7 +34,7 @@ const userRouter = ({ app }) => {
     route.post('/cert/send', async (req, res, next) => {
         const result = await user.sendCertNumber(req.body);
 
-        if (result !== 'SUCCESS') {
+        if (result.message !== 'success') {
             return next(result);
         }
 
@@ -66,7 +66,7 @@ const userRouter = ({ app }) => {
     route.post('/cert/test', async (req, res, next) => {
         const result = await user.testCertNumber(req.body);
 
-        if (result !== 'SUCCESS') {
+        if (result.message !== 'success') {
             return next(result);
         }
         return res.status(200).json(result);
@@ -99,7 +99,7 @@ const userRouter = ({ app }) => {
     route.post('/cert/check', async (req, res, next) => {
         const result = await user.checkCertNumber(req.body);
 
-        if (result !== 'SUCCESS') {
+        if (result.message !== 'success') {
             return next(result);
         }
 
