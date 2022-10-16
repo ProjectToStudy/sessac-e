@@ -16,11 +16,10 @@ const Button = ({ props }: ButtonProps) => {
         <button
             type="button"
             onClick={onClick}
-            disabled={isActive ? !isActive : false}
+            disabled={isActive ? !isActive : true}
             className={`
                 ${styles.button} 
                 ${secondary ? styles.secondary_btn : styles.primary_btn} 
-                ${isActive && styles.active}
             `}
         >
             {text}

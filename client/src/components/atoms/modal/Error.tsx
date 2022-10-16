@@ -3,7 +3,7 @@ import styles from '../../../styles/Modal.module.scss';
 const ErrorModal = () => {
     return (
         <div className={styles.background}>
-            <div className={styles.content}>
+            <div className={styles.error}>
                 <div className={styles.desc_area}>
                     <img src="/images/alert.svg" alt="alert" />
                     <div className={styles.desc}>

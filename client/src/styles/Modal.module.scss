@@ -1,7 +1,6 @@
-.background {
+.background, .terms_background{
   display: flex;
   justify-content: center;
-  align-items: center;
   position: fixed;
   top: 0;
   right: 0;
@@ -10,7 +9,10 @@
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 1;
 }
-.content {
+.background {
+  align-items: center;
+}
+.error {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -57,4 +59,56 @@
   font-weight: 600;
   line-height: 19px;
   color: white;
+}
+
+
+/** terms modal **/
+.terms_background {
+  align-items: flex-end;
+}
+.terms {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 428px;
+  height: 297px;
+  padding: 9px 17px 12px;
+  border-radius: 20px 20px 0 0;
+  background-color: white;
+}
+.terms_list {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 26px;
+  width: 100%;
+  padding: 31px 0 27px;
+}
+.terms_item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 20px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 17px;
+  color: var(--black);
+  & input {
+    display: none;
+    &:checked + label {
+      background: url('../../public/images/check.svg');
+      background-size: 20px;
+    }
+  }
+  & label {
+    width: 20px;
+    height: 20px;
+    background: url('../../public/images/check.svg');
+    background-size: 20px;
+  }
 }

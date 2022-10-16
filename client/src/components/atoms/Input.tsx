@@ -9,8 +9,9 @@ interface InputProps {
         placeholder: string;
         value: string;
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+        onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
     };
-    error?: string | null;
+    error?: string;
     explanation?: string;
 }
 
@@ -18,8 +19,8 @@ const Input = ({ props, error, explanation }: InputProps) => {
     return (
         <div className={styles.input_area}>
             <input {...props} />
-            {explanation !== null && error === '' && <span className={styles.explanation}>{explanation}</span>}
-            {error !== null && <span className={styles.error}>{error}</span>}
+            {explanation && error === '' && <span className={styles.explanation}>{explanation}</span>}
+            {error && <span className={styles.error}>{error}</span>}
         </div>
     );
 };

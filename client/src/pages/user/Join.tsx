@@ -1,4 +1,4 @@
-import JoinContainer from '../containers/Join';
+import JoinContainer from '../../containers/user/Join';
 
 const Join = () => {
     return <JoinContainer />;

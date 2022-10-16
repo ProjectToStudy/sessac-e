@@ -5,6 +5,8 @@
   --gray-700: #5C5E60;
   --gray-300: #8D8E92;
   --gray-100: #B6B7B8;
+  --text-gray-300: #949697;
+  --line: 1px solid #F0F0F0;
   --error: #F05C2E;
 }
 * {
@@ -23,6 +25,9 @@ a {
 button {
   font-family: 'Pretendard';
   border: none;
+}
+li {
+  list-style: none;
 }
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {

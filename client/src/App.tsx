@@ -1,9 +1,6 @@
 import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import Join from './pages/Join';
-import JoinPlanting from './pages/JoinPlanting';
-import Login from './pages/Login';
+import { Main, Join, JoinPlanting, Home } from './pages/index';
 import './App.css';
 
 const setScreenSize = () => {
@@ -18,10 +15,10 @@ const App = () => {
 
     return (
         <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Main />} />
             <Route path="/join" element={<Join />} />
-            <Route path="/plant-seeds" element={<JoinPlanting />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/plant-seeds/:state" element={<JoinPlanting />} />
+            <Route path="/home" element={<Home />} />
         </Routes>
     );
 };
