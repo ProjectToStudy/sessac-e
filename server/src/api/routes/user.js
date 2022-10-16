@@ -7,8 +7,6 @@ const user = require('../../controllers/user');
 const userRouter = ({ app }) => {
     app.use('/api/v1/user', route);
 
-    // TODO: 코드 구조 리팩토링
-
     /**
      * @swagger
      * /api/v1/user/cert/send:
@@ -34,7 +32,7 @@ const userRouter = ({ app }) => {
     route.post('/cert/send', async (req, res, next) => {
         const result = await user.sendCertNumber(req.body);
 
-        if (result !== 'SUCCESS') {
+        if (result.message !== 'success') {
             return next(result);
         }
 
@@ -66,7 +64,7 @@ const userRouter = ({ app }) => {
     route.post('/cert/test', async (req, res, next) => {
         const result = await user.testCertNumber(req.body);
 
-        if (result !== 'SUCCESS') {
+        if (result.message !== 'success') {
             return next(result);
         }
         return res.status(200).json(result);
@@ -78,7 +76,7 @@ const userRouter = ({ app }) => {
      *   post:
      *     tags:
      *       - user
-     *     description: 인증번호 검증
+     *     description: 인증번호 검증 및 로그인
      *     requestBody:
      *       required: true
      *       content:
@@ -89,7 +87,7 @@ const userRouter = ({ app }) => {
      *               phone:
      *                 type: string
      *               certificationNumber:
-     *                 type: integer
+     *                 type: string
      *     responses:
      *       200:
      *         description: 인증번호 검증 성공
@@ -99,11 +97,61 @@ const userRouter = ({ app }) => {
     route.post('/cert/check', async (req, res, next) => {
         const result = await user.checkCertNumber(req.body);
 
-        if (result !== 'SUCCESS') {
+        if (result.message !== 'success') {
             return next(result);
         }
 
-        return res.status(200).json(result);
+        const userResult = await user.getUser(req.body);
+
+        if (userResult.message !== 'success') {
+            return next(userResult);
+        }
+
+        const loginResult = await user.loginUser(userResult.result);
+
+        if (loginResult.message !== 'success') {
+            return next(loginResult);
+        }
+
+        return res.status(200).json(loginResult);
+    });
+
+    /**
+     * @swagger
+     * /api/v1/user/login:
+     *   post:
+     *     tags:
+     *       - user
+     *     description: 로그인
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               phone:
+     *                 type: string
+     *     responses:
+     *       200:
+     *         description: 인증번호 전송 성공
+     *       400:
+     *         description: 인증번호 전송 실패
+     */
+    route.post('/login', async (req, res, next) => {
+        const userResult = await user.createUser(req.body);
+
+        if (userResult.message !== 'success') {
+            return next(userResult);
+        }
+
+        const loginResult = await user.loginUser(userResult.result);
+
+        if (loginResult.message !== 'success') {
+            return next(loginResult);
+        }
+
+        return res.status(200).json(loginResult);
     });
 };
 

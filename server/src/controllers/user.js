@@ -1,7 +1,9 @@
 const send = require('../utils/sendNotification');
 const db = require('../models');
+const jwt = require('../utils/jwt');
+const redisClient = require('../utils/redis');
 
-async function sendCertNumber (data) {
+async function sendCertNumber(data) {
     const number = generateRandomNumber();
     const body = {
         type: 'SMS',
@@ -16,13 +18,12 @@ async function sendCertNumber (data) {
         ]
     };
 
-
     const result = await send.sendSms(body);
 
     if (result.statusCode !== '202') {
         return {
-            errorCode: 'ER0001',
-            content: result,
+            code: 400301,
+            result,
         };
     }
 
@@ -32,14 +33,15 @@ async function sendCertNumber (data) {
             certificationNumber: number,
         });
     } catch (err) {
-        console.log(err);
         return {
-            errorCode: 'ER0002',
-            content: err,
+            code: 400101,
         };
     }
 
-    return 'SUCCESS';
+    return {
+        code: 200000,
+        message: 'success',
+    };
 }
 
 async function testCertNumber(data) {
@@ -50,12 +52,14 @@ async function testCertNumber(data) {
         });
     } catch (err) {
         return {
-            errorCode: 'ER0002',
-            content: err,
+            code: 400101,
         };
     }
 
-    return 'SUCCESS';
+    return {
+        code: 200000,
+        message: 'success',
+    };
 }
 
 async function checkCertNumber(data) {
@@ -73,33 +77,113 @@ async function checkCertNumber(data) {
             raw: true,
         });
 
-        console.log(result);
-        console.log(data.certificationNumber);
-
-        if (result[0]['certificationNumber'] !== data.certificationNumber) {
+        if (!data.certificationNumber) {
             return {
-                // 실행 오류와 / 서비스 오류 번호 구분하기
-                errorCode: 'ER1001',
-                content: '',
+                code: 401001,
+            }
+        }
+
+        if (result[0].certificationNumber !== data.certificationNumber) {
+            return {
+                code: 401101
             }
         }
     } catch (err) {
         console.log(err);
         return {
-            errorCode: 'ER0003',
-            content: err,
+            code: 400101,
         }
     }
 
-    return 'SUCCESS';
+    return {
+        code: 200000,
+        message: 'success',
+    };
 }
 
 function generateRandomNumber() {
     return Math.floor(Math.random() * 1000000);
 }
 
+async function getUser(data) {
+    try {
+        const result = await db.userRequiredInfo.findOne({
+            attributes: ['id', 'phone'],
+            where: {
+                phone: data.phone,
+                isActive: true,
+            },
+            raw: true,
+        });
+
+        if (result) {
+            return {
+                code: 200000,
+                message: 'success',
+                result
+            }
+        } else {
+            return {
+                code: 200000,
+                message: '회원가입 필요',
+            }
+        }
+    } catch (err) {
+        console.log(err);
+        return {
+            code: 400000,
+            message: 'get user error',
+        }
+    }
+}
+
+async function createUser(data) {
+    try {
+        const user = await db.userRequiredInfo.create({
+            phone: data.phone,
+        });
+
+        return {
+            code: 201000,
+            message: 'success',
+            result: {
+                id: user.id,
+                phone: user.phone,
+            }
+        }
+    } catch (err) {
+        console.log(err);
+        return {
+            code: 400000,
+            message: '회원 생성 실패',
+        }
+    }
+
+}
+
+async function loginUser(data) {
+    // token 발급
+    const accessToken = jwt.sign(data);
+    const refreshToken = jwt.refresh();
+
+    // refreshToken redis 저장
+    await redisClient.set(data.phone, refreshToken);
+
+    return {
+        code: 200000,
+        message: 'success',
+        result: {
+            accessToken,
+            refreshToken,
+        }
+    }
+}
+
 module.exports = {
     sendCertNumber,
     testCertNumber,
     checkCertNumber,
+    getUser,
+    createUser,
+    loginUser,
 }

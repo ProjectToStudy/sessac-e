@@ -17,7 +17,7 @@ module.exports = ({ app }) => {
     app.use((req, res, next) => {
         const err = new Error('Not Found');
 
-        err['status'] = 404;
+        err['code'] = 404000;
         next(err);
     });
 
@@ -26,22 +26,23 @@ module.exports = ({ app }) => {
         if (err.name === 'UnauthorizedError') {
             return res
                 .status(err.status)
-                .send({ message: err.message })
-                .end();
+                .json({
+                    code: 401000,
+                    message: err.message
+                });
         }
         return next(err);
     });
 
     app.use((err, req, res, next) => {
         if (err.status === 500) {
-            res.json({
-                errors: {
+            return res
+                .status(err.status)
+                .json({
+                    code: 500000,
                     message: err.message
-                }
-            });
+                });
         }
-        else {
-            return errorHandler(err, req, res);
-        }
+        return errorHandler(err, req, res);
     });
 };
