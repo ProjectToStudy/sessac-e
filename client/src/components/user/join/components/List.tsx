@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../../styles/JoinPlanting.module.scss';
+import styles from '../../../../styles/JoinPlanting.module.scss';
 
 interface ItemType {
     icon: any;

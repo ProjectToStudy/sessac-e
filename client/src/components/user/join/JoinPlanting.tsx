@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import List from './components/List';
-import { Button } from '../atoms';
-import { Seed, Sprout, Student } from '../../assets/';
-import styles from '../../styles/JoinPlanting.module.scss';
+import { Button } from '../../atoms';
+import { Seed, Sprout, Student } from '../../../assets';
+import styles from '../../../styles/JoinPlanting.module.scss';
 
 interface JoinPlantingComponentProps {
     screenState: number;

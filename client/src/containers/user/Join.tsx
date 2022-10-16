@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../modules';
-import { certCheckAPI, certSendAPI } from '../modules/user';
-import useInputs from '../hooks/useInputs';
-import JoinComponent from '../components/join/Join';
+import { RootState } from '../../modules';
+import { certCheckAPI, certSendAPI } from '../../modules/user';
+import useInputs from '../../hooks/useInputs';
+import JoinComponent from '../../components/user/join/Join';
 
 const JoinContainer = () => {
     const { certCheck, certCheckError }: any = useSelector((state: RootState) => state.user);

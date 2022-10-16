@@ -1,5 +1,5 @@
 import { useParams } from 'react-router';
-import JoinPlantingContainer from '../containers/JoinPlanting';
+import JoinPlantingContainer from '../../containers/user/JoinPlanting';
 
 const JoinPlanting = () => {
     const { state } = useParams();

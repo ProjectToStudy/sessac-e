@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import JoinPlantingComponent from '../components/join/JoinPlanting';
+import JoinPlantingComponent from '../../components/user/join/JoinPlanting';
 import { useNavigate } from 'react-router';
 
 const JoinPlantingContainer = ({ screenState }: { screenState: number }) => {
