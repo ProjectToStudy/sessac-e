@@ -12,12 +12,17 @@
   line-height: 24px;
   color: black;
 }
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 .help_area {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  padding-top: 14px;
+  padding-top: 10px;
   font-size: 12px;
   font-weight: 400;
   line-height: 14px;
@@ -30,5 +35,5 @@
 }
 
 .submit {
-  padding-top: 24px;
+  padding-top: 7px;
 }

@@ -36,7 +36,7 @@ const HomeScreen = ({ onNextClick }: HomeScreenProps) => {
             </div>
             <div className={styles.auth_area}>
                 <Button props={{ text: '회원가입', onClick: () => onNextClick(1), isActive: true }} />
-                <Link to="/">생략하고 둘러보기</Link>
+                <Link to="/home">생략하고 둘러보기</Link>
             </div>
         </div>
     );
@@ -71,7 +71,7 @@ const SelectScreen = ({ category, isActive, selected, onNextClick, onItemClick, 
             </div>
             <div className={styles.auth_area}>
                 <Button props={{ text: '다음으로', isActive, onClick: () => onNextClick(category === '직업' ? 2 : 3) }} />
-                <Link to="/">생략하고 둘러보기</Link>
+                <Link to="/home">생략하고 둘러보기</Link>
             </div>
         </div>
     );

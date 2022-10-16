@@ -4,6 +4,7 @@ import { RootState } from '../../modules';
 import { certCheckAPI, certSendAPI } from '../../modules/user';
 import useInputs from '../../hooks/useInputs';
 import JoinComponent from '../../components/user/join/Join';
+import TermsModal from '../../components/atoms/modal/Terms';
 
 const JoinContainer = () => {
     const { certCheck, certCheckError }: any = useSelector((state: RootState) => state.user);
@@ -22,6 +23,8 @@ const JoinContainer = () => {
 
     const [getCodeCount, setGetCodeCount] = useState<number>(0);
     const [timer, setTimer] = useState<number>(0);
+
+    const [isTermsState, setIsTermsState] = useState<boolean>(true);
 
     /** 인증 코드 받기 버튼 클릭 핸들러 함수
      * 1. 인증 코드 받기 버튼 비활성화
@@ -44,13 +47,23 @@ const JoinContainer = () => {
         if (e.target.name === 'phone') {
             if (isValid.phone) setIsValid({ ...isValid, phone: false });
             if (phone !== '') {
-                if (!phoneRegex.test(phone)) setErrors({ ...errors, phone: '잘못된 번호입니다.' });
+                if (!phoneRegex.test(phone)) setErrors({ ...errors, phone: '휴대폰 번호 형식이 알맞지 않습니다.' });
                 else setIsValid({ ...isValid, phone: true });
             }
         } else if (e.target.name === 'certification') {
-            dispatch(certCheckAPI({ phone, certificationNumber: +certification }));
+            if (certification !== '') {
+                dispatch(certCheckAPI({ phone, certificationNumber: certification }));
+            }
         }
     };
+
+    const handleSubmitClick = () => {
+        setIsTermsState(true);
+    }
+
+    const handleTermsState = () => {
+        setIsTermsState(false);
+    }
 
     useEffect(() => {
         if (isValid.phone) {
@@ -97,7 +110,9 @@ const JoinContainer = () => {
                 onChange={handleChange}
                 onBlur={handleInputBlur}
                 onGetCodeBtnClick={handleGetCodeBtnClick}
+                onSubmitClick={handleSubmitClick}
             />
+            {isTermsState && <TermsModal onCloseClick={handleTermsState} />}
         </div>
     );
 };

@@ -7,7 +7,7 @@ const [CERT_SEND, CERT_SEND_SUCCESS, CERT_SEND_FAILURE] = createRequestActionTyp
 const [CERT_CHECK, CERT_CHECK_SUCCESS, CERT_CHECK_FAILURE] = createRequestActionTypes('user/CERT_CHECK');
 
 export const certSendAPI = createAction(CERT_SEND, (phone: string) => (phone));
-export const certCheckAPI = createAction(CERT_CHECK, ({ phone, certificationNumber }: { phone: string, certificationNumber: number }) => ({ phone, certificationNumber }));
+export const certCheckAPI = createAction(CERT_CHECK, ({ phone, certificationNumber }: { phone: string, certificationNumber: string }) => ({ phone, certificationNumber }));
 
 const certSendSaga = createRequestSaga(CERT_SEND, userAPI.certSend);
 const certCheckSaga = createRequestSaga(CERT_CHECK, userAPI.certCheck);
