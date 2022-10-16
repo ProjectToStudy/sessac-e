@@ -24,7 +24,7 @@ const JoinContainer = () => {
     const [getCodeCount, setGetCodeCount] = useState<number>(0);
     const [timer, setTimer] = useState<number>(0);
 
-    const [isTermsState, setIsTermsState] = useState<boolean>(true);
+    const [isTermsState, setIsTermsState] = useState<boolean>(false);
 
     /** 인증 코드 받기 버튼 클릭 핸들러 함수
      * 1. 인증 코드 받기 버튼 비활성화
