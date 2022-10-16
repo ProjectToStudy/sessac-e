@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
-import styles from '../styles/Home.module.scss';
+import styles from '../styles/Index.module.scss';
 
-const Home = () => {
+const Index = () => {
     return (
-        <div id="Home">
+        <div id="Index">
             <div id="container">
                 <div id="component" className={styles.component}>
                     <div className={styles.slogan}>함께 자라나는 새싹 E</div>
@@ -22,4 +22,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default Index;

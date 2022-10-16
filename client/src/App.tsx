@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
+import Index from './pages/Index';
 import Join from './pages/Join';
 import JoinPlanting from './pages/JoinPlanting';
 import Login from './pages/Login';
@@ -18,7 +18,7 @@ const App = () => {
 
     return (
         <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Index />} />
             <Route path="/join" element={<Join />} />
             <Route path="/plant-seeds/:state" element={<JoinPlanting />} />
             <Route path="/login" element={<Login />} />
