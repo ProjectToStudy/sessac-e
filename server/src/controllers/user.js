@@ -1,7 +1,9 @@
 const send = require('../utils/sendNotification');
 const db = require('../models');
+const jwt = require('../utils/jwt');
+const redisClient = require('../utils/redis');
 
-async function sendCertNumber (data) {
+async function sendCertNumber(data) {
     const number = generateRandomNumber();
     const body = {
         type: 'SMS',
@@ -81,7 +83,7 @@ async function checkCertNumber(data) {
             }
         }
 
-        if (result[0]['certificationNumber'] !== data.certificationNumber) {
+        if (result[0].certificationNumber !== data.certificationNumber) {
             return {
                 code: 401101
             }
@@ -103,8 +105,85 @@ function generateRandomNumber() {
     return Math.floor(Math.random() * 1000000);
 }
 
+async function getUser(data) {
+    try {
+        const result = await db.userRequiredInfo.findOne({
+            attributes: ['id', 'phone'],
+            where: {
+                phone: data.phone,
+                isActive: true,
+            },
+            raw: true,
+        });
+
+        if (result) {
+            return {
+                code: 200000,
+                message: 'success',
+                result
+            }
+        } else {
+            return {
+                code: 200000,
+                message: '회원가입 필요',
+            }
+        }
+    } catch (err) {
+        console.log(err);
+        return {
+            code: 400000,
+            message: 'get user error',
+        }
+    }
+}
+
+async function createUser(data) {
+    try {
+        const user = await db.userRequiredInfo.create({
+            phone: data.phone,
+        });
+
+        return {
+            code: 201000,
+            message: 'success',
+            result: {
+                id: user.id,
+                phone: user.phone,
+            }
+        }
+    } catch (err) {
+        console.log(err);
+        return {
+            code: 400000,
+            message: '회원 생성 실패',
+        }
+    }
+
+}
+
+async function loginUser(data) {
+    // token 발급
+    const accessToken = jwt.sign(data);
+    const refreshToken = jwt.refresh();
+
+    // refreshToken redis 저장
+    await redisClient.set(data.phone, refreshToken);
+
+    return {
+        code: 200000,
+        message: 'success',
+        result: {
+            accessToken,
+            refreshToken,
+        }
+    }
+}
+
 module.exports = {
     sendCertNumber,
     testCertNumber,
     checkCertNumber,
+    getUser,
+    createUser,
+    loginUser,
 }

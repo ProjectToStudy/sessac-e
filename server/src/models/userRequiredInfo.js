@@ -4,7 +4,10 @@ const userRequiredInfo = (sequelize, Sequelize) => {
         phone: {
             type: Sequelize.STRING(20),
             allowNull: false,
-            unique: true,
+        },
+        isActive: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: true,
         },
         createdAt: {
             type: Sequelize.DATE,

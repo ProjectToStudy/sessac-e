@@ -6,7 +6,7 @@ const userCertificationHistory = (sequelize, Sequelize) => {
             allowNull: false,
         },
         certificationNumber: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.STRING(10),
             allowNull: false,
         },
         isCertified: {
