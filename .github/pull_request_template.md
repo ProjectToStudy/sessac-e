@@ -1,7 +1,7 @@
-## Description
+# Description
 
 
-# Fixes # (issue)
+#### Fixes # (issue)
 
 
 ## Type of change
@@ -12,4 +12,4 @@
 - [ ] This change requires a documentation update
 
 
-# Don't forget to put the label on it
+### Don't forget to put the label on it
