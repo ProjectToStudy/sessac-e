@@ -1,7 +1,7 @@
-# Description
+## Description
 
 
-Fixes # (issue)
+# Fixes # (issue)
 
 
 ## Type of change
@@ -10,3 +10,6 @@ Fixes # (issue)
 - [ ] New feature (non-breaking change which adds functionality)
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
 - [ ] This change requires a documentation update
+
+
+# Don't forget to put the label on it
