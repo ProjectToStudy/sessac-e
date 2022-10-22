@@ -24,5 +24,6 @@
     "src",
     "**/*.ts",
     "**/*.tsx"
-  ]
+  ],
+  "typeRoots": ["./@types", "./node_modules/@types"]
 }
