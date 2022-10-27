@@ -21,6 +21,7 @@ const App = () => {
         <Routes>
             <Route path="/" element={<Main />} />
             <Route path="/join" element={<Join />} />
+            <Route path="/login" element={<Join />} />
             <Route path="/plant-seeds/:state" element={isSigning ? <JoinPlanting /> : <Navigate to='/join' />} />
             <Route path="/home" element={<Home />} />
         </Routes>
