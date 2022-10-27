@@ -1,3 +1,15 @@
 export { ReactComponent as Seed } from './seed.svg';
 export { ReactComponent as Sprout } from './sprout.svg';
-export { ReactComponent as Student } from './student.svg';
+export { ReactComponent as Bag } from './planting/bag.svg';
+export { ReactComponent as Pencil } from './planting/pencil.svg';
+export { ReactComponent as Office } from './planting/office.svg';
+export { ReactComponent as IT } from './planting/it.svg';
+export { ReactComponent as Profession } from './planting/profession.svg';
+export { ReactComponent as Freshman } from './planting/freshman.svg';
+export { ReactComponent as People } from './planting/people.svg';
+export { ReactComponent as ETC } from './planting/etc.svg';
+export { ReactComponent as Edu } from './planting/edu.svg';
+export { ReactComponent as Award } from './planting/award.svg';
+export { ReactComponent as Cap } from './planting/cap.svg';
+export { ReactComponent as Info } from './planting/info.svg';
+export { ReactComponent as Crescent } from './planting/crescent.svg';
