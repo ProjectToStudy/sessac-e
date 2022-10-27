@@ -80,7 +80,7 @@ const SelectScreen = ({ category, isActive, selected, onNextClick, onItemClick, 
 const EndScreen = ({ onNextClick }: HomeScreenProps) => {
     return (
         <div className={styles.content}>
-            <div className={`${styles.home} ${styles.end}`}>
+            <div className={styles.end}>
                 <img src="/images/sprout.svg" alt="sprout" />
                 <span>
                 새싹님을 위한
