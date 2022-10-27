@@ -4,7 +4,6 @@ import List from './components/List';
 import { Button } from '../../atoms';
 import * as Icon from '../../../assets';
 import styles from '../../../styles/JoinPlanting.module.scss';
-import { useNavigate } from 'react-router';
 
 interface JoinPlantingComponentProps {
     screenState: number;
@@ -78,9 +77,7 @@ const SelectScreen = ({ category, isActive, selected, onNextClick, onItemClick, 
     );
 };
 
-const EndScreen = () => {
-    const navigate = useNavigate();
-
+const EndScreen = ({ onNextClick }: HomeScreenProps) => {
     return (
         <div className={styles.content}>
             <div className={`${styles.home} ${styles.end}`}>
@@ -92,7 +89,7 @@ const EndScreen = () => {
             </span>
             </div>
             <div className={styles.auth_area}>
-                <Button props={{ text: '시작하기', onClick: () => navigate('/home'), isActive: true }} />
+                <Button props={{ text: '시작하기', onClick: () => onNextClick(4), isActive: true }} />
             </div>
         </div>
     );
@@ -111,7 +108,7 @@ const JoinPlantingComponent = ({ screenState, isActive, selected, onNextClick, o
                     onItemClick={onItemClick}
                 />
             )}
-            {screenState === 4 && <EndScreen />}
+            {screenState === 4 && <EndScreen onNextClick={onNextClick} />}
         </div>
     );
 };

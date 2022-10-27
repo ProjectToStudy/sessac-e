@@ -1,5 +1,7 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
+import { setIsSigning } from '../../../modules/user';
 import Button from '../Button';
 import styles from '../../../styles/Modal.module.scss';
 
@@ -8,9 +10,11 @@ interface Props {
 }
 
 const TermsModal = ({ onCloseClick }: Props) => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleSubmitClick = () => {
+        dispatch(setIsSigning(true));
         navigate('/plant-seeds/1');
     };
 
