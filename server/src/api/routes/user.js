@@ -190,7 +190,7 @@ const userRouter = ({ app }) => {
      *                 message: 회원가입이 필요합니다
      */
     route.post('/login', async (req, res, next) => {
-        const userResult = await user.getUser(req.params.phone);
+        const userResult = await user.getUser(req.body);
 
         if (userResult.message !== 'success') {
             return next(userResult);

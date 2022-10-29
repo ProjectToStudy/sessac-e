@@ -164,7 +164,7 @@ async function loginUser(data) {
     const refreshToken = jwt.refresh();
 
     // refreshToken redis 저장
-    await redisClient.set(data.phone, refreshToken);
+    redisClient.set(data.phone, refreshToken);
 
     return {
         code: 200000,
