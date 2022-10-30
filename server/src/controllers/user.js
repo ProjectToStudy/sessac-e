@@ -124,15 +124,13 @@ async function getUser(data) {
             }
         } else {
             return {
-                code: 200000,
-                message: '회원가입 필요',
+                code: 401002,
             }
         }
     } catch (err) {
         console.log(err);
         return {
-            code: 400000,
-            message: 'get user error',
+            code: 400102,
         }
     }
 }
@@ -154,8 +152,7 @@ async function createUser(data) {
     } catch (err) {
         console.log(err);
         return {
-            code: 400000,
-            message: '회원 생성 실패',
+            code: 400102,
         }
     }
 
@@ -167,7 +164,7 @@ async function loginUser(data) {
     const refreshToken = jwt.refresh();
 
     // refreshToken redis 저장
-    await redisClient.set(data.phone, refreshToken);
+    redisClient.set(data.phone, refreshToken);
 
     return {
         code: 200000,
