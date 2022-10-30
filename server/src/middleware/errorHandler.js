@@ -22,6 +22,12 @@ const errorHandler = (err, req, res) => {
         case 401001:
             message = '인증번호가 입력되지 않았습니다';
             break;
+        case 400102:
+            message = '회원정보 저장 및 호출에 실패했습니다';
+            break;
+        case 401002:
+            message = '회원가입이 필요합니다';
+            break;
         case 404000:
             message = '존재하지 않는 URL 입니다';
             break;
