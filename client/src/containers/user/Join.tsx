@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 import { RootState } from '../../modules';
-import { certCheckAPI, certSendAPI } from '../../modules/user';
+import { certCheckAPI, certSendAPI, setIsSigning } from '../../modules/user';
 import useInputs from '../../hooks/useInputs';
 import JoinComponent from '../../components/user/join/Join';
-import TermsModal from '../../components/atoms/modal/Terms';
+import TermsModal from '../../components/user/join/components/Terms';
 
 const JoinContainer = () => {
-    const { certCheck, certCheckError }: any = useSelector((state: RootState) => state.user);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const { certCheck, certCheckError }: any = useSelector((state: RootState) => state.user);
 
     const [screenState, setScreenState] = useState(1);
     const [state, handleChange] = useInputs({
@@ -25,45 +28,7 @@ const JoinContainer = () => {
     const [timer, setTimer] = useState<number>(0);
 
     const [isTermsState, setIsTermsState] = useState<boolean>(false);
-
-    /** 인증 코드 받기 버튼 클릭 핸들러 함수
-     * 1. 인증 코드 받기 버튼 비활성화
-     * 2. (첫 페이지라면) 두 번째 페이지로 전환
-     * 3. 인증 코드 보내기 횟수 제한
-     * 4. 인증 코드 보내는 api 호출
-     */
-    const handleGetCodeBtnClick = () => {
-        setIsActiveBtnState({ ...isActiveBtnState, getCode: false });
-        if (getCodeCount < 5) setGetCodeCount(getCodeCount + 1);
-        else alert('6회 이상 시도 불가');
-        if (screenState === 1) setScreenState(2);
-    };
-    /** 유효성 체크 함수
-     * 1. 휴대전화 번호 형식 (유효성) 체크
-     * 2. 발급된 인증 코드와 일치하는지 체크: api 통신
-     */
-    const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-        const phoneRegex = /^01([0]) ?([0-9]{4}) ?([0-9]{4})$/;
-        if (e.target.name === 'phone') {
-            if (isValid.phone) setIsValid({ ...isValid, phone: false });
-            if (phone !== '') {
-                if (!phoneRegex.test(phone)) setErrors({ ...errors, phone: '휴대폰 번호 형식이 알맞지 않습니다.' });
-                else setIsValid({ ...isValid, phone: true });
-            }
-        } else if (e.target.name === 'certification') {
-            if (certification !== '') {
-                dispatch(certCheckAPI({ phone, certificationNumber: certification }));
-            }
-        }
-    };
-
-    const handleSubmitClick = () => {
-        setIsTermsState(true);
-    }
-
-    const handleTermsState = () => {
-        setIsTermsState(false);
-    }
+    const [checked, setChecked] = useState<string[]>([]);
 
     useEffect(() => {
         if (isValid.phone) {
@@ -98,6 +63,62 @@ const JoinContainer = () => {
         if (certCheckError) setErrors({ ...errors, certification: '인증번호가 일치하지 않습니다.' });
     }, [certCheck, certCheckError]);
 
+    /** 인증 코드 받기 버튼 클릭 핸들러 함수
+     * 1. 인증 코드 받기 버튼 비활성화
+     * 2. (첫 페이지라면) 두 번째 페이지로 전환
+     * 3. 인증 코드 보내기 횟수 제한
+     * 4. 인증 코드 보내는 api 호출
+     */
+    const handleGetCodeBtnClick = () => {
+        setIsActiveBtnState({ ...isActiveBtnState, getCode: false });
+        if (getCodeCount < 5) setGetCodeCount(getCodeCount + 1);
+        else alert('6회 이상 시도 불가');
+        if (screenState === 1) setScreenState(2);
+    };
+    /** 유효성 체크 함수
+     * 1. 휴대전화 번호 형식 (유효성) 체크
+     * 2. 발급된 인증 코드와 일치하는지 체크: api 통신
+     */
+    const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        const phoneRegex = /^01([0]) ?([0-9]{4}) ?([0-9]{4})$/;
+        if (e.target.name === 'phone') {
+            if (isValid.phone) setIsValid({ ...isValid, phone: false });
+            if (phone !== '') {
+                if (!phoneRegex.test(phone)) setErrors({ ...errors, phone: '휴대폰 번호 형식이 알맞지 않습니다.' });
+                else setIsValid({ ...isValid, phone: true });
+            }
+        } else if (e.target.name === 'certification') {
+            if (certification !== '') {
+                dispatch(certCheckAPI({ phone, certificationNumber: certification }));
+            }
+        }
+    };
+
+    const handleSubmitClick = () => {
+        setIsTermsState(true);
+    };
+
+    const handleTermsState = () => {
+        setIsTermsState(false);
+    };
+
+    const handleCheck = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.id === 'checkAll') {
+            if (e.target.checked) setChecked(['check1', 'check2', 'check3']);
+            else setChecked([]);
+        } else {
+            if (e.target.checked) setChecked([...checked, e.target.id]);
+            else setChecked(checked.filter((id) => id !== e.target.id));
+        }
+    };
+
+    const handleTermsSubmitClick = () => {
+        if (checked.length === 3) {
+            dispatch(setIsSigning(true));
+            navigate('/plant-seeds/1');
+        }
+    };
+
     return (
         <div id="container">
             <JoinComponent
@@ -112,7 +133,14 @@ const JoinContainer = () => {
                 onGetCodeBtnClick={handleGetCodeBtnClick}
                 onSubmitClick={handleSubmitClick}
             />
-            {isTermsState && <TermsModal onCloseClick={handleTermsState} />}
+            {isTermsState && (
+                <TermsModal
+                    checked={checked}
+                    onCheck={handleCheck}
+                    onCloseClick={handleTermsState}
+                    onSubmitClick={handleTermsSubmitClick}
+                />
+            )}
         </div>
     );
 };
