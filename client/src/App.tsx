@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { Main, Join, JoinPlanting, Home } from './pages/index';
+import { RootState } from './modules';
 import './App.css';
 
 const setScreenSize = () => {
@@ -9,6 +11,8 @@ const setScreenSize = () => {
 };
 
 const App = () => {
+    const { isSigning }: any = useSelector((state: RootState) => state.user);
+
     useEffect(() => {
         setScreenSize();
     }, []);
@@ -17,7 +21,8 @@ const App = () => {
         <Routes>
             <Route path="/" element={<Main />} />
             <Route path="/join" element={<Join />} />
-            <Route path="/plant-seeds/:state" element={<JoinPlanting />} />
+            <Route path="/login" element={<Join />} />
+            <Route path="/plant-seeds/:state" element={isSigning ? <JoinPlanting /> : <Navigate to='/join' />} />
             <Route path="/home" element={<Home />} />
         </Routes>
     );

@@ -3,9 +3,11 @@ import { takeLatest } from 'redux-saga/effects';
 import createRequestSaga, { createRequestActionTypes } from '../lib/createRequestSaga';
 import * as userAPI from '../api/user';
 
+const IS_SIGNING = 'user/IS_SIGNING';
 const [CERT_SEND, CERT_SEND_SUCCESS, CERT_SEND_FAILURE] = createRequestActionTypes('user/CERT_SEND');
 const [CERT_CHECK, CERT_CHECK_SUCCESS, CERT_CHECK_FAILURE] = createRequestActionTypes('user/CERT_CHECK');
 
+export const setIsSigning = createAction(IS_SIGNING, (value: boolean) => value);
 export const certSendAPI = createAction(CERT_SEND, (phone: string) => (phone));
 export const certCheckAPI = createAction(CERT_CHECK, ({ phone, certificationNumber }: { phone: string, certificationNumber: string }) => ({ phone, certificationNumber }));
 
@@ -17,6 +19,7 @@ export function * userSaga () {
 }
 
 export interface ResponseType {
+    isSigning: boolean;
     certSend: string | null;
     certSendError: any;
     certCheck: {
@@ -31,6 +34,7 @@ export interface ResponseType {
     } | null;
 }
 const initialState: ResponseType = {
+    isSigning: false,
     certSend: null,
     certSendError: null,
     certCheck: null,
@@ -39,6 +43,7 @@ const initialState: ResponseType = {
 
 const user = handleActions(
     {
+        [IS_SIGNING]: (state: ResponseType = initialState, { payload: isSigning }: { payload: ResponseType['isSigning']}) => ({ ...state, isSigning }),
         [CERT_SEND_SUCCESS]: (state: ResponseType = initialState, { payload: certSend }: { payload: ResponseType['certSend'] }) => ({ ...state, certSend, certSendError: null }),
         [CERT_SEND_FAILURE]: (state: ResponseType = initialState, { payload: error }: { payload: any }) => ({ ...state, certSendError: error }),
         [CERT_CHECK_SUCCESS]: (state: ResponseType = initialState, { payload: certCheck }: { payload: ResponseType['certCheck'] }) => ({ ...state, certCheck, certCheckError: null }),

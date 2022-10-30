@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import JoinPlantingComponent from '../../components/user/join/JoinPlanting';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
+import { setIsSigning } from '../../modules/user';
+import JoinPlantingComponent from '../../components/user/join/JoinPlanting';
 
 const JoinPlantingContainer = ({ screenState }: { screenState: number }) => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [isActive, setIsActive] = useState({ job: false, purpose: false });
@@ -12,7 +15,13 @@ const JoinPlantingContainer = ({ screenState }: { screenState: number }) => {
      * 다음 페이지로 전환
      * @param state: 현재 화면 번호
      */
-    const handleScreenState = (state: number) => navigate(`/plant-seeds/${state + 1}`);
+    const handleScreenState = (state: number) => {
+        if (state < 4) navigate(`/plant-seeds/${state + 1}`);
+        else {
+            dispatch(setIsSigning(false));
+            navigate('/home');
+        }
+    }
 
     const handleItemClick = (e: React.MouseEvent<HTMLLIElement>) => {
         const category = e.currentTarget.dataset.name;
