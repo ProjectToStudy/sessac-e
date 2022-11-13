@@ -65,7 +65,14 @@ const HomeComponent = () => {
                     <button type="button" name="">새로고침</button>
                 </div>
                 <ul className={styles.popular_list}>
-                    zzz
+                    {Array.from({ length: 5 }, (_, i) => (
+                        <li key={i} className={styles.popular_item}>
+                            <img src='' alt='thumbnail' />
+                            <div>
+                                <span>한식 조리기능사  자격증 실기 준비</span>
+                            </div>
+                        </li>
+                    ))}
                 </ul>
             </section>
         </div>

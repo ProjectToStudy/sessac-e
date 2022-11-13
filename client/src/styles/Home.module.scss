@@ -31,6 +31,8 @@
   height: 103px;
   padding: 0 32px;
 }
+
+
 .recommendation {
   display: flex;
   flex-direction: column;
@@ -50,8 +52,10 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding-right: 10px;
   }
+}
+.recommended .title_area {
+  padding-right: 10px;
 }
 .recommended_list {
   display: flex;
@@ -167,5 +171,34 @@
       font-weight: 600;
       color: var(--primary);
     }
+  }
+}
+
+.popular .title_area {
+  padding-right: 16px;
+}
+.popular_list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.popular_item {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--gray-4-line);
+  &:nth-child(1) {
+    padding-top: 0;
+  }
+  &:nth-last-child(1) {
+    padding-bottom: 0;
+    border: none;
+  }
+  & img {
+    width: 110px;
+    height: 110px;
+    border-radius: 6px;
+    background-color: #ccc;
   }
 }
