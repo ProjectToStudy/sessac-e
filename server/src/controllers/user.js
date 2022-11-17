@@ -81,14 +81,14 @@ async function checkCertNumber(data) {
         if (!data.certificationNumber) {
             return {
                 code: 401001,
-            }
+            };
         }
 
-        if (!datetime.compareToCurrentTime(datetime.addDatetime('s', 180, result[0].createdAt))) {
+        if (!datetime.compareToCurrentTime(datetime.addDatetime('s', 120, result[0].createdAt))) {
             // 인증번호 유효시간 지남
             return {
                 code : 401201,
-            }
+            };
         }
 
         if (result[0].certificationNumber !== data.certificationNumber) {
@@ -96,7 +96,7 @@ async function checkCertNumber(data) {
                 // 인증번호 입력 횟수 5회 초과
                 return {
                     code: 401301,
-                }
+                };
             }
 
             await db.userCertificationHistory.update({
@@ -109,13 +109,22 @@ async function checkCertNumber(data) {
 
             return {
                 code: 401101,
-            }
+            };
         }
+
+        await db.userCertificationHistory.update({
+            isCertified: true,
+        }, {
+            where: {
+                id: result[0].id,
+            },
+        });
+
     } catch (err) {
         console.log(err);
         return {
             code: 400101,
-        }
+        };
     }
 
     return {
@@ -144,17 +153,17 @@ async function getUser(data) {
                 code: 200000,
                 message: 'success',
                 result
-            }
+            };
         } else {
             return {
                 code: 401002,
-            }
+            };
         }
     } catch (err) {
         console.log(err);
         return {
             code: 400102,
-        }
+        };
     }
 }
 
@@ -164,6 +173,9 @@ async function createUser(data) {
             phone: data.phone,
         });
 
+        // 해당 회원에 대한 추가 정보 테이블도 같이 생성
+        user.createUserAdditionalInfo();
+
         return {
             code: 201000,
             message: 'success',
@@ -171,30 +183,71 @@ async function createUser(data) {
                 id: user.id,
                 phone: user.phone,
             }
-        }
+        };
     } catch (err) {
         console.log(err);
         return {
             code: 400102,
-        }
+        };
     }
 
 }
 
 async function loginUser(data) {
-    // token 발급
-    const accessToken = jwt.sign(data);
-    const refreshToken = jwt.refresh();
+    try {
+        // token 발급
+        const accessToken = jwt.sign(data);
+        const refreshToken = jwt.refresh();
 
-    // refreshToken redis 저장
-    redisClient.set(data.phone, refreshToken);
+        // refreshToken redis 저장
+        redisClient.set(data.id, refreshToken);
 
-    return {
-        code: 200000,
-        message: 'success',
-        result: {
-            accessToken,
-            refreshToken,
+        // 로그인 성공시 로그인 히스토리 생성
+        await db.userLoginHistory.create({
+            userId: data.id,
+        });
+
+        return {
+            code: 200000,
+            message: 'success',
+            result: {
+                accessToken,
+                refreshToken,
+            }
+        };
+    } catch (err) {
+        console.log(err);
+        return {
+            code: 400102,
+        };
+    }
+}
+
+async function getUserInfo(data) {
+    try {
+        const result = await db.userAdditionalInfo.findOne({
+            where: {
+                userRequiredInfoId: data.id,
+            },
+            raw: true,
+        });
+
+        if (!result) {
+            return {
+                code: 401102,
+            }
+        }
+
+        return {
+            code: 200000,
+            message: 'success',
+            result,
+        }
+
+    } catch (err) {
+        console.log(err);
+        return {
+            code: 400102,
         }
     }
 }
@@ -206,4 +259,5 @@ module.exports = {
     getUser,
     createUser,
     loginUser,
-}
+    getUserInfo,
+};

@@ -9,6 +9,7 @@ const secret = config.secret ? config.secret : '';
 function sign(user) {
     const payload = {
         // access token 에 들어갈 payload
+        id: user.id,
         phone: user.phone,
     };
 
@@ -25,9 +26,10 @@ function verify(token) {
         decoded = jwt.verify(token, secret);
         return {
             ok: true,
-            phone: decoded.phone,
+            decoded,
         };
     } catch (err) {
+        console.log(err);
         return {
             ok: false,
             message: err.message,
@@ -67,4 +69,4 @@ module.exports = {
     verify,
     refresh,
     refreshVerify,
-}
+};

@@ -35,6 +35,9 @@ const errorHandler = (err, req, res) => {
         case 401002:
             message = '회원가입이 필요합니다';
             break;
+        case 401102:
+            message = '회원정보를 가져올 수 없습니다'
+            break;
         case 404000:
             message = '존재하지 않는 URL 입니다';
             break;
@@ -52,8 +55,8 @@ const errorHandler = (err, req, res) => {
             message,
             result,
     });
-}
+};
 
 module.exports = {
     errorHandler,
-}
+};
