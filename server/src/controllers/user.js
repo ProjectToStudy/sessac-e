@@ -2,16 +2,18 @@ const send = require('../utils/sendNotification');
 const db = require('../models');
 const jwt = require('../utils/jwt');
 const redisClient = require('../utils/redis');
+const datetime = require('../utils/datetime');
 
 async function sendCertNumber(data) {
     const number = generateRandomNumber();
+    const phone = data.phone.replace(/ /g, '');
     const body = {
         type: 'SMS',
         from: '01052079385', // 사전 등록된 번호로만 발신 가능
         content: `[새싹이] 인증번호는 [${number}] 입니다 :)`,
         messages: [
             {
-                to: data.phone,
+                to: phone,
                 subject: 'a',
                 contents: 'b',
             }
@@ -29,7 +31,7 @@ async function sendCertNumber(data) {
 
     try {
         await db.userCertificationHistory.create({
-            phone: data.phone,
+            phone,
             certificationNumber: number,
         });
     } catch (err) {
@@ -45,9 +47,11 @@ async function sendCertNumber(data) {
 }
 
 async function testCertNumber(data) {
+    const phone = data.phone.replace(/ /g, '');
+
     try {
         await db.userCertificationHistory.create({
-            phone: data.phone,
+            phone,
             certificationNumber: 123456,
         });
     } catch (err) {
@@ -63,9 +67,6 @@ async function testCertNumber(data) {
 }
 
 async function checkCertNumber(data) {
-    // TODO: 맞는 번호인지 체크해야 함
-    // phone 번호로 컬럼 가져오기 -> 여러개인 경우? 무조건 가장 최신 데이터
-    // 현재 시간과 비교해서 입력 시간이 3분 이상 차이나면 유효하지 않다는 에러 돌려주기
     try {
         const result = await db.userCertificationHistory.findAll({
             where: {
@@ -83,9 +84,31 @@ async function checkCertNumber(data) {
             }
         }
 
-        if (result[0].certificationNumber !== data.certificationNumber) {
+        if (!datetime.compareToCurrentTime(datetime.addDatetime('s', 180, result[0].createdAt))) {
+            // 인증번호 유효시간 지남
             return {
-                code: 401101
+                code : 401201,
+            }
+        }
+
+        if (result[0].certificationNumber !== data.certificationNumber) {
+            if (result[0].failCount > 4) {
+                // 인증번호 입력 횟수 5회 초과
+                return {
+                    code: 401301,
+                }
+            }
+
+            await db.userCertificationHistory.update({
+                failCount: result[0].failCount + 1,
+            }, {
+                where: {
+                    id: result[0].id,
+                },
+            });
+
+            return {
+                code: 401101,
             }
         }
     } catch (err) {

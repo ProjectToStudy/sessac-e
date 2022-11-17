@@ -9,6 +9,10 @@ const userCertificationHistory = (sequelize, Sequelize) => {
             type: Sequelize.STRING(10),
             allowNull: false,
         },
+        failCount: {
+            type: Sequelize.INTEGER,
+            defaultValue: 0,
+        },
         isCertified: {
             type: Sequelize.BOOLEAN,
             defaultValue: false,

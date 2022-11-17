@@ -135,6 +135,10 @@ const userRouter = ({ app }) => {
      *                 message: 인증번호가 입력되지 않았습니다
      *               - code: 401101
      *                 message: 인증번호가 잘못되었습니다
+     *               - code: 401201
+     *                 message: 유효시간이 지난 인증번호입니다
+     *               - code: 401301
+     *                 message: 인증번호 입력 횟수를 초과했습니다
      */
     route.post('/cert/check', async (req, res, next) => {
         const result = await user.checkCertNumber(req.body);

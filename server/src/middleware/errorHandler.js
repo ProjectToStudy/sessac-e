@@ -16,13 +16,20 @@ const errorHandler = (err, req, res) => {
             // 데이터 오류
             message = '인증번호 저장 및 호출에 실패했습니다';
             break;
-        case 401101:
-            message = '인증번호가 잘못되었습니다';
-            break;
         case 401001:
             message = '인증번호가 입력되지 않았습니다';
             break;
+        case 401101:
+            message = '인증번호가 잘못되었습니다';
+            break;
+        case 401201:
+            message = '유효시간이 지난 인증번호입니다';
+            break;
+        case 401301:
+            message = '인증번호 입력 횟수를 초과했습니다';
+            break;
         case 400102:
+            // 데이터 오류
             message = '회원정보 저장 및 호출에 실패했습니다';
             break;
         case 401002:
