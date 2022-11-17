@@ -19,4 +19,4 @@ function addDatetime(type, amount, datetime) {
 module.exports = {
     compareToCurrentTime,
     addDatetime,
-}
+};

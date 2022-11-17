@@ -35,6 +35,6 @@ const userCertificationHistory = (sequelize, Sequelize) => {
     });
 
     return UserCertificationHistory;
-}
+};
 
 module.exports = userCertificationHistory;

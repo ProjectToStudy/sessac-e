@@ -235,20 +235,20 @@ async function getUserInfo(data) {
         if (!result) {
             return {
                 code: 401102,
-            }
+            };
         }
 
         return {
             code: 200000,
             message: 'success',
             result,
-        }
+        };
 
     } catch (err) {
         console.log(err);
         return {
             code: 400102,
-        }
+        };
     }
 }
 
