@@ -1,12 +1,13 @@
 const redis = require('redis');
 const config = require('../config');
 
-const redisPort = config.redis ? parseInt(config.redis) : 6379;
+const redisPort = config.redis.port ? parseInt(config.redis.port) : 6379;
+const redisHost = config.redis.host ? config.redis.host : '127.0.0.1';
 
 const redisClient = redis.createClient({
     legacyMode: true,
     socket: {
-        host: 'redis',
+        host: redisHost,
         port: redisPort,
     }
 });

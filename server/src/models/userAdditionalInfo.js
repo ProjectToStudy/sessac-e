@@ -1,21 +1,19 @@
-const userCertificationHistory = (sequelize, Sequelize) => {
-    const UserCertificationHistory = sequelize.define('userCertificationHistory', {
+const userAdditionalInfo = (sequelize, Sequelize) => {
+    const UserAdditionalInfo = sequelize.define('userAdditionalInfo', {
         // id 자동생성
-        phone: {
-            type: Sequelize.STRING(20),
+        // userId: {
+        //     type: Sequelize.INTEGER,
+        //     allowNull: false,
+        // },
+        career: {
+            type: Sequelize.JSON,
             allowNull: false,
+            defaultValue: [],
         },
-        certificationNumber: {
-            type: Sequelize.STRING(10),
+        purpose: {
+            type: Sequelize.JSON,
             allowNull: false,
-        },
-        failCount: {
-            type: Sequelize.INTEGER,
-            defaultValue: 0,
-        },
-        isCertified: {
-            type: Sequelize.BOOLEAN,
-            defaultValue: false,
+            defaultValue: [],
         },
         createdAt: {
             type: Sequelize.DATE,
@@ -34,7 +32,11 @@ const userCertificationHistory = (sequelize, Sequelize) => {
         freezeTableName: true,
     });
 
-    return UserCertificationHistory;
+    UserAdditionalInfo.associate = models => {
+        UserAdditionalInfo.belongsTo(models.userRequiredInfo);
+    };
+
+    return UserAdditionalInfo;
 };
 
-module.exports = userCertificationHistory;
+module.exports = userAdditionalInfo;

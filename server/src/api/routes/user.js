@@ -3,9 +3,60 @@ const express = require('express');
 const route = express.Router();
 
 const user = require('../../controllers/user');
+const auth = require('../../middleware/auth');
 
 const userRouter = ({ app }) => {
     app.use('/api/v1/user', route);
+
+    /**
+     * @swagger
+     * /api/v1/user:
+     *   get:
+     *     tags:
+     *       - user
+     *     description: 회원정보 get
+     *     security:
+     *       - authorization: []
+     *     parameters:
+     *       - name: authorization
+     *         in: header
+     *         value: Bearer [accessToken]
+     *         description: 엑세스 토큰
+     *         required: true
+     *         type: string
+     *     responses:
+     *       200:
+     *         description: 성공
+     *         content:
+     *           application/json:
+     *             example:
+     *               - code: 200000
+     *                 message: success
+     *                 result : '[회원 정보]'
+     *       400:
+     *         description: 실패
+     *         content:
+     *           application/json:
+     *             example:
+     *               - code: 400102
+     *                 message: 회원정보 저장 및 호출에 실패했습니다
+     *       401:
+     *         description: 실패
+     *         content:
+     *           application/json:
+     *             example:
+     *               - code: 401102
+     *                 message: 회원정보를 가져올 수 없습니다
+     */
+    route.get('/', auth.verify, async (req, res, next) => {
+        const result = await user.getUserInfo(req.user);
+
+        if (result.message !== 'success') {
+            return next(result);
+        }
+
+        return res.status(200).json(result);
+    });
 
     /**
      * @swagger
@@ -135,6 +186,10 @@ const userRouter = ({ app }) => {
      *                 message: 인증번호가 입력되지 않았습니다
      *               - code: 401101
      *                 message: 인증번호가 잘못되었습니다
+     *               - code: 401201
+     *                 message: 유효시간이 지난 인증번호입니다
+     *               - code: 401301
+     *                 message: 인증번호 입력 횟수를 초과했습니다
      */
     route.post('/cert/check', async (req, res, next) => {
         const result = await user.checkCertNumber(req.body);
@@ -256,6 +311,7 @@ const userRouter = ({ app }) => {
 
         return res.status(200).json(loginResult);
     });
+
 };
 
 module.exports = {
