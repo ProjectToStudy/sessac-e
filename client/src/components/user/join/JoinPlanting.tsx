@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import List from './components/List';
 import { Button } from '../../atoms';
 import * as Icon from '../../../assets';
@@ -11,9 +10,11 @@ interface JoinPlantingComponentProps {
     selected: string[];
     onNextClick: (state: number) => void;
     onItemClick: (e: React.MouseEvent<HTMLLIElement>) => void;
+    onOmissionClick: () => void;
 }
 interface HomeScreenProps {
     onNextClick: JoinPlantingComponentProps['onNextClick'];
+    onOmissionClick?: JoinPlantingComponentProps['onOmissionClick'];
 }
 interface SelectScreenProps {
     category: string;
@@ -21,9 +22,10 @@ interface SelectScreenProps {
     selected: JoinPlantingComponentProps['selected'];
     onNextClick: JoinPlantingComponentProps['onNextClick'];
     onItemClick: JoinPlantingComponentProps['onItemClick'];
+    onOmissionClick: JoinPlantingComponentProps['onOmissionClick'];
 }
 
-const HomeScreen = ({ onNextClick }: HomeScreenProps) => {
+const HomeScreen = ({ onNextClick, onOmissionClick }: HomeScreenProps) => {
     return (
         <div className={styles.content}>
             <div className={styles.home}>
@@ -36,13 +38,13 @@ const HomeScreen = ({ onNextClick }: HomeScreenProps) => {
             </div>
             <div className={styles.auth_area}>
                 <Button props={{ text: '회원가입', onClick: () => onNextClick(1), isActive: true }} />
-                <Link to="/home">생략하고 둘러보기</Link>
+                <button type="button" onClick={onOmissionClick} className={styles.omission}>생략하고 둘러보기</button>
             </div>
         </div>
     );
 };
 
-const SelectScreen = ({ category, isActive, selected, onNextClick, onItemClick, }: SelectScreenProps) => {
+const SelectScreen = ({ category, isActive, selected, onNextClick, onItemClick, onOmissionClick }: SelectScreenProps) => {
     const jobList = [{ icon: <Icon.Bag />, name: '학생' }, { icon: <Icon.Pencil />, name: '예술직종' }, { icon: <Icon.Office />, name: '일반사무직' }, { icon: <Icon.IT />, name: 'IT직종' },
         { icon: <Icon.Profession />, name: '전문직' }, { icon: <Icon.Freshman />, name: '취업준비' }, { icon: <Icon.People />, name: '크리에이터' }, { icon: <Icon.ETC />, name: '기타' }, { icon: <Icon.Edu />, name: '교육직' }];
     const purposeList = [{ icon: <Icon.Freshman />, name: '취업준비' }, { icon: <Icon.Award />, name: '자격증' }, { icon: <Icon.Pencil />, name: '취업준비' }, { icon: <Icon.Cap />, name: '학업' },
@@ -71,7 +73,7 @@ const SelectScreen = ({ category, isActive, selected, onNextClick, onItemClick, 
             </div>
             <div className={styles.auth_area}>
                 <Button props={{ text: '다음으로', isActive, onClick: () => onNextClick(category === '직업' ? 2 : 3) }} />
-                <Link to="/home">생략하고 둘러보기</Link>
+                <button type="button" onClick={onOmissionClick} className={styles.omission}>생략하고 둘러보기</button>
             </div>
         </div>
     );
@@ -95,10 +97,10 @@ const EndScreen = ({ onNextClick }: HomeScreenProps) => {
     );
 };
 
-const JoinPlantingComponent = ({ screenState, isActive, selected, onNextClick, onItemClick }: JoinPlantingComponentProps) => {
+const JoinPlantingComponent = ({ screenState, isActive, selected, onNextClick, onItemClick, onOmissionClick }: JoinPlantingComponentProps) => {
     return (
         <div id="component" className={styles.component}>
-            {screenState === 1 && <HomeScreen onNextClick={onNextClick} />}
+            {screenState === 1 && <HomeScreen onNextClick={onNextClick} onOmissionClick={onOmissionClick} />}
             {(screenState === 2 || screenState === 3) && (
                 <SelectScreen
                     category={screenState === 2 ? '직업' : '이용 목적'}
@@ -106,6 +108,7 @@ const JoinPlantingComponent = ({ screenState, isActive, selected, onNextClick, o
                     selected={selected}
                     onNextClick={onNextClick}
                     onItemClick={onItemClick}
+                    onOmissionClick={onOmissionClick}
                 />
             )}
             {screenState === 4 && <EndScreen onNextClick={onNextClick} />}
