@@ -27,10 +27,10 @@ const userRequiredInfo = (sequelize, Sequelize) => {
     });
 
     UserRequiredInfo.associate = models => {
-        UserRequiredInfo.hasMany(models.userLoginHistory);
+        UserRequiredInfo.hasOne(models.userAdditionalInfo);
     };
 
     return UserRequiredInfo;
-}
+};
 
 module.exports = userRequiredInfo;

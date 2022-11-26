@@ -20,6 +20,7 @@ const startServer = async () => {
 
     // 유의 : 프로덕션 모드에서는 절대 사용하지 말 것
     // sequelize.sync({ force: true })
+    // sequelize.sync({ alter: true })
     sequelize.sync()
         .then(() => {
             console.log('데이터베이스 연결됨');
