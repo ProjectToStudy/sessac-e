@@ -255,6 +255,28 @@ async function getUserInfo(data) {
     }
 }
 
+async function updateUserInfo(user, data) {
+    try {
+        console.log(data);
+        await db.userAdditionalInfo.update(data, {
+            where: {
+                userRequiredInfoId: user.id,
+            },
+            raw: true,
+        });
+
+        return {
+            code: 200000,
+            message: 'success',
+        };
+    } catch (err) {
+        console.log(err);
+        return {
+            code: 400102,
+        };
+    }
+}
+
 module.exports = {
     sendCertNumber,
     testCertNumber,
@@ -263,4 +285,5 @@ module.exports = {
     createUser,
     loginUser,
     getUserInfo,
+    updateUserInfo,
 };
