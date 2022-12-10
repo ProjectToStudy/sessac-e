@@ -1,8 +1,9 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
+import { setCookie } from '../../utils/cookie';
 import { RootState } from '../../modules';
-import { certCheckAPI, certSendAPI, setIsSigning, loginAPI } from '../../modules/user';
+import { initializeKey, certCheckAPI, certSendAPI, setIsSigning, loginAPI } from '../../modules/user';
 import useInputs from '../../hooks/useInputs';
 import JoinComponent from '../../components/user/join/Join';
 import TermsModal from '../../components/user/join/components/Terms';
@@ -57,16 +58,25 @@ const JoinContainer = () => {
 
     useEffect(() => {
         if (certCheck) {
+            dispatch(initializeKey('certCheck'));
             setErrors({ ...errors, certification: '' });
             setIsActiveBtnState({ ...isActiveBtnState, start: true });
         }
-        if (certCheckError) setErrors({ ...errors, certification: '인증번호가 일치하지 않습니다.' });
+        if (certCheckError) {
+            dispatch(initializeKey('certCheckError'));
+            setErrors({ ...errors, certification: '인증번호가 일치하지 않습니다.' });
+        }
     }, [certCheck, certCheckError]);
 
     useEffect(() => {
-        if (login) navigate('/home');
+        if (login) {
+            setCookie('at', login.result.accessToken);
+            dispatch(initializeKey('login'));
+            navigate('/home');
+        }
         if (loginError) {
             if (loginError.code === 401002) setIsTermsState(true);
+            dispatch(initializeKey('loginError'));
         }
     }, [login, loginError]);
 

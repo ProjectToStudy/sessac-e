@@ -1,14 +1,17 @@
 import { createAction, handleActions } from 'redux-actions';
 import { takeLatest } from 'redux-saga/effects';
+import produce from 'immer';
 import createRequestSaga, { createRequestActionTypes } from '../lib/createRequestSaga';
 import * as userAPI from '../api/user';
 
+const INITIALIZE_KEY = 'user/INITIALIZE_KEY';
 const IS_SIGNING = 'user/IS_SIGNING';
 const [CERT_SEND, CERT_SEND_SUCCESS, CERT_SEND_FAILURE] = createRequestActionTypes('user/CERT_SEND');
 const [CERT_CHECK, CERT_CHECK_SUCCESS, CERT_CHECK_FAILURE] = createRequestActionTypes('user/CERT_CHECK');
 const [LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE] = createRequestActionTypes('user/LOGIN');
 const [JOIN, JOIN_SUCCESS, JOIN_FAILURE] = createRequestActionTypes('user/JOIN');
 
+export const initializeKey = createAction(INITIALIZE_KEY, (key: string) => key);
 export const setIsSigning = createAction(IS_SIGNING, (value: boolean) => value);
 export const certSendAPI = createAction(CERT_SEND, (phone: string) => (phone));
 export const certCheckAPI = createAction(CERT_CHECK, ({ phone, certificationNumber }: { phone: string, certificationNumber: string }) => ({ phone, certificationNumber }));
@@ -73,6 +76,10 @@ const initialState: ResponseType = {
 
 const user = handleActions(
     {
+        [INITIALIZE_KEY]: (state: ResponseType = initialState, { payload: key }: { payload: string }) => produce(state, draft => {
+            // @ts-expect-error
+            draft[key] = initialState[key]
+        }),
         [IS_SIGNING]: (state: ResponseType = initialState, { payload: isSigning }: { payload: ResponseType['isSigning']}) => ({ ...state, isSigning }),
         [CERT_SEND_SUCCESS]: (state: ResponseType = initialState, { payload: certSend }: { payload: ResponseType['certSend'] }) => ({ ...state, certSend, certSendError: null }),
         [CERT_SEND_FAILURE]: (state: ResponseType = initialState, { payload: error }: { payload: any }) => ({ ...state, certSendError: error }),
