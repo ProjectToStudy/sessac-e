@@ -130,7 +130,7 @@ const JoinContainer = () => {
     const handleTermsSubmitClick = () => {
         if (checked.length === 3) {
             dispatch(setIsSigning(true));
-            navigate('/plant-seeds/1', { state: { phone } });
+            navigate('/add/1', { state: { phone } });
         }
     };
 

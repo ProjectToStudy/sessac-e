@@ -15,10 +15,10 @@ const Navigation = () => {
                     </li>
                     <li className={styles.nav_item}>
                         <NavLink
-                            to='/'
+                            to='/search'
                             id='studyList'
                             className={({ isActive }) => isActive ? styles.active : undefined} />
-                        <span>스터디리스트</span>
+                        <span>스터디찾기</span>
                     </li>
                     <li className={styles.nav_item}>
                         <NavLink

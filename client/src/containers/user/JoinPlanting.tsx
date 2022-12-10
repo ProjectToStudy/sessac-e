@@ -21,7 +21,7 @@ const JoinPlantingContainer = ({ phone, screenState }: { phone: string, screenSt
      * @param state: 현재 화면 번호
      */
     const handleScreenState = (state: number) => {
-        if (state < 4) navigate(`/plant-seeds/${state + 1}`);
+        if (state < 4) navigate(`/add/${state + 1}`);
         else {
             dispatch(setIsSigning(false));
             navigate('/home');
