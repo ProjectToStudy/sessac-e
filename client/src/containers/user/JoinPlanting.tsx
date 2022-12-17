@@ -2,19 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { RootState } from '../../modules';
-import { setIsSigning, joinAPI } from '../../modules/user';
+import { initializeKey, updateAPI } from '../../modules/user';
 import JoinPlantingComponent from '../../components/user/join/JoinPlanting';
 
-const JoinPlantingContainer = ({ phone, screenState }: { phone: string, screenState: number }) => {
+const JoinPlantingContainer = ({ screenState }: { screenState: number }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { join, joinError }: any = useSelector((state: RootState) => state.user);
+    const { update, updateError }: any = useSelector((state: RootState) => state.user);
 
-    const [isActive, setIsActive] = useState({ job: false, purpose: false });
-    const [selected, setSelected] = useState<{ [key: string]: string[] }>({ job: [], purpose: [] });
+    const [isActive, setIsActive] = useState({ career: false, purpose: false });
+    const [selected, setSelected] = useState<{ [key: string]: string[] }>({ career: [], purpose: [] });
 
-    const handleOmissionClick = () => dispatch(joinAPI(phone));
+    const handleOmissionClick = () => navigate('/home');
 
     /** 페이지 화면 핸들러 함수
      * 다음 페이지로 전환
@@ -23,8 +23,7 @@ const JoinPlantingContainer = ({ phone, screenState }: { phone: string, screenSt
     const handleScreenState = (state: number) => {
         if (state < 4) navigate(`/add/${state + 1}`);
         else {
-            dispatch(setIsSigning(false));
-            navigate('/home');
+            dispatch(updateAPI({ ...selected, etc: '' }));
         }
     }
 
@@ -48,23 +47,26 @@ const JoinPlantingContainer = ({ phone, screenState }: { phone: string, screenSt
     };
 
     useEffect(() => {
-        if (join) navigate('/home');
-    }, [join, joinError]);
-
-    useEffect(() => {
         if (screenState === 2) {
-            setIsActive({ ...isActive, job: selected.job.length > 0 });
+            setIsActive({ ...isActive, career: selected.career.length > 0 });
         } else if (screenState === 3) {
             setIsActive({ ...isActive, purpose: selected.purpose.length > 0 });
         }
     }, [selected]);
 
+    useEffect(() => {
+        if (update) {
+            dispatch(initializeKey('update'));
+            navigate('/home');
+        }
+    }, [update, updateError]);
+
     return (
         <div id="container">
             <JoinPlantingComponent
                 screenState={screenState}
-                isActive={screenState === 2 ? isActive.job : isActive.purpose}
-                selected={screenState === 2 ? selected.job : selected.purpose}
+                isActive={screenState === 2 ? isActive.career : isActive.purpose}
+                selected={screenState === 2 ? selected.career : selected.purpose}
                 onNextClick={handleScreenState}
                 onItemClick={handleItemClick}
                 onOmissionClick={handleOmissionClick}

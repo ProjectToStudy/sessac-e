@@ -10,6 +10,7 @@ const [CERT_SEND, CERT_SEND_SUCCESS, CERT_SEND_FAILURE] = createRequestActionTyp
 const [CERT_CHECK, CERT_CHECK_SUCCESS, CERT_CHECK_FAILURE] = createRequestActionTypes('user/CERT_CHECK');
 const [LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE] = createRequestActionTypes('user/LOGIN');
 const [JOIN, JOIN_SUCCESS, JOIN_FAILURE] = createRequestActionTypes('user/JOIN');
+const [UPDATE, UPDATE_SUCCESS, UPDATE_FAILURE] = createRequestActionTypes('user/UPDATE');
 
 export const initializeKey = createAction(INITIALIZE_KEY, (key: string) => key);
 export const setIsSigning = createAction(IS_SIGNING, (value: boolean) => value);
@@ -17,16 +18,19 @@ export const certSendAPI = createAction(CERT_SEND, (phone: string) => (phone));
 export const certCheckAPI = createAction(CERT_CHECK, ({ phone, certificationNumber }: { phone: string, certificationNumber: string }) => ({ phone, certificationNumber }));
 export const loginAPI = createAction(LOGIN, (phone: string) => (phone));
 export const joinAPI = createAction(JOIN, (phone: string) => (phone));
+export const updateAPI = createAction(UPDATE, ({ career, purpose, etc }: { career: string[], purpose: string[], etc: string }) => ({ career, purpose, etc }));
 
 const certSendSaga = createRequestSaga(CERT_SEND, userAPI.certSend);
 const certCheckSaga = createRequestSaga(CERT_CHECK, userAPI.certCheck);
 const loginSaga = createRequestSaga(LOGIN, userAPI.login);
 const joinSaga = createRequestSaga(JOIN, userAPI.join);
+const updateSaga = createRequestSaga(UPDATE, userAPI.update);
 export function * userSaga () {
     yield takeLatest(CERT_SEND, certSendSaga);
     yield takeLatest(CERT_CHECK, certCheckSaga);
     yield takeLatest(LOGIN, loginSaga);
     yield takeLatest(JOIN, joinSaga);
+    yield takeLatest(UPDATE, updateSaga);
 }
 
 export interface ResponseType {
@@ -61,6 +65,15 @@ export interface ResponseType {
         code: number;
         message: string;
     } | null;
+    update: {
+        code: number;
+        message: string;
+        result: object;
+    } | null;
+    updateError: {
+        code: number;
+        message: string;
+    } | null;
 }
 const initialState: ResponseType = {
     isSigning: false,
@@ -72,6 +85,8 @@ const initialState: ResponseType = {
     loginError: null,
     join: null,
     joinError: null,
+    update: null,
+    updateError: null,
 };
 
 const user = handleActions(
@@ -89,6 +104,8 @@ const user = handleActions(
         [LOGIN_FAILURE]: (state: ResponseType = initialState, { payload: error }: { payload: ResponseType['loginError'] }) => ({ ...state, loginError: error }),
         [JOIN_SUCCESS]: (state: ResponseType = initialState, { payload: join }: { payload: ResponseType['join'] }) => ({ ...state, join, joinError: null }),
         [JOIN_FAILURE]: (state: ResponseType = initialState, { payload: error }: { payload: ResponseType['joinError'] }) => ({ ...state, joinError: error }),
+        [UPDATE_SUCCESS]: (state: ResponseType = initialState, { payload: update }: { payload: ResponseType['update'] }) => ({ ...state, update, updateError: null }),
+        [UPDATE_FAILURE]: (state: ResponseType = initialState, { payload: error }: { payload: ResponseType['updateError'] }) => ({ ...state, updateError: error }),
     },
     initialState,
 );
