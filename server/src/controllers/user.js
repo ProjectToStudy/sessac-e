@@ -67,10 +67,11 @@ async function testCertNumber(data) {
 }
 
 async function checkCertNumber(data) {
+    const phone = data.phone.replace(/ /g, '');
     try {
         const result = await db.userCertificationHistory.findAll({
             where: {
-                phone: data.phone,
+                phone,
             },
             order: [
                 ['createdAt', 'DESC']
@@ -138,11 +139,12 @@ function generateRandomNumber() {
 }
 
 async function getUser(data) {
+    const phone = data.phone.replace(/ /g, '');
     try {
         const result = await db.userRequiredInfo.findOne({
             attributes: ['id', 'phone'],
             where: {
-                phone: data.phone,
+                phone,
                 isActive: true,
             },
             raw: true,
@@ -168,9 +170,10 @@ async function getUser(data) {
 }
 
 async function createUser(data) {
+    const phone = data.phone.replace(/ /g, '');
     try {
         const user = await db.userRequiredInfo.create({
-            phone: data.phone,
+            phone,
         });
 
         // 해당 회원에 대한 추가 정보 테이블도 같이 생성
@@ -252,6 +255,28 @@ async function getUserInfo(data) {
     }
 }
 
+async function updateUserInfo(user, data) {
+    try {
+        console.log(data);
+        await db.userAdditionalInfo.update(data, {
+            where: {
+                userRequiredInfoId: user.id,
+            },
+            raw: true,
+        });
+
+        return {
+            code: 200000,
+            message: 'success',
+        };
+    } catch (err) {
+        console.log(err);
+        return {
+            code: 400102,
+        };
+    }
+}
+
 module.exports = {
     sendCertNumber,
     testCertNumber,
@@ -260,4 +285,5 @@ module.exports = {
     createUser,
     loginUser,
     getUserInfo,
+    updateUserInfo,
 };
