@@ -60,6 +60,68 @@ const userRouter = ({ app }) => {
 
     /**
      * @swagger
+     * /api/v1/user:
+     *   patch:
+     *     tags:
+     *       - user
+     *     description: 회원정보 update
+     *     security:
+     *       - authorization: []
+     *     parameters:
+     *       - name: authorization
+     *         in: header
+     *         value: Bearer [accessToken]
+     *         description: 엑세스 토큰
+     *         required: true
+     *         type: string
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               data:
+     *                 type: object
+     *                 properties:
+     *                   career:
+     *                     type: array
+     *                     items:
+     *                       type: string
+     *                   purpose:
+     *                     type: array
+     *                     items:
+     *                       type: string
+     *                   etc:
+     *                     type: string
+     *     responses:
+     *       200:
+     *         description: 성공
+     *         content:
+     *           application/json:
+     *             example:
+     *               - code: 200000
+     *                 message: success
+     *       400:
+     *         description: 실패
+     *         content:
+     *           application/json:
+     *             example:
+     *               - code: 400102
+     *                 message: 회원정보 저장 및 호출에 실패했습니다
+     */
+    route.patch('/', auth.verify, async (req, res, next) => {
+        const result = await user.updateUserInfo(req.user, req.body.data);
+
+        if (result.message !== 'success') {
+            return next(result);
+        }
+
+        return res.status(200).json(result);
+    });
+
+    /**
+     * @swagger
      * /api/v1/user/cert/send:
      *   post:
      *     tags:
