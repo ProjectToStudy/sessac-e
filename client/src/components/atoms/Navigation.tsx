@@ -15,7 +15,7 @@ const Navigation = () => {
                     </li>
                     <li className={styles.nav_item}>
                         <NavLink
-                            to='/search'
+                            to='/study'
                             id='studyList'
                             className={({ isActive }) => isActive ? styles.active : undefined} />
                         <span>스터디찾기</span>

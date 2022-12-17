@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { RootState } from './modules';
-import { Main, Join, JoinPlanting, Home, Search } from './pages/index';
+import { Main, Join, JoinPlanting, Home, Study } from './pages/index';
 import { Header, Navigation } from './components/atoms';
 import './App.css';
 
@@ -12,7 +12,7 @@ const setScreenSize = () => {
 };
 
 const titleList: { [key: string]: string } = {
-    '/search': '스터디 찾기',
+    '/study': '스터디 찾기',
 };
 
 const App = () => {
@@ -36,7 +36,7 @@ const App = () => {
                 <Route path="/login" element={<Join />} />
                 <Route path="/add/:state" element={isSigning ? <JoinPlanting /> : <Navigate to='/join' />} />
                 <Route path="/home" element={<Home />} />
-                <Route path="/search" element={<Search />} />
+                <Route path="/study" element={<Study />} />
             </Routes>
             {!(noNavPages.includes(location.pathname)) && <Navigation />}
         </>
