@@ -1,3 +1,8 @@
+.component {
+  display: flex;
+  flex-direction: column;
+  padding: 15px 0 15px 16px;
+}
 .list {
   display: flex;
   flex-direction: column;
@@ -6,4 +11,53 @@
 .item {
   display: flex;
   gap: 10px;
+}
+.thumbnail_area {
+  width: 110px;
+  height: 110px;
+}
+.thumbnail {
+  width: 110px;
+  height: 110px;
+  border-radius: 6px;
+}
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  letter-spacing: -0.5px;
+  color: var(--gray-6-dark);
+
+  .category {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 12px;
+  }
+  .title {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 18px;
+    color: black;
+  }
+  .date {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 14px;
+  }
+  .number {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14px;
+  }
+  .recommend {
+    padding: 6px 10px;
+    border-radius: 6px;
+    background-color: var(--gray-2-light);
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 12px;
+    & b {
+      font-weight: 600;
+    }
+  }
 }
