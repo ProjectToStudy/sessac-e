@@ -319,6 +319,10 @@ const userRouter = ({ app }) => {
             return next(loginResult);
         }
 
+        // 쿠키 저장
+        const accessToken = loginResult.result.accessToken;
+        res.setHeader('Set-Cookie', `accessToken=${accessToken}`);
+
         return res.status(200).json(loginResult);
     });
 
@@ -370,6 +374,10 @@ const userRouter = ({ app }) => {
         if (loginResult.message !== 'success') {
             return next(loginResult);
         }
+
+        // 쿠키 저장
+        const accessToken = loginResult.result.accessToken;
+        res.setHeader('Set-Cookie', `accessToken=${accessToken}`);
 
         return res.status(200).json(loginResult);
     });
