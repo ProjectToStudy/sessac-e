@@ -1,8 +1,9 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
+import { setCookie } from '../../utils/cookie';
 import { RootState } from '../../modules';
-import { certCheckAPI, certSendAPI, setIsSigning, loginAPI } from '../../modules/user';
+import { initializeKey, certCheckAPI, certSendAPI, setIsSigning, loginAPI, joinAPI } from '../../modules/user';
 import useInputs from '../../hooks/useInputs';
 import JoinComponent from '../../components/user/join/Join';
 import TermsModal from '../../components/user/join/components/Terms';
@@ -11,7 +12,7 @@ const JoinContainer = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { certCheck, certCheckError, login, loginError }: any = useSelector((state: RootState) => state.user);
+    const { certCheck, certCheckError, login, loginError, join, joinError }: any = useSelector((state: RootState) => state.user);
 
     const [screenState, setScreenState] = useState(1);
     const [state, handleChange] = useInputs({
@@ -57,18 +58,35 @@ const JoinContainer = () => {
 
     useEffect(() => {
         if (certCheck) {
+            dispatch(initializeKey('certCheck'));
             setErrors({ ...errors, certification: '' });
             setIsActiveBtnState({ ...isActiveBtnState, start: true });
         }
-        if (certCheckError) setErrors({ ...errors, certification: '인증번호가 일치하지 않습니다.' });
+        if (certCheckError) {
+            dispatch(initializeKey('certCheckError'));
+            setErrors({ ...errors, certification: '인증번호가 일치하지 않습니다.' });
+        }
     }, [certCheck, certCheckError]);
 
     useEffect(() => {
-        if (login) navigate('/home');
+        if (login) {
+            setCookie('at', login.result.accessToken);
+            dispatch(initializeKey('login'));
+            navigate('/home');
+        }
         if (loginError) {
             if (loginError.code === 401002) setIsTermsState(true);
+            dispatch(initializeKey('loginError'));
         }
     }, [login, loginError]);
+
+    useEffect(() => {
+        if (join) {
+            setCookie('at', join.result.accessToken);
+            dispatch(initializeKey('join'));
+            navigate('/add/1');
+        }
+    }, [join, joinError]);
 
     /** 인증 코드 받기 버튼 클릭 핸들러 함수
      * 1. 인증 코드 받기 버튼 비활성화
@@ -120,7 +138,7 @@ const JoinContainer = () => {
     const handleTermsSubmitClick = () => {
         if (checked.length === 3) {
             dispatch(setIsSigning(true));
-            navigate('/plant-seeds/1', { state: { phone } });
+            dispatch(joinAPI(phone));
         }
     };
 

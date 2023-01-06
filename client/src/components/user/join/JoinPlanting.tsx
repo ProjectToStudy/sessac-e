@@ -64,7 +64,7 @@ const SelectScreen = ({ category, isActive, selected, onNextClick, onItemClick, 
                         <span>중복선택 할 수 있어요!</span>
                     </div>
                     <List
-                        category={category === '직업' ? 'job' : 'purpose'}
+                        category={category === '직업' ? 'career' : 'purpose'}
                         list={category === '직업' ? jobList : purposeList}
                         selected={selected}
                         onItemClick={onItemClick}
