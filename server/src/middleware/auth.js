@@ -42,7 +42,7 @@ async function verify(req, res, next) {
                 id: payload.id,
                 phone: payload.phone,
             });
-            res.setHeader('Set-Cookie', `accessToken=${accessToken}; Max-Age=${60*60*24}`);
+            res.setHeader('Set-Cookie', `accessToken=${accessToken}`);
             req.user = payload;
 
             return next();

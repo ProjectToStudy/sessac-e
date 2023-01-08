@@ -321,9 +321,13 @@ const userRouter = ({ app }) => {
 
         // 쿠키 저장
         const accessToken = loginResult.result.accessToken;
-        res.setHeader('Set-Cookie', `accessToken=${accessToken}; Max-Age=${60*60*24}`);
+        res.setHeader('Set-Cookie', `accessToken=${accessToken}`);
 
-        return res.status(200).json({});
+        return res.status(200).json({
+            code: 200000,
+            message: 'success',
+            result: {},
+        });
     });
 
     /**
@@ -377,9 +381,13 @@ const userRouter = ({ app }) => {
 
         // 쿠키 저장
         const accessToken = loginResult.result.accessToken;
-        res.setHeader('Set-Cookie', `accessToken=${accessToken}; Max-Age=${60*60*24}`);
+        res.setHeader('Set-Cookie', `accessToken=${accessToken}`);
 
-        return res.status(200).json({});
+        return res.status(200).json({
+            code: 200000,
+            message: 'success',
+            result: {},
+        });
     });
 
 };
