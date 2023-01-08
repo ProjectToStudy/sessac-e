@@ -321,13 +321,10 @@ const userRouter = ({ app }) => {
 
         // 쿠키 저장
         const accessToken = loginResult.result.accessToken;
-        res.setHeader('Set-Cookie', `accessToken=${accessToken}; path=/; secure=true; samesite=none`);
+        // res.setHeader('Set-Cookie', `accessToken=${accessToken}; path=/; secure=true; samesite=none`);
+        res.setHeader('Set-Cookie', `accessToken=${accessToken}; path=/;`);
 
-        return res.status(200).json({
-            code: 200000,
-            message: 'success',
-            result: {},
-        });
+        return res.status(200).json(loginResult);
     });
 
     /**
@@ -381,13 +378,10 @@ const userRouter = ({ app }) => {
 
         // 쿠키 저장
         const accessToken = loginResult.result.accessToken;
-        res.setHeader('Set-Cookie', `accessToken=${accessToken}; Path=/; secure=true; samesite=none`);
+        // res.setHeader('Set-Cookie', `accessToken=${accessToken}; Path=/; secure=true; samesite=none`);
+        res.setHeader('Set-Cookie', `accessToken=${accessToken}; Path=/;`);
 
-        return res.status(200).json({
-            code: 200000,
-            message: 'success',
-            result: {},
-        });
+        return res.status(200).json(loginResult);
     });
 
 };

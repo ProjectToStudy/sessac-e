@@ -42,7 +42,8 @@ async function verify(req, res, next) {
                 id: payload.id,
                 phone: payload.phone,
             });
-            res.setHeader('Set-Cookie', `accessToken=${accessToken}; Path=/; secure=true; samesite=none`);
+            // res.setHeader('Set-Cookie', `accessToken=${accessToken}; Path=/; secure=true; samesite=none`);
+            res.setHeader('Set-Cookie', `accessToken=${accessToken}; Path=/;`);
             req.user = payload;
 
             return next();
