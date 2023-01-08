@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { setCookie } from '../../utils/cookie';
 import { RootState } from '../../modules';
 import { initializeKey, certCheckAPI, certSendAPI, setIsSigning, loginAPI, joinAPI } from '../../modules/user';
 import useInputs from '../../hooks/useInputs';
@@ -70,7 +69,6 @@ const JoinContainer = () => {
 
     useEffect(() => {
         if (login) {
-            setCookie('at', login.result.accessToken);
             dispatch(initializeKey('login'));
             navigate('/home');
         }
@@ -82,7 +80,6 @@ const JoinContainer = () => {
 
     useEffect(() => {
         if (join) {
-            setCookie('at', join.result.accessToken);
             dispatch(initializeKey('join'));
             navigate('/add/1');
         }
