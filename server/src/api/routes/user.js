@@ -321,7 +321,7 @@ const userRouter = ({ app }) => {
 
         // 쿠키 저장
         const accessToken = loginResult.result.accessToken;
-        res.setHeader('Set-Cookie', `accessToken=${accessToken}`);
+        res.setHeader('Set-Cookie', `accessToken=${accessToken}; Path=/`);
 
         return res.status(200).json({
             code: 200000,
@@ -381,7 +381,7 @@ const userRouter = ({ app }) => {
 
         // 쿠키 저장
         const accessToken = loginResult.result.accessToken;
-        res.setHeader('Set-Cookie', `accessToken=${accessToken}`);
+        res.setHeader('Set-Cookie', `accessToken=${accessToken}; Path=/`);
 
         return res.status(200).json({
             code: 200000,
