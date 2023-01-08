@@ -12,7 +12,7 @@ module.exports = {
         password: process.env.PASSWORD,
     },
     redis: {
-        host: process.env.REDIT_HOST,
+        host: process.env.REDIS_HOST,
         port: process.env.REDIS_PORT,
     },
     secret: process.env.SECRET,

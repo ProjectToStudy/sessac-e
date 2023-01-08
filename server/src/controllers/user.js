@@ -215,7 +215,7 @@ async function loginUser(data) {
             message: 'success',
             result: {
                 accessToken,
-                refreshToken,
+                // refreshToken,
             }
         };
     } catch (err) {
