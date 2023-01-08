@@ -12,7 +12,7 @@ const startServer = async () => {
 
     app.use(cors({
         origin: ['http://dev.sessac-e.site', 'http://localhost:3000'],
-        credential: true
+        credentials: true
     }));
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({
