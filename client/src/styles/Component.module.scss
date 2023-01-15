@@ -80,6 +80,9 @@ header {
     width: 24px;
     height: 24px;
   }
+  & a[id=home]::after {
+    background: url("../../public/images/nav/home.svg") 24px;
+  }
   & a[id=studyList]::after {
     background: url("../../public/images/nav/studylist.svg") 24px;
   }
@@ -98,6 +101,15 @@ header {
     }
     &[id=home]::after {
       background: url("../../public/images/nav/home-active.svg") 24px;
+    }
+    &[id=studyList]::after {
+      background: url("../../public/images/nav/studylist-active.svg") 24px;
+    }
+    &[id=myStudy]::after {
+      background: url("../../public/images/nav/mystudy-active.svg") 24px;
+    }
+    &[id=myPage]::after {
+      background: url("../../public/images/nav/mypage-active.svg") 24px;
     }
   }
 }

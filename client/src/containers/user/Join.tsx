@@ -6,6 +6,7 @@ import { initializeKey, certCheckAPI, certSendAPI, setIsSigning, loginAPI, joinA
 import useInputs from '../../hooks/useInputs';
 import JoinComponent from '../../components/user/join/Join';
 import TermsModal from '../../components/user/join/components/Terms';
+import { setAccessToken } from '../../utils/cookie';
 
 const JoinContainer = () => {
     const dispatch = useDispatch();
@@ -69,6 +70,7 @@ const JoinContainer = () => {
 
     useEffect(() => {
         if (login) {
+            setAccessToken(login.result.accessToken);
             dispatch(initializeKey('login'));
             navigate('/home');
         }
@@ -80,6 +82,7 @@ const JoinContainer = () => {
 
     useEffect(() => {
         if (join) {
+            setAccessToken(join.result.accessToken);
             dispatch(initializeKey('join'));
             navigate('/add/1');
         }
