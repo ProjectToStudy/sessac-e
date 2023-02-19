@@ -1,19 +1,17 @@
-const teamAdditionalInfo = (sequelize, Sequelize) => {
-    const TeamAdditionalInfo = sequelize.define('teamAdditionalInfo', {
+const teamPhotoInfo = (sequelize, Sequelize) => {
+    const TeamPhotoInfo = sequelize.define('teamPhotoInfo', {
         // id 자동생성
-        detailDescription: {
+        imageUrl: {
             // @TODO: 상세정보 길이 논의 필요
             type: Sequelize.STRING(500),
             allowNull: false,
             defaultValue: '',
         },
-        callOut: {
-            // @TODO: 상세정보 길이 논의 필요
-            type: Sequelize.STRING(500),
+        sortNo: {
+            type: Sequelize.INTEGER,
             allowNull: false,
-            defaultValue: '',
+            defaultValue: 0,
         },
-        // @TODO: 우대사항, 질문사항 어떤 방식으로 추가되는지 논의 필요
         createdAt: {
             type: 'TIMESTAMP',
             allowNull: true,
@@ -31,11 +29,11 @@ const teamAdditionalInfo = (sequelize, Sequelize) => {
         freezeTableName: true,
     });
 
-    TeamAdditionalInfo.associate = models => {
-        TeamAdditionalInfo.belongsTo(models.teamInfo);
+    TeamPhotoInfo.associate = models => {
+        TeamPhotoInfo.belongsTo(models.teamInfo);
     }
 
-    return TeamAdditionalInfo;
+    return TeamPhotoInfo;
 };
 
-module.exports = teamAdditionalInfo;
+module.exports = teamPhotoInfo;

@@ -15,7 +15,7 @@ const teamInfo = (sequelize, Sequelize) => {
             allowNull: false,
             defaultValue: '',
         },
-        isOnline: {
+        channel: {
             type: Sequelize.BOOLEAN,
             allowNull: false,
             defaultValue: true,
@@ -56,8 +56,16 @@ const teamInfo = (sequelize, Sequelize) => {
         teamInfo.belongsTo(models.teamAreaInfo);
     }
 
+    teamInfo.associate = models => {
+        teamInfo.belongsTo(models.teamStatusInfo);
+    }
+
     TeamInfo.associate = models => {
         TeamInfo.hasOne(models.teamAdditionalInfo);
+    }
+
+    TeamInfo.associate = models => {
+        TeamInfo.hasMany(models.teamPhotoInfo);
     }
 
     return TeamInfo;
