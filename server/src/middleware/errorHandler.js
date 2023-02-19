@@ -2,7 +2,7 @@
 
 const errorHandler = (err, req, res) => {
     let message;
-    let result = {};
+    let result = err.result ? err.result : {};
     const code = err.code ? err.code : 400000;
     const returnCode = parseInt(code.toString().substring(0, 3));
 
