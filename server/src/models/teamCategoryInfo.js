@@ -1,7 +1,8 @@
-const userLoginHistory = (sequelize, Sequelize) => {
-    const UserLoginHistory = sequelize.define('userLoginHistory', {
-        userId: {
-            type: Sequelize.INTEGER,
+const teamCategoryInfo = (sequelize, Sequelize) => {
+    const TeamCategoryInfo = sequelize.define('teamCategoryInfo', {
+        // id 자동생성
+        categoryName: {
+            type: Sequelize.STRING(20),
             allowNull: false,
         },
         createdAt: {
@@ -21,7 +22,11 @@ const userLoginHistory = (sequelize, Sequelize) => {
         freezeTableName: true,
     });
 
-    return UserLoginHistory;
+    TeamCategoryInfo.associate = models => {
+        TeamCategoryInfo.hasMany(models.teamInfo);
+    }
+
+    return TeamCategoryInfo;
 };
 
-module.exports = userLoginHistory;
+module.exports = teamCategoryInfo;

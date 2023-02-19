@@ -1,9 +1,7 @@
-const userLoginHistory = (sequelize, Sequelize) => {
-    const UserLoginHistory = sequelize.define('userLoginHistory', {
-        userId: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-        },
+const teamAreaInfo = (sequelize, Sequelize) => {
+    const TeamAreaInfo = sequelize.define('teamAreaInfo', {
+        // id 자동생성
+        // @TODO: 주소 어떻게 넣을건지 논의 필요
         createdAt: {
             type: 'TIMESTAMP',
             allowNull: true,
@@ -21,7 +19,11 @@ const userLoginHistory = (sequelize, Sequelize) => {
         freezeTableName: true,
     });
 
-    return UserLoginHistory;
+    TeamAreaInfo.associate = models => {
+        TeamAreaInfo.hasMany(models.teamInfo);
+    }
+
+    return TeamAreaInfo;
 };
 
-module.exports = userLoginHistory;
+module.exports = teamAreaInfo;

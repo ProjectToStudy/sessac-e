@@ -16,19 +16,19 @@ const userAdditionalInfo = (sequelize, Sequelize) => {
             defaultValue: [],
         },
         createdAt: {
-            type: Sequelize.DATE,
-            allowNull: false,
+            type: 'TIMESTAMP',
+            allowNull: true,
             defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         },
         updatedAt: {
-            type: Sequelize.DATE,
-            allowNull: false,
-            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-            onUpdate: Sequelize.literal('CURRENT_TIMESTAMP')
+            type: 'TIMESTAMP',
+            allowNull: true,
+            onupdate: Sequelize.literal('CURRENT_TIMESTAMP')
         },
     }, {
         charset: 'utf8',
         collate: 'utf8_general_ci',
+        timestamps: false,
         freezeTableName: true,
     });
 

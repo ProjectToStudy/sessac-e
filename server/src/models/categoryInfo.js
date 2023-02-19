@@ -1,12 +1,21 @@
-const userRequiredInfo = (sequelize, Sequelize) => {
-    const UserRequiredInfo = sequelize.define('userRequiredInfo', {
+const categoryInfo = (sequelize, Sequelize) => {
+    const CategoryInfo = sequelize.define('categoryInfo', {
         // id 자동생성
-        phone: {
+        name: {
             type: Sequelize.STRING(20),
             allowNull: false,
         },
-        isActive: {
+        category: {
+            type: Sequelize.STRING(20),
+            allowNull: false,
+        },
+        type: {
+            type: Sequelize.STRING(20),
+            allowNull: false,
+        },
+        isValid: {
             type: Sequelize.BOOLEAN,
+            allowNull: false,
             defaultValue: true,
         },
         createdAt: {
@@ -17,7 +26,7 @@ const userRequiredInfo = (sequelize, Sequelize) => {
         updatedAt: {
             type: 'TIMESTAMP',
             allowNull: true,
-            onUpdate: Sequelize.literal('CURRENT_TIMESTAMP')
+            onUpdate: Sequelize.literal('CURRENT_TIMESTAMP'),
         },
     }, {
         charset: 'utf8',
@@ -26,11 +35,7 @@ const userRequiredInfo = (sequelize, Sequelize) => {
         freezeTableName: true,
     });
 
-    UserRequiredInfo.associate = models => {
-        UserRequiredInfo.hasOne(models.userAdditionalInfo);
-    };
-
-    return UserRequiredInfo;
+    return CategoryInfo;
 };
 
-module.exports = userRequiredInfo;
+module.exports = categoryInfo;
