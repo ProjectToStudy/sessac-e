@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { RootState } from './modules';
-import { Main, Join, JoinPlanting, Home, Study } from './pages/index';
+import { Main, Join, JoinPlanting, Home, Study, MyPage, StudyCreate } from './pages/index';
 import { Header, Navigation } from './components/atoms';
 import './App.css';
 
@@ -11,8 +11,15 @@ const setScreenSize = () => {
     document.documentElement.style.setProperty('--vh', `${vh}px`);
 };
 
-const titleList: { [key: string]: string } = {
-    '/study': '스터디 찾기',
+const headerInfoList: { [key: string]: { title: string; isSearch: boolean; } } = {
+    '/study': {
+        title: '스터디 찾기',
+        isSearch: true,
+    },
+    '/my': {
+        title: '나의 스터디',
+        isSearch: false,
+    },
 };
 
 const App = () => {
@@ -20,8 +27,8 @@ const App = () => {
 
     const { isSigning }: any = useSelector((state: RootState) => state.user);
 
-    const noHeaderPages = ['/', '/join', '/login', '/add/1', '/add/2', '/add/3', '/add/4', '/home'];
-    const noNavPages = ['/', '/join', '/login', '/add/1', '/add/2', '/add/3', '/add/4'];
+    const noHeaderPages = ['/', '/join', '/login', '/add/1', '/add/2', '/add/3', '/add/4', '/home', '/study/create'];
+    const noNavPages = ['/', '/join', '/login', '/add/1', '/add/2', '/add/3', '/add/4', '/study/create'];
 
     useEffect(() => {
         setScreenSize();
@@ -29,7 +36,7 @@ const App = () => {
 
     return (
         <>
-            {!(noHeaderPages.includes(location.pathname)) && <Header title={titleList[location.pathname]} />}
+            {!(noHeaderPages.includes(location.pathname)) && <Header props={headerInfoList[location.pathname]} />}
             <Routes>
                 <Route path="/" element={<Main />} />
                 <Route path="/join" element={<Join />} />
@@ -37,6 +44,8 @@ const App = () => {
                 <Route path="/add/:state" element={isSigning ? <JoinPlanting /> : <Navigate to='/join' />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/study" element={<Study />} />
+                <Route path="/study/create" element={<StudyCreate/>} />
+                <Route path="/my" element={<MyPage />} />
             </Routes>
             {!(noNavPages.includes(location.pathname)) && <Navigation />}
         </>
