@@ -5,17 +5,21 @@
   --gray-700: #5C5E60;
   --gray-300: #8D8E92;
   --gray-100: #B6B7B8;
+  --gray-2-light: #F7F7F7;
+  --gray-4-line: #E1E1E1;
+  --gray-6-dark: #8A8A8D;
   --text-gray-300: #949697;
   --line: 1px solid #F0F0F0;
   --error: #F05C2E;
 }
 * {
   box-sizing: border-box;
+  margin: 0;
   padding: 0;
 }
 body {
   margin: 0;
-  font-family: 'Pretendard';
+  font-family: 'Pretendard', serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -23,11 +27,16 @@ a {
   text-decoration: none;
 }
 button {
-  font-family: 'Pretendard';
+  font-family: 'Pretendard', serif;
   border: none;
+  background-color: transparent;
+  cursor: pointer;
 }
 li {
   list-style: none;
+}
+textarea {
+  font-family: 'Pretendard', serif;
 }
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {

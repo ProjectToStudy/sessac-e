@@ -11,6 +11,9 @@ module.exports = {
         user: process.env.USER_NAME,
         password: process.env.PASSWORD,
     },
-    redis: process.env.REDIS_PORT,
+    redis: {
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT,
+    },
     secret: process.env.SECRET,
 };

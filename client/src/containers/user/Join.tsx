@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 import { RootState } from '../../modules';
-import { certCheckAPI, certSendAPI } from '../../modules/user';
+import { initializeKey, certCheckAPI, certSendAPI, setIsSigning, loginAPI, joinAPI } from '../../modules/user';
 import useInputs from '../../hooks/useInputs';
 import JoinComponent from '../../components/user/join/Join';
-import TermsModal from '../../components/atoms/modal/Terms';
+import TermsModal from '../../components/user/join/components/Terms';
+import { setAccessToken } from '../../utils/cookie';
 
 const JoinContainer = () => {
-    const { certCheck, certCheckError }: any = useSelector((state: RootState) => state.user);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const { certCheck, certCheckError, login, loginError, join, joinError }: any = useSelector((state: RootState) => state.user);
 
     const [screenState, setScreenState] = useState(1);
     const [state, handleChange] = useInputs({
@@ -25,6 +29,64 @@ const JoinContainer = () => {
     const [timer, setTimer] = useState<number>(0);
 
     const [isTermsState, setIsTermsState] = useState<boolean>(false);
+    const [checked, setChecked] = useState<string[]>([]);
+
+    useEffect(() => {
+        if (isValid.phone) {
+            setErrors({ ...errors, phone: '' });
+            setIsActiveBtnState({ ...isActiveBtnState, getCode: true });
+        } else if (!isValid.phone) {
+            setIsActiveBtnState({ ...isActiveBtnState, getCode: false });
+            if (timer !== 0) setTimer(0);
+        }
+    }, [isValid]);
+
+    useEffect(() => {
+        if (getCodeCount > 0) {
+            setTimer(300);
+            dispatch(certSendAPI(phone));
+        }
+    }, [getCodeCount]);
+
+    useEffect(() => {
+        const handleTimer = setInterval(() => {
+            setTimer((timer) => timer - 1);
+        }, 1000);
+        if (timer === 0) clearInterval(handleTimer);
+        return () => clearInterval(handleTimer);
+    }, [timer]);
+
+    useEffect(() => {
+        if (certCheck) {
+            dispatch(initializeKey('certCheck'));
+            setErrors({ ...errors, certification: '' });
+            setIsActiveBtnState({ ...isActiveBtnState, start: true });
+        }
+        if (certCheckError) {
+            dispatch(initializeKey('certCheckError'));
+            setErrors({ ...errors, certification: '인증번호가 일치하지 않습니다.' });
+        }
+    }, [certCheck, certCheckError]);
+
+    useEffect(() => {
+        if (login) {
+            setAccessToken(login.result.accessToken);
+            dispatch(initializeKey('login'));
+            navigate('/home');
+        }
+        if (loginError) {
+            if (loginError.code === 401002) setIsTermsState(true);
+            dispatch(initializeKey('loginError'));
+        }
+    }, [login, loginError]);
+
+    useEffect(() => {
+        if (join) {
+            setAccessToken(join.result.accessToken);
+            dispatch(initializeKey('join'));
+            navigate('/add/1');
+        }
+    }, [join, joinError]);
 
     /** 인증 코드 받기 버튼 클릭 핸들러 함수
      * 1. 인증 코드 받기 버튼 비활성화
@@ -57,46 +119,28 @@ const JoinContainer = () => {
         }
     };
 
-    const handleSubmitClick = () => {
-        setIsTermsState(true);
-    }
+    const handleSubmitClick = () => dispatch(loginAPI(phone));
 
     const handleTermsState = () => {
         setIsTermsState(false);
-    }
+    };
 
-    useEffect(() => {
-        if (isValid.phone) {
-            setErrors({ ...errors, phone: '' });
-            setIsActiveBtnState({ ...isActiveBtnState, getCode: true });
-        } else if (!isValid.phone) {
-            setIsActiveBtnState({ ...isActiveBtnState, getCode: false });
-            if (timer !== 0) setTimer(0);
+    const handleCheck = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.id === 'checkAll') {
+            if (e.target.checked) setChecked(['check1', 'check2', 'check3']);
+            else setChecked([]);
+        } else {
+            if (e.target.checked) setChecked([...checked, e.target.id]);
+            else setChecked(checked.filter((id) => id !== e.target.id));
         }
-    }, [isValid]);
+    };
 
-    useEffect(() => {
-        if (getCodeCount > 0) {
-            setTimer(300);
-            dispatch(certSendAPI(phone));
+    const handleTermsSubmitClick = () => {
+        if (checked.length === 3) {
+            dispatch(setIsSigning(true));
+            dispatch(joinAPI(phone));
         }
-    }, [getCodeCount]);
-
-    useEffect(() => {
-        const handleTimer = setInterval(() => {
-            setTimer((timer) => timer - 1);
-        }, 1000);
-        if (timer === 0) clearInterval(handleTimer);
-        return () => clearInterval(handleTimer);
-    }, [timer]);
-
-    useEffect(() => {
-        if (certCheck) {
-            setErrors({ ...errors, certification: '' });
-            setIsActiveBtnState({ ...isActiveBtnState, start: true });
-        }
-        if (certCheckError) setErrors({ ...errors, certification: '인증번호가 일치하지 않습니다.' });
-    }, [certCheck, certCheckError]);
+    };
 
     return (
         <div id="container">
@@ -112,7 +156,14 @@ const JoinContainer = () => {
                 onGetCodeBtnClick={handleGetCodeBtnClick}
                 onSubmitClick={handleSubmitClick}
             />
-            {isTermsState && <TermsModal onCloseClick={handleTermsState} />}
+            {isTermsState && (
+                <TermsModal
+                    checked={checked}
+                    onCheck={handleCheck}
+                    onCloseClick={handleTermsState}
+                    onSubmitClick={handleTermsSubmitClick}
+                />
+            )}
         </div>
     );
 };

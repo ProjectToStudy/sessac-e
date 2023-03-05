@@ -101,7 +101,7 @@
   & input {
     display: none;
     &:checked + label {
-      background: url('../../public/images/check.svg');
+      background: url('../../public/images/checked.svg');
       background-size: 20px;
     }
   }
