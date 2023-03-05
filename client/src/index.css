@@ -35,6 +35,9 @@ button {
 li {
   list-style: none;
 }
+textarea {
+  font-family: 'Pretendard', serif;
+}
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
