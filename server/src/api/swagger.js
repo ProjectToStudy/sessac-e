@@ -12,18 +12,6 @@ const options = {
         },
         // host: 'localhost:8000',
         // basePath: '/',
-        components: {
-            securitySchemes: {
-                authorization: {
-                    type: 'http',
-                    scheme: 'bearer',
-                    bearerFormat: 'JWT',
-                }
-            }
-        },
-        // security: [{
-        //     authorization: []
-        // }],
         servers: [
             {
                 url: '/',

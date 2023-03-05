@@ -9,7 +9,6 @@ const secret = config.secret ? config.secret : '';
 function sign(user) {
     const payload = {
         // access token 에 들어갈 payload
-        id: user.id,
         phone: user.phone,
     };
 
@@ -19,10 +18,6 @@ function sign(user) {
     });
 }
 
-const decode = (token) => {
-    return jwt.decode(token, {complete: true});
-}
-
 function verify(token) {
     let decoded = null;
 
@@ -30,10 +25,9 @@ function verify(token) {
         decoded = jwt.verify(token, secret);
         return {
             ok: true,
-            decoded,
+            phone: decoded.phone,
         };
     } catch (err) {
-        console.log(err);
         return {
             ok: false,
             message: err.message,
@@ -44,20 +38,18 @@ function verify(token) {
 function refresh() {
     return jwt.sign({}, secret, {
         algorithm: 'HS256',
-        expiresIn: '1h',
+        expiresIn: '14d',
     });
 }
 
-async function refreshVerify(token, id) {
+async function refreshVerify(token, phone) {
     const getAsync = promisify(redisClient.get).bind(redisClient);
 
-    console.log('refreshVerify');
     try {
-        const data = await getAsync(id);
-        console.log(data);
+        const data = await getAsync(phone);
         if (token === data) {
             try {
-                jwt.verify(data, secret);
+                jwt.verify(token, secret);
                 return true;
             } catch (err) {
                 return false;
@@ -72,8 +64,7 @@ async function refreshVerify(token, id) {
 
 module.exports = {
     sign,
-    decode,
     verify,
     refresh,
     refreshVerify,
-};
+}

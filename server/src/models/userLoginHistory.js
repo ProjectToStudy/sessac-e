@@ -1,9 +1,10 @@
 const userLoginHistory = (sequelize, Sequelize) => {
     const UserLoginHistory = sequelize.define('userLoginHistory', {
-        userId: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-        },
+        // id 자동생성
+        // userId: {
+        //     type: Sequelize.NUMBER,
+        //     allowNull: false,
+        // },
         createdAt: {
             type: Sequelize.DATE,
             allowNull: false,
@@ -21,7 +22,11 @@ const userLoginHistory = (sequelize, Sequelize) => {
         freezeTableName: true,
     });
 
+    UserLoginHistory.associate = models => {
+        UserLoginHistory.belongsTo(models.userRequiredInfo);
+    };
+
     return UserLoginHistory;
-};
+}
 
 module.exports = userLoginHistory;
