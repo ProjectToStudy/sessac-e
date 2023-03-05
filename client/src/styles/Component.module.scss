@@ -1,154 +1,6 @@
-.header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  width: 100%;
-  height: 56px;
-  background-color: white;
-}
-.header_inner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  width: 100%;
-  max-width: 428px;
-  height: 100%;
-  padding: 0 8.5px;
-  border-bottom: 1px solid #F2F2F2;
-  & h3 {
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 22px;
-    color: black;
-  }
-  & button {
-    width: 24px;
-    height: 24px;
-    border: none;
-    &[name=back] {
-      background: url("../../public/images/arrow-back-24.svg") 24px;
-    }
-    &[name=search] {
-      background: url("../../public/images/search.svg") 24px;
-    }
-    &[name=complete] {
-      width: 32px;
-      height: 22px;
-      font-size: 18px;
-      line-height: 22px;
-      font-weight: 500;
-      color: var(--primary);
-    }
-  }
-}
-header {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  position: sticky;
-  bottom: 0;
-  width: 100%;
-  height: calc(56px + env(safe-area-inset-bottom));
-  background-color: white;
-  z-index: 9;
-  & nav {
-    width: 100%;
-    max-width: 428px;
-  }
-  & nav, & ul, & li {
-    height: 100%;
-  }
-}
-.nav_list {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 56px;
-  padding: 0 48px;
-  border-top: var(--line)
-}
-.nav_item {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 2px;
-  padding-bottom: 8px;
-  font-size: 10px;
-  font-weight: 500;
-  line-height: 100%;
-  letter-spacing: -0.01em;
-  color: black;
-  cursor: pointer;
-  & a {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  & a::after {
-    content: '';
-    width: 24px;
-    height: 24px;
-  }
-  & a[id=home]::after {
-    background: url("../../public/images/nav/home.svg") 24px;
-  }
-  & a[id=studyList]::after {
-    background: url("../../public/images/nav/studylist.svg") 24px;
-  }
-  & a[id=myStudy]::after {
-    background: url("../../public/images/nav/mystudy.svg") 24px;
-  }
-  & a[id=myPage]::after {
-    background: url("../../public/images/nav/mypage.svg") 24px;
-  }
-  & a.active {
-    &::before {
-      content: '';
-      width: 2px;
-      height: 2px;
-      background-color: var(--primary);
-    }
-    &[id=home]::after {
-      background: url("../../public/images/nav/home-active.svg") 24px;
-    }
-    &[id=studyList]::after {
-      background: url("../../public/images/nav/studylist-active.svg") 24px;
-    }
-    &[id=myStudy]::after {
-      background: url("../../public/images/nav/mystudy-active.svg") 24px;
-    }
-    &[id=myPage]::after {
-      background: url("../../public/images/nav/mypage-active.svg") 24px;
-    }
-  }
-}
 .input_area {
   display: flex;
   flex-direction: column;
-  & input {
-    width: 100%;
-    height: 48px;
-    padding: 14.5px 10px;
-    border: 1px solid var(--gray-100);
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 19px;
-    color: var(--gray-900);
-
-    &::placeholder {
-      color: var(--gray-100);
-    }
-    &:focus {
-      outline: none;
-      border-color: var(--gray-900);
-    }
-  }
 }
 .error, .explanation {
   height: 37px;
@@ -164,6 +16,26 @@ header {
   padding-top: 7px;
   font-weight: 400;
   color: var(--gray-100);
+}
+
+input {
+  width: 100%;
+  height: 48px;
+  padding: 14.5px 10px;
+  border: 1px solid var(--gray-100);
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19px;
+  color: var(--gray-900);
+
+  &::placeholder {
+    color: var(--gray-100);
+  }
+  &:focus {
+    outline: none;
+    border-color: var(--gray-900);
+  }
 }
 
 .button {

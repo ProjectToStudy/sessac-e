@@ -16,27 +16,17 @@ const errorHandler = (err, req, res) => {
             // 데이터 오류
             message = '인증번호 저장 및 호출에 실패했습니다';
             break;
-        case 401001:
-            message = '인증번호가 입력되지 않았습니다';
-            break;
         case 401101:
             message = '인증번호가 잘못되었습니다';
             break;
-        case 401201:
-            message = '유효시간이 지난 인증번호입니다';
-            break;
-        case 401301:
-            message = '인증번호 입력 횟수를 초과했습니다';
+        case 401001:
+            message = '인증번호가 입력되지 않았습니다';
             break;
         case 400102:
-            // 데이터 오류
             message = '회원정보 저장 및 호출에 실패했습니다';
             break;
         case 401002:
             message = '회원가입이 필요합니다';
-            break;
-        case 401102:
-            message = '회원정보를 가져올 수 없습니다';
             break;
         case 404000:
             message = '존재하지 않는 URL 입니다';
@@ -55,8 +45,8 @@ const errorHandler = (err, req, res) => {
             message,
             result,
     });
-};
+}
 
 module.exports = {
     errorHandler,
-};
+}

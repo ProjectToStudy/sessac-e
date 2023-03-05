@@ -2,18 +2,16 @@ const send = require('../utils/sendNotification');
 const db = require('../models');
 const jwt = require('../utils/jwt');
 const redisClient = require('../utils/redis');
-const datetime = require('../utils/datetime');
 
 async function sendCertNumber(data) {
     const number = generateRandomNumber();
-    const phone = data.phone.replace(/ /g, '');
     const body = {
         type: 'SMS',
         from: '01052079385', // 사전 등록된 번호로만 발신 가능
         content: `[새싹이] 인증번호는 [${number}] 입니다 :)`,
         messages: [
             {
-                to: phone,
+                to: data.phone,
                 subject: 'a',
                 contents: 'b',
             }
@@ -31,7 +29,7 @@ async function sendCertNumber(data) {
 
     try {
         await db.userCertificationHistory.create({
-            phone,
+            phone: data.phone,
             certificationNumber: number,
         });
     } catch (err) {
@@ -47,11 +45,9 @@ async function sendCertNumber(data) {
 }
 
 async function testCertNumber(data) {
-    const phone = data.phone.replace(/ /g, '');
-
     try {
         await db.userCertificationHistory.create({
-            phone,
+            phone: data.phone,
             certificationNumber: 123456,
         });
     } catch (err) {
@@ -67,11 +63,13 @@ async function testCertNumber(data) {
 }
 
 async function checkCertNumber(data) {
-    const phone = data.phone.replace(/ /g, '');
+    // TODO: 맞는 번호인지 체크해야 함
+    // phone 번호로 컬럼 가져오기 -> 여러개인 경우? 무조건 가장 최신 데이터
+    // 현재 시간과 비교해서 입력 시간이 3분 이상 차이나면 유효하지 않다는 에러 돌려주기
     try {
         const result = await db.userCertificationHistory.findAll({
             where: {
-                phone,
+                phone: data.phone,
             },
             order: [
                 ['createdAt', 'DESC']
@@ -82,50 +80,19 @@ async function checkCertNumber(data) {
         if (!data.certificationNumber) {
             return {
                 code: 401001,
-            };
-        }
-
-        if (!datetime.compareToCurrentTime(datetime.addDatetime('s', 120, result[0].createdAt))) {
-            // 인증번호 유효시간 지남
-            return {
-                code : 401201,
-            };
+            }
         }
 
         if (result[0].certificationNumber !== data.certificationNumber) {
-            if (result[0].failCount > 4) {
-                // 인증번호 입력 횟수 5회 초과
-                return {
-                    code: 401301,
-                };
-            }
-
-            await db.userCertificationHistory.update({
-                failCount: result[0].failCount + 1,
-            }, {
-                where: {
-                    id: result[0].id,
-                },
-            });
-
             return {
-                code: 401101,
-            };
+                code: 401101
+            }
         }
-
-        await db.userCertificationHistory.update({
-            isCertified: true,
-        }, {
-            where: {
-                id: result[0].id,
-            },
-        });
-
     } catch (err) {
         console.log(err);
         return {
             code: 400101,
-        };
+        }
     }
 
     return {
@@ -139,12 +106,11 @@ function generateRandomNumber() {
 }
 
 async function getUser(data) {
-    const phone = data.phone.replace(/ /g, '');
     try {
         const result = await db.userRequiredInfo.findOne({
             attributes: ['id', 'phone'],
             where: {
-                phone,
+                phone: data.phone,
                 isActive: true,
             },
             raw: true,
@@ -155,29 +121,25 @@ async function getUser(data) {
                 code: 200000,
                 message: 'success',
                 result
-            };
+            }
         } else {
             return {
                 code: 401002,
-            };
+            }
         }
     } catch (err) {
         console.log(err);
         return {
             code: 400102,
-        };
+        }
     }
 }
 
 async function createUser(data) {
-    const phone = data.phone.replace(/ /g, '');
     try {
         const user = await db.userRequiredInfo.create({
-            phone,
+            phone: data.phone,
         });
-
-        // 해당 회원에 대한 추가 정보 테이블도 같이 생성
-        user.createUserAdditionalInfo();
 
         return {
             code: 201000,
@@ -186,94 +148,31 @@ async function createUser(data) {
                 id: user.id,
                 phone: user.phone,
             }
-        };
+        }
     } catch (err) {
         console.log(err);
         return {
             code: 400102,
-        };
+        }
     }
 
 }
 
 async function loginUser(data) {
-    try {
-        // token 발급
-        const accessToken = jwt.sign(data);
-        const refreshToken = jwt.refresh();
+    // token 발급
+    const accessToken = jwt.sign(data);
+    const refreshToken = jwt.refresh();
 
-        // refreshToken redis 저장
-        redisClient.set(data.id, refreshToken);
+    // refreshToken redis 저장
+    redisClient.set(data.phone, refreshToken);
 
-        // 로그인 성공시 로그인 히스토리 생성
-        await db.userLoginHistory.create({
-            userId: data.id,
-        });
-
-        return {
-            code: 200000,
-            message: 'success',
-            result: {
-                accessToken,
-                // refreshToken,
-            }
-        };
-    } catch (err) {
-        console.log(err);
-        return {
-            code: 400102,
-        };
-    }
-}
-
-async function getUserInfo(data) {
-    try {
-        const result = await db.userAdditionalInfo.findOne({
-            where: {
-                userRequiredInfoId: data.id,
-            },
-            raw: true,
-        });
-
-        if (!result) {
-            return {
-                code: 401102,
-            };
+    return {
+        code: 200000,
+        message: 'success',
+        result: {
+            accessToken,
+            refreshToken,
         }
-
-        return {
-            code: 200000,
-            message: 'success',
-            result,
-        };
-
-    } catch (err) {
-        console.log(err);
-        return {
-            code: 400102,
-        };
-    }
-}
-
-async function updateUserInfo(user, data) {
-    try {
-        console.log(data);
-        await db.userAdditionalInfo.update(data, {
-            where: {
-                userRequiredInfoId: user.id,
-            },
-            raw: true,
-        });
-
-        return {
-            code: 200000,
-            message: 'success',
-        };
-    } catch (err) {
-        console.log(err);
-        return {
-            code: 400102,
-        };
     }
 }
 
@@ -284,6 +183,4 @@ module.exports = {
     getUser,
     createUser,
     loginUser,
-    getUserInfo,
-    updateUserInfo,
-};
+}
