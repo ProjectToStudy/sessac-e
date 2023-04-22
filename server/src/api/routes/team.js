@@ -7,11 +7,13 @@ const teamController = require('../../controllers/team');
 const authMiddleware = require('../../middleware/auth');
 
 const teamRouter = ({ app }) => {
-    app.use('/api/v1/team', route);
+    app.use('/api/v1/teams', route);
+
+    route.get('', teamController.getTeams);
 
     /**
      * @swagger
-     * /api/v1/team/categories:
+     * /api/v1/teams/categories:
      *  get:
      *      tags:
      *          - team

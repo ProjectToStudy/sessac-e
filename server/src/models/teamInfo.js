@@ -1,6 +1,11 @@
+const {DataTypes} = require("sequelize");
 const teamInfo = (sequelize, Sequelize) => {
     const TeamInfo = sequelize.define('teamInfo', {
         // id 자동생성
+        createdUserId: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
         name: {
             type: Sequelize.STRING(20),
             allowNull: false,
@@ -16,9 +21,9 @@ const teamInfo = (sequelize, Sequelize) => {
             defaultValue: '',
         },
         channel: {
-            type: Sequelize.BOOLEAN,
+            type: Sequelize.JSON,
             allowNull: false,
-            defaultValue: true,
+            defaultValue: [1, 0],
         },
         capacity: {
             type: Sequelize.INTEGER,
@@ -29,6 +34,32 @@ const teamInfo = (sequelize, Sequelize) => {
             type: Sequelize.BOOLEAN,
             allowNull: false,
             defaultValue: true,
+        },
+        // 모집 시작 기간
+        recruitStartDate: {
+            type: 'TIMESTAMP',
+            allowNull: true,
+        },
+        // 모집 마감 기간
+        recruitEndDate: {
+            type: 'TIMESTAMP',
+            allowNull: true,
+        },
+        // 모집 진행중 여부
+        isRecruit: {
+            type: Sequelize.BOOLEAN,
+            allowNull: false,
+            defaultValue: true,
+        },
+        // 스터디 시작 기간
+        startDate: {
+            type: 'TIMESTAMP',
+            allowNull: true,
+        },
+        // 스터디 마감 기간
+        endDate: {
+            type: 'TIMESTAMP',
+            allowNull: true,
         },
         isValid: {
             type: Sequelize.BOOLEAN,
@@ -56,9 +87,9 @@ const teamInfo = (sequelize, Sequelize) => {
         teamInfo.belongsTo(models.teamAreaInfo);
     }
 
-    teamInfo.associate = models => {
-        teamInfo.belongsTo(models.teamStatusInfo);
-    }
+    // teamInfo.associate = models => {
+    //     teamInfo.belongsTo(models.teamStatusInfo);
+    // }
 
     TeamInfo.associate = models => {
         TeamInfo.hasOne(models.teamAdditionalInfo);

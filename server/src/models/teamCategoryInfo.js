@@ -5,6 +5,10 @@ const teamCategoryInfo = (sequelize, Sequelize) => {
             type: Sequelize.STRING(20),
             allowNull: false,
         },
+        teamId: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
         createdAt: {
             type: 'TIMESTAMP',
             allowNull: true,
@@ -21,10 +25,6 @@ const teamCategoryInfo = (sequelize, Sequelize) => {
         timestamps: false,
         freezeTableName: true,
     });
-
-    TeamCategoryInfo.associate = models => {
-        TeamCategoryInfo.hasMany(models.teamInfo);
-    }
 
     return TeamCategoryInfo;
 };

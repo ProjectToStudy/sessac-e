@@ -15,10 +15,10 @@ const teamStatusInfo = (sequelize, Sequelize) => {
         timestamps: false,
         freezeTableName: true,
     });
-
-    TeamStatusInfo.associate = models => {
-        TeamStatusInfo.hasMany(models.teamInfo);
-    }
+    //
+    // TeamStatusInfo.associate = models => {
+    //     TeamStatusInfo.hasMany(models.teamInfo);
+    // }
 
     return TeamStatusInfo;
 };

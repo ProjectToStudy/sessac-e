@@ -22,6 +22,10 @@ const teamPhotoInfo = (sequelize, Sequelize) => {
             allowNull: true,
             onUpdate: Sequelize.literal('CURRENT_TIMESTAMP'),
         },
+        deletedAt: {
+            type: 'TIMESTAMP',
+            allowNull: true,
+        }
     }, {
         charset: 'utf8',
         collate: 'utf8_general_ci',
