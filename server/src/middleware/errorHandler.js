@@ -42,7 +42,7 @@ const errorHandler = (err, req, res) => {
             message = '존재하지 않는 URL 입니다';
             break;
         default:
-            message = '';
+            message = err.message ? err.message : '서버 에러가 발생했습니다';
             break;
     }
 
