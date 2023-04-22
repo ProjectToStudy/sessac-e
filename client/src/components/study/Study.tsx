@@ -3,6 +3,7 @@ import { ReactComponent as Heart } from '../../assets/study/heart.svg';
 
 export interface CategoryItemType {
     id: number;
+    type: string;
     name: string;
     isValid: boolean;
 }
@@ -63,7 +64,13 @@ const StudyComponent = ({ categoryList, studyList, userStudyInfo }: { categoryLi
     return (
         <div id="component" className={styles.component}>
             <div className={styles.filter_area}>
-                <ul className={styles.categoryList}>
+                <button type="button" className={styles.sort}>최신순</button>
+                <hr />
+                <ul className={styles.filter_list}>
+                    <li role="button" className={`${styles.filter_item} ${styles.active}`}>전체</li>
+                    {categoryList.map((item) => (
+                        item.type === 'purpose' && <li key={item.id} role="button" className={styles.filter_item}>{item.name}</li>
+                    ))}
                 </ul>
             </div>
             {(categoryList.length && studyList.length) && <StudyList categoryList={categoryList} studyList={studyList} likes={userStudyInfo.likes} />}
