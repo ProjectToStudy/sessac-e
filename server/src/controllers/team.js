@@ -1,8 +1,8 @@
-const team = require('../services/team');
+const teamService = require('../services/team');
 
 const getTeams = async (req, res, next) => {
     try {
-        const result = await team.findAllTeams(req.query);
+        const result = await teamService.findAllTeams(req.query);
 
         if (result.message !== 'success') {
             return next(result);
@@ -16,7 +16,7 @@ const getTeams = async (req, res, next) => {
 
 const getCategories = async (req, res, next) => {
     try {
-        const result = await team.findAllCategories(req.query);
+        const result = await teamService.findAllCategories(req.query);
 
         if (result.message !== 'success') {
             return next(result);

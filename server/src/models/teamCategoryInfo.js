@@ -5,7 +5,7 @@ const teamCategoryInfo = (sequelize, Sequelize) => {
             type: Sequelize.STRING(20),
             allowNull: false,
         },
-        teamId: {
+        teamInfoId: {
             type: Sequelize.INTEGER,
             allowNull: false,
         },

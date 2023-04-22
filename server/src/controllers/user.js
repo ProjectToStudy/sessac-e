@@ -1,289 +1,146 @@
-const send = require('../utils/sendNotification');
-const db = require('../models');
-const jwt = require('../utils/jwt');
-const redisClient = require('../utils/redis');
-const datetime = require('../utils/datetime');
+const userService = require('../services/user');
 
-async function sendCertNumber(data) {
-    const number = generateRandomNumber();
-    const phone = data.phone.replace(/ /g, '');
-    const body = {
-        type: 'SMS',
-        from: '01052079385', // 사전 등록된 번호로만 발신 가능
-        content: `[새싹이] 인증번호는 [${number}] 입니다 :)`,
-        messages: [
-            {
-                to: phone,
-                subject: 'a',
-                contents: 'b',
-            }
-        ]
-    };
-
-    const result = await send.sendSms(body);
-
-    if (result.statusCode !== '202') {
-        return {
-            code: 400301,
-            result,
-        };
-    }
-
+const getUserInfo = async (req, res, next) => {
     try {
-        await db.userCertificationHistory.create({
-            phone,
-            certificationNumber: number,
-        });
-    } catch (err) {
-        return {
-            code: 400101,
-        };
-    }
+        const result = await userService.getUserInfo(req.user);
 
-    return {
-        code: 200000,
-        message: 'success',
-    };
-}
-
-async function testCertNumber(data) {
-    const phone = data.phone.replace(/ /g, '');
-
-    try {
-        await db.userCertificationHistory.create({
-            phone,
-            certificationNumber: 123456,
-        });
-    } catch (err) {
-        return {
-            code: 400101,
-        };
-    }
-
-    return {
-        code: 200000,
-        message: 'success',
-    };
-}
-
-async function checkCertNumber(data) {
-    const phone = data.phone.replace(/ /g, '');
-    try {
-        const result = await db.userCertificationHistory.findAll({
-            where: {
-                phone,
-            },
-            order: [
-                ['createdAt', 'DESC']
-            ],
-            raw: true,
-        });
-
-        if (!data.certificationNumber) {
-            return {
-                code: 401001,
-            };
+        if (result.message !== 'success') {
+            return next(result);
         }
 
-        if (!datetime.compareToCurrentTime(datetime.addDatetime('s', 120, result[0].createdAt))) {
-            // 인증번호 유효시간 지남
-            return {
-                code : 401201,
-            };
+        return res.status(200).json(result);
+    } catch (err) {
+        return next(err);
+    }
+}
+
+const getUserTeamsInfo = async (req, res, next) => {
+    try {
+        const result = await userService.getUserTeamsInfo(req.user);
+
+        if (result.message !== 'success') {
+            return next(result);
         }
 
-        if (result[0].certificationNumber !== data.certificationNumber) {
-            if (result[0].failCount > 4) {
-                // 인증번호 입력 횟수 5회 초과
-                return {
-                    code: 401301,
-                };
-            }
+        return res.status(200).json(result);
+    } catch (err) {
+        return next(err);
+    }
+}
 
-            await db.userCertificationHistory.update({
-                failCount: result[0].failCount + 1,
-            }, {
-                where: {
-                    id: result[0].id,
-                },
-            });
+const updateUserInfo = async (req, res, next) => {
+    try {
+        const result = await userService.updateUserInfo(req.user, req.body.data);
 
-            return {
-                code: 401101,
-            };
+        if (result.message !== 'success') {
+            return next(result);
         }
 
-        await db.userCertificationHistory.update({
-            isCertified: true,
-        }, {
-            where: {
-                id: result[0].id,
-            },
-        });
-
+        return res.status(200).json(result);
     } catch (err) {
-        console.log(err);
-        return {
-            code: 400101,
-        };
+        return next(err);
     }
+};
 
-    return {
-        code: 200000,
-        message: 'success',
-    };
-}
-
-function generateRandomNumber() {
-    return Math.floor(Math.random() * 1000000);
-}
-
-async function getUser(data) {
-    const phone = data.phone.replace(/ /g, '');
+const loginUser = async (req, res, next) => {
     try {
-        const result = await db.userRequiredInfo.findOne({
-            attributes: ['id', 'phone'],
-            where: {
-                phone,
-                isActive: true,
-            },
-            raw: true,
-        });
+        const userResult = await userService.getUser(req.body);
 
-        if (result) {
-            return {
-                code: 200000,
-                message: 'success',
-                result
-            };
-        } else {
-            return {
-                code: 401002,
-            };
-        }
-    } catch (err) {
-        console.log(err);
-        return {
-            code: 400102,
-        };
-    }
-}
-
-async function createUser(data) {
-    const phone = data.phone.replace(/ /g, '');
-    try {
-        const user = await db.userRequiredInfo.create({
-            phone,
-        });
-
-        // 해당 회원에 대한 추가 정보 테이블도 같이 생성
-        user.createUserAdditionalInfo();
-
-        return {
-            code: 201000,
-            message: 'success',
-            result: {
-                id: user.id,
-                phone: user.phone,
-            }
-        };
-    } catch (err) {
-        console.log(err);
-        return {
-            code: 400102,
-        };
-    }
-
-}
-
-async function loginUser(data) {
-    try {
-        // token 발급
-        const accessToken = jwt.sign(data);
-        const refreshToken = jwt.refresh();
-
-        // refreshToken redis 저장
-        redisClient.set(data.id, refreshToken);
-
-        // 로그인 성공시 로그인 히스토리 생성
-        await db.userLoginHistory.create({
-            userId: data.id,
-        });
-
-        return {
-            code: 200000,
-            message: 'success',
-            result: {
-                accessToken,
-                // refreshToken,
-            }
-        };
-    } catch (err) {
-        console.log(err);
-        return {
-            code: 400102,
-        };
-    }
-}
-
-async function getUserInfo(data) {
-    try {
-        const result = await db.userAdditionalInfo.findOne({
-            where: {
-                userRequiredInfoId: data.id,
-            },
-            raw: true,
-        });
-
-        if (!result) {
-            return {
-                code: 401102,
-            };
+        if (userResult.message !== 'success') {
+            return next(userResult);
         }
 
-        return {
-            code: 200000,
-            message: 'success',
-            result,
-        };
+        const loginResult = await userService.loginUser(userResult.result);
 
+        if (loginResult.message !== 'success') {
+            return next(loginResult);
+        }
+
+        // 쿠키 저장
+        const accessToken = loginResult.result.accessToken;
+        // res.setHeader('Set-Cookie', `accessToken=${accessToken}; path=/; secure=true; samesite=none`);
+        res.setHeader('Set-Cookie', `accessToken=${accessToken}; path=/;`);
+
+        return res.status(200).json(loginResult);
     } catch (err) {
-        console.log(err);
-        return {
-            code: 400102,
-        };
+        return next(err);
     }
-}
 
-async function updateUserInfo(user, data) {
+};
+
+const joinUser = async (req, res, next) => {
     try {
-        console.log(data);
-        await db.userAdditionalInfo.update(data, {
-            where: {
-                userRequiredInfoId: user.id,
-            },
-            raw: true,
-        });
+        const userResult = await userService.createUser(req.body);
 
-        return {
-            code: 200000,
-            message: 'success',
-        };
+        if (userResult.message !== 'success') {
+            return next(userResult);
+        }
+
+        const loginResult = await userService.loginUser(userResult.result);
+
+        if (loginResult.message !== 'success') {
+            return next(loginResult);
+        }
+
+        // 쿠키 저장
+        const accessToken = loginResult.result.accessToken;
+        // res.setHeader('Set-Cookie', `accessToken=${accessToken}; Path=/; secure=true; samesite=none`);
+        res.setHeader('Set-Cookie', `accessToken=${accessToken}; Path=/;`);
+
+        return res.status(200).json(loginResult);
     } catch (err) {
-        console.log(err);
-        return {
-            code: 400102,
-        };
+        return next(err);
+    }
+};
+
+const testCertNumber = async (req, res, next) => {
+    try {
+        const result = await userService.testCertNumber(req.body);
+
+        if (result.message !== 'success') {
+            return next(result);
+        }
+        return res.status(200).json(result);
+    } catch (err) {
+        return next(err);
+    }
+};
+
+const sendCertNumber = async (req, res, next) => {
+    try {
+        const result = await userService.sendCertNumber(req.body);
+
+        if (result.message !== 'success') {
+            return next(result);
+        }
+
+        return res.status(200).json(result);
+    } catch (err) {
+        return next(err);
+    }
+};
+
+const checkCertNumber = async (req, res, next) => {
+    try {
+        const result = await userService.checkCertNumber(req.body);
+
+        if (result.message !== 'success') {
+            return next(result);
+        }
+
+        return res.status(200).json(result);
+    } catch (err) {
+        return next(err);
     }
 }
 
 module.exports = {
-    sendCertNumber,
-    testCertNumber,
-    checkCertNumber,
-    getUser,
-    createUser,
-    loginUser,
     getUserInfo,
+    getUserTeamsInfo,
+    loginUser,
+    joinUser,
     updateUserInfo,
+    testCertNumber,
+    sendCertNumber,
+    checkCertNumber,
 };

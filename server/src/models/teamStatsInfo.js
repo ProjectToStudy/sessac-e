@@ -5,7 +5,7 @@ const teamStatsInfo = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: false,
         },
-        teamId: {
+        teamInfoId: {
             type: Sequelize.INTEGER,
             allowNull: false,
         },
@@ -34,7 +34,7 @@ const teamStatsInfo = (sequelize, Sequelize) => {
         indexes: [
             {
                 unique: true,
-                fields: ['userId', 'teamId', 'type', 'deletedAt']
+                fields: ['userId', 'teamInfoId', 'type', 'deletedAt']
             },
         ],
         freezeTableName: true,
