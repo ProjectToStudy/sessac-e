@@ -34,10 +34,6 @@ const JoinContainer = () => {
     const [checked, setChecked] = useState<string[]>([]);
 
     useEffect(() => {
-        console.log(isActiveBtnState);
-    }, [isActiveBtnState]);
-
-    useEffect(() => {
         if (isValid.phone) {
             setErrors({ ...errors, phone: '' });
             setIsActiveBtnState({ ...isActiveBtnState, getCode: true });
@@ -104,7 +100,6 @@ const JoinContainer = () => {
      * 4. 인증 코드 보내는 api 호출
      */
     const handleGetCodeBtnClick = () => {
-        console.log(getCodeCount);
         setIsActiveBtnState({ ...isActiveBtnState, getCode: false });
         if (getCodeCount < 5) setGetCodeCount(getCodeCount + 1);
         else alert('6회 이상 시도 불가');

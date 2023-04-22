@@ -1,26 +1,57 @@
 .component {
   display: flex;
   flex-direction: column;
+  min-height: calc(100dvh - 112px);
+}
+.filter_area {
+  display: flex;
   padding: 15px 0 15px 16px;
 }
-.list {
+
+.study_list {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding: 7px 16px;
 }
 .item {
   display: flex;
   gap: 10px;
 }
 .thumbnail_area {
+  position: relative;
   width: 110px;
   height: 110px;
+  .thumbnail {
+    width: 110px;
+    height: 110px;
+    border-radius: 6px;
+  }
+  .new {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 34px;
+    height: 18px;
+    border-radius: 6px;
+    background-color: white;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.06);
+    font-size: 10px;
+    line-height: 10px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    color: var(--primary);
+  }
+  & svg {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+  }
 }
-.thumbnail {
-  width: 110px;
-  height: 110px;
-  border-radius: 6px;
-}
+
 .info {
   display: flex;
   flex-direction: column;

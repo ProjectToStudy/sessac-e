@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { RootState } from './modules';
-import { Main, Join, JoinPlanting, Home, Study, MyPage, StudyCreate } from './pages/index';
+import { Main, Join, JoinPlanting, Home, Study, MyPage, StudyCreate, MyStudy } from './pages/index';
 import { Header, Navigation } from './components/atoms';
 import './App.css';
 
@@ -10,8 +10,12 @@ const headerInfoList: { [key: string]: { title: string; isSearch: boolean } } = 
         title: '스터디 찾기',
         isSearch: true,
     },
-    '/me': {
+    '/my': {
         title: '나의 스터디',
+        isSearch: false,
+    },
+    '/me': {
+        title: '마이 페이지',
         isSearch: false,
     },
 };
@@ -35,6 +39,7 @@ const App = () => {
                 <Route path="/home" element={<Home />} />
                 <Route path="/study" element={<Study />} />
                 <Route path="/study/create" element={<StudyCreate />} />
+                <Route path="/my" element={<MyStudy />} />
                 <Route path="/me" element={<MyPage />} />
             </Routes>
             {!noNavPages.includes(location.pathname) && <Navigation />}

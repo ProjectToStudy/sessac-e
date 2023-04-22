@@ -1,22 +1,42 @@
 import styles from '../../styles/Study.module.scss';
+import { ReactComponent as Heart } from '../../assets/study/heart.svg';
+
+export interface CategoryItemType {
+    id: number;
+    name: string;
+    isValid: boolean;
+}
 
 export interface StudyItemType {
+    id: number;
+    isValid: number;
     name: string;
+    category: number[];
+    imageUrl: string;
+    isNew: number;
     recruitStartDate: string;
     recruitEndDate: string;
 }
-const StudyItem = ({ props }: { props: StudyItemType }) => {
-    const { name, recruitStartDate, recruitEndDate } = props;
+const StudyItem = ({ categoryList, study, likes }: { categoryList: CategoryItemType[], study: StudyItemType, likes: number[] }) => {
+    const { id, name, category, imageUrl, isNew, recruitStartDate, recruitEndDate } = study;
+
+    const dateFormat = (date: string) => {
+        const splitDate = date.split('T')[0].split('-');
+        return `${splitDate[1]}월 ${splitDate[2]}일`
+    }
+
     return (
         <li className={styles.item}>
             <div className={styles.thumbnail_area}>
-                <img src="" alt="image" className={styles.thumbnail} />
+                <img src={imageUrl} alt="" className={styles.thumbnail} />
+                {isNew && <span className={styles.new}>NEW</span>}
+                {likes.includes(id) && <Heart />}
             </div>
             <div className={styles.info}>
-                <span className={styles.category}>mainCategory &gt; subCategory</span>
+                <span className={styles.category}>{categoryList[category[0] + 1].name} &gt; {categoryList[category[1] + 1].name}</span>
                 <p className={styles.title}>{name}</p>
                 <span className={styles.date}>
-                    {recruitStartDate} ~ {recruitEndDate}
+                    {dateFormat(recruitStartDate)} ~ {dateFormat(recruitEndDate)}
                 </span>
                 <span className={styles.number}>총 0회 진행</span>
                 {/*{recommend && (*/}
@@ -29,20 +49,24 @@ const StudyItem = ({ props }: { props: StudyItemType }) => {
     );
 };
 
-const StudyList = ({ studyList }: { studyList: StudyItemType[] }) => {
+const StudyList = ({ categoryList, studyList, likes }: { categoryList: CategoryItemType[], studyList: StudyItemType[], likes: number[] }) => {
     return (
-        <ul className={styles.list}>
+        <ul className={styles.study_list}>
             {studyList.map((item: StudyItemType, index: number) => (
-                <StudyItem key={index} props={item} />
+                item.isValid && <StudyItem key={index} categoryList={categoryList} study={item} likes={likes} />
             ))}
         </ul>
     );
 };
 
-const StudyComponent = ({ studyList }: { studyList: StudyItemType[] }) => {
+const StudyComponent = ({ categoryList, studyList, userStudyInfo }: { categoryList: CategoryItemType[], studyList: StudyItemType[], userStudyInfo: { likes: number[], hits: number[] } }) => {
     return (
         <div id="component" className={styles.component}>
-            <StudyList studyList={studyList} />
+            <div className={styles.filter_area}>
+                <ul className={styles.categoryList}>
+                </ul>
+            </div>
+            {(categoryList.length && studyList.length) && <StudyList categoryList={categoryList} studyList={studyList} likes={userStudyInfo.likes} />}
         </div>
     );
 };
