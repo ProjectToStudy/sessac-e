@@ -13,3 +13,7 @@ export { ReactComponent as Award } from './planting/award.svg';
 export { ReactComponent as Cap } from './planting/cap.svg';
 export { ReactComponent as Info } from './planting/info.svg';
 export { ReactComponent as Crescent } from './planting/crescent.svg';
+export { ReactComponent as Motivation } from './home/motivation.svg';
+export { ReactComponent as InfoSharing } from './home/info-sharing.svg';
+export { ReactComponent as Hackathon } from './home/hackathon.svg';
+export { ReactComponent as Certificate } from './home/certificate.svg';
