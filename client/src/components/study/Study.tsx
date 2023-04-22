@@ -1,8 +1,10 @@
 import styles from '../../styles/Study.module.scss';
 import { ReactComponent as Heart } from '../../assets/study/heart.svg';
+import { ReactComponent as EmptyHeart } from '../../assets/study/empty-heart.svg';
 
 export interface CategoryItemType {
     id: number;
+    type: string;
     name: string;
     isValid: boolean;
 }
@@ -30,7 +32,7 @@ const StudyItem = ({ categoryList, study, likes }: { categoryList: CategoryItemT
             <div className={styles.thumbnail_area}>
                 <img src={imageUrl} alt="" className={styles.thumbnail} />
                 {isNew && <span className={styles.new}>NEW</span>}
-                {likes.includes(id) && <Heart />}
+                {likes.includes(id) ? <Heart /> : <EmptyHeart />}
             </div>
             <div className={styles.info}>
                 <span className={styles.category}>{categoryList[category[0] + 1].name} &gt; {categoryList[category[1] + 1].name}</span>
@@ -63,7 +65,13 @@ const StudyComponent = ({ categoryList, studyList, userStudyInfo }: { categoryLi
     return (
         <div id="component" className={styles.component}>
             <div className={styles.filter_area}>
-                <ul className={styles.categoryList}>
+                <button type="button" className={styles.sort}>최신순</button>
+                <hr />
+                <ul className={styles.filter_list}>
+                    <li role="button" className={`${styles.filter_item} ${styles.active}`}>전체</li>
+                    {categoryList.map((item) => (
+                        item.type === 'purpose' && <li key={item.id} role="button" className={styles.filter_item}>{item.name}</li>
+                    ))}
                 </ul>
             </div>
             {(categoryList.length && studyList.length) && <StudyList categoryList={categoryList} studyList={studyList} likes={userStudyInfo.likes} />}
