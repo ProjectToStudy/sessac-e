@@ -3,7 +3,6 @@ const Sequelize = require('sequelize');
 const db = require('../../models');
 const service = require('../index');
 const arrayUtils = require('../../utils/array');
-const {teamRouter} = require("../../api/routes/team");
 const datetime = require("../../utils/datetime");
 
 const findAllTeams = async (data) => {
