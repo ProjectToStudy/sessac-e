@@ -25,6 +25,7 @@ const findAllTeams = async (data) => {
                     [Sequelize.Op.in]: uniqueTeamInfoId,
                 },
                 deletedAt: null,
+                sortNo: 0,
             },
             order: ['sortNo'],
             raw: true,
@@ -50,9 +51,9 @@ const findAllTeams = async (data) => {
             team.imageUrl = teamPhotoResult
                 .filter((item) => item.teamInfoId === team.id)
                 .reduce((acc, item) => {
-                    acc.push(item.imageUrl);
+                    acc = item.imageUrl;
                     return acc;
-                }, []);
+                }, '');
 
             team.hitsCount = teamStatsResult
                 .filter((item) => item.teamInfoId === team.id)
