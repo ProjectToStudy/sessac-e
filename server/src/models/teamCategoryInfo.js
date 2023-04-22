@@ -1,6 +1,11 @@
-const userLoginHistory = (sequelize, Sequelize) => {
-    const UserLoginHistory = sequelize.define('userLoginHistory', {
-        userId: {
+const teamCategoryInfo = (sequelize, Sequelize) => {
+    const TeamCategoryInfo = sequelize.define('teamCategoryInfo', {
+        // id 자동생성
+        categoryName: {
+            type: Sequelize.STRING(20),
+            allowNull: false,
+        },
+        teamId: {
             type: Sequelize.INTEGER,
             allowNull: false,
         },
@@ -21,7 +26,7 @@ const userLoginHistory = (sequelize, Sequelize) => {
         freezeTableName: true,
     });
 
-    return UserLoginHistory;
+    return TeamCategoryInfo;
 };
 
-module.exports = userLoginHistory;
+module.exports = teamCategoryInfo;

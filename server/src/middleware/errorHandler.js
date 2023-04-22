@@ -2,8 +2,8 @@
 
 const errorHandler = (err, req, res) => {
     let message;
-    let result = {};
-    const code = err.code ? err.code : 400000;
+    let result = err.result ? err.result : err;
+    const code = err.code ? err.code : 500000;
     const returnCode = parseInt(code.toString().substring(0, 3));
 
     // TODO: message 수정하기, 정렬
