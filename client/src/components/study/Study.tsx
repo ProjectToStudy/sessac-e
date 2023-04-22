@@ -1,122 +1,72 @@
 import styles from '../../styles/Study.module.scss';
+import { ReactComponent as Heart } from '../../assets/study/heart.svg';
 
-const testData = [
-    {
-        img: '',
-        mainCategory: '자격증',
-        subCategory: '토익',
-        title: '정기적인 스터디로 토익점수 올리자!',
-        date: '12월 10일 ~ 6월 30일',
-        number: 30,
-        recommend: '요즘 상승세인 토익 스터디',
-        like: false,
-        sticker: 'new',
-    },
-    {
-        img: '',
-        mainCategory: '자격증',
-        subCategory: '토익',
-        title: '정기적인 스터디로 토익점수 올리자!',
-        date: '12월 10일 ~ 6월 30일',
-        number: 17,
-        like: false,
-        sticker: 'hot',
-    },
-    {
-        img: '',
-        mainCategory: '자격증',
-        subCategory: '토익',
-        title: '정기적인 스터디로 토익점수 올리자!',
-        date: '12월 10일 ~ 6월 30일',
-        number: 17,
-        like: false,
-        sticker: 'hot',
-    },
-    {
-        img: '',
-        mainCategory: '자격증',
-        subCategory: '토익',
-        title: '정기적인 스터디로 토익점수 올리자!',
-        date: '12월 10일 ~ 6월 30일',
-        number: 17,
-        like: false,
-        sticker: 'hot',
-    },
-    {
-        img: '',
-        mainCategory: '자격증',
-        subCategory: '토익',
-        title: '정기적인 스터디로 토익점수 올리자!',
-        date: '12월 10일 ~ 6월 30일',
-        number: 17,
-        like: false,
-        sticker: 'hot',
-    },
-    {
-        img: '',
-        mainCategory: '자격증',
-        subCategory: '토익',
-        title: '정기적인 스터디로 토익점수 올리자!',
-        date: '12월 10일 ~ 6월 30일',
-        number: 17,
-        like: false,
-        sticker: 'hot',
-    },
-    {
-        img: '',
-        mainCategory: '자격증',
-        subCategory: '토익',
-        title: '정기적인 스터디로 토익점수 올리자!',
-        date: '12월 10일 ~ 6월 30일',
-        number: 17,
-        like: false,
-        sticker: 'hot',
-    }
-]
-
-interface StudyItemProps {
-    img: string;
-    mainCategory: string;
-    subCategory: string;
-    title: string;
-    date: string;
-    number: number;
-    recommend?: string;
-    like: boolean;
-    sticker?: string;
+export interface CategoryItemType {
+    id: number;
+    name: string;
+    isValid: boolean;
 }
-const StudyItem = ({ props }: { props: StudyItemProps }) => {
-    const { img, mainCategory, subCategory, title, date, number, recommend } = props;
+
+export interface StudyItemType {
+    id: number;
+    isValid: number;
+    name: string;
+    category: number[];
+    imageUrl: string;
+    isNew: number;
+    recruitStartDate: string;
+    recruitEndDate: string;
+}
+const StudyItem = ({ categoryList, study, likes }: { categoryList: CategoryItemType[], study: StudyItemType, likes: number[] }) => {
+    const { id, name, category, imageUrl, isNew, recruitStartDate, recruitEndDate } = study;
+
+    const dateFormat = (date: string) => {
+        const splitDate = date.split('T')[0].split('-');
+        return `${splitDate[1]}월 ${splitDate[2]}일`
+    }
+
     return (
         <li className={styles.item}>
             <div className={styles.thumbnail_area}>
-                <img src={img} alt="image" className={styles.thumbnail} />
+                <img src={imageUrl} alt="" className={styles.thumbnail} />
+                {isNew && <span className={styles.new}>NEW</span>}
+                {likes.includes(id) && <Heart />}
             </div>
             <div className={styles.info}>
-                <span className={styles.category}>{mainCategory} &gt; {subCategory}</span>
-                <p className={styles.title}>{title}</p>
-                <span className={styles.date}>{date}</span>
-                <span className={styles.number}>총 {number}회 진행</span>
-                {recommend && <p className={styles.recommend}><b>[맞춤추천]</b> {recommend}</p>}
+                <span className={styles.category}>{categoryList[category[0] + 1].name} &gt; {categoryList[category[1] + 1].name}</span>
+                <p className={styles.title}>{name}</p>
+                <span className={styles.date}>
+                    {dateFormat(recruitStartDate)} ~ {dateFormat(recruitEndDate)}
+                </span>
+                <span className={styles.number}>총 0회 진행</span>
+                {/*{recommend && (*/}
+                {/*    <p className={styles.recommend}>*/}
+                {/*        <b>[맞춤추천]</b> {recommend}*/}
+                {/*    </p>*/}
+                {/*)}*/}
             </div>
         </li>
     );
 };
 
-const StudyList = ({ studyList }: { studyList: StudyItemProps[] }) => {
+const StudyList = ({ categoryList, studyList, likes }: { categoryList: CategoryItemType[], studyList: StudyItemType[], likes: number[] }) => {
     return (
-        <ul className={styles.list}>
-            {studyList.map((item: StudyItemProps, index: number) => (
-                <StudyItem key={index} props={item} />
+        <ul className={styles.study_list}>
+            {studyList.map((item: StudyItemType, index: number) => (
+                item.isValid && <StudyItem key={index} categoryList={categoryList} study={item} likes={likes} />
             ))}
         </ul>
-    )
-}
+    );
+};
 
-const StudyComponent = () => {
+const StudyComponent = ({ categoryList, studyList, userStudyInfo }: { categoryList: CategoryItemType[], studyList: StudyItemType[], userStudyInfo: { likes: number[], hits: number[] } }) => {
     return (
         <div id="component" className={styles.component}>
-            <StudyList studyList={testData} />
+            <div className={styles.filter_area}>
+                <ul className={styles.categoryList}>
+                </ul>
+            </div>
+            {(categoryList.length && studyList.length) && <StudyList categoryList={categoryList} studyList={studyList} likes={userStudyInfo.likes} />}
         </div>
     );
 };

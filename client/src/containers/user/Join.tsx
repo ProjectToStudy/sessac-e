@@ -12,7 +12,9 @@ const JoinContainer = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { certCheck, certCheckError, login, loginError, join, joinError }: any = useSelector((state: RootState) => state.user);
+    const { certCheck, certCheckError, login, loginError, join, joinError }: any = useSelector(
+        (state: RootState) => state.user,
+    );
 
     const [screenState, setScreenState] = useState(1);
     const [state, handleChange] = useInputs({
@@ -52,7 +54,10 @@ const JoinContainer = () => {
         const handleTimer = setInterval(() => {
             setTimer((timer) => timer - 1);
         }, 1000);
-        if (timer === 0) clearInterval(handleTimer);
+        if (timer === 0) {
+            clearInterval(handleTimer);
+            setIsActiveBtnState({ ...isActiveBtnState, getCode: true });
+        }
         return () => clearInterval(handleTimer);
     }, [timer]);
 

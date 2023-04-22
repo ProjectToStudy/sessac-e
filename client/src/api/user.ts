@@ -9,3 +9,5 @@ export const login = (phone: string) => Axios.post('/user/login', { phone }, { w
 export const join = (phone: string) => Axios.post('/user/join', { phone }, { withCredentials: true });
 export const update = ({ career, purpose, etc }: { career: string[], purpose: string[], etc: string }) =>
     Axios.patch('/user', { data: { career, purpose, etc } }, { headers: { Authorization: `Bearer ${getAccessToken()}` } });
+
+export const userStudy = () => Axios.get('user/teams', { headers: { Authorization: `Bearer ${getAccessToken()}` } });

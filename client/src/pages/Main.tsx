@@ -6,7 +6,10 @@ const Main = () => {
         <div id="Main">
             <div id="container">
                 <div id="component" className={styles.component}>
-                    <div className={styles.slogan}>함께 자라나는 새싹 E</div>
+                    <div className={styles.title_area}>
+                        <img src="/logo180.svg" alt="logo" width={180} height={180} />
+                        <h1 className={styles.title}>함께 자라나는 새싹 E</h1>
+                    </div>
                     <div className={styles.auth_area}>
                         <Link to="/join" className={styles.join_btn}>
                             회원가입
