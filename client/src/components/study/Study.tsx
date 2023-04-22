@@ -1,5 +1,6 @@
 import styles from '../../styles/Study.module.scss';
 import { ReactComponent as Heart } from '../../assets/study/heart.svg';
+import { ReactComponent as EmptyHeart } from '../../assets/study/empty-heart.svg';
 
 export interface CategoryItemType {
     id: number;
@@ -31,7 +32,7 @@ const StudyItem = ({ categoryList, study, likes }: { categoryList: CategoryItemT
             <div className={styles.thumbnail_area}>
                 <img src={imageUrl} alt="" className={styles.thumbnail} />
                 {isNew && <span className={styles.new}>NEW</span>}
-                {likes.includes(id) && <Heart />}
+                {likes.includes(id) ? <Heart /> : <EmptyHeart />}
             </div>
             <div className={styles.info}>
                 <span className={styles.category}>{categoryList[category[0] + 1].name} &gt; {categoryList[category[1] + 1].name}</span>
