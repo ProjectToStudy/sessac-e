@@ -3,17 +3,18 @@ const makeOptions = (data) => {
     const selectFields = [];
     const whereFields = {};
     const orderByFields = [];
+    let limitCount = -1;
 
     for (const [key, value] of Object.entries(data)) {
-        if (!value || key === 'sort' || key === 'field') {
+        if (!value || key === 'sort' || key === 'fields' || key === 'limit') {
             continue;
         }
 
         whereFields[key] = value.split(',');
     }
 
-    if (data.field) {
-        const selectColumns = data.field.split(',');
+    if (data.fields) {
+        const selectColumns = data.fields.split(',');
 
         for (const column of selectColumns) {
 
@@ -34,11 +35,40 @@ const makeOptions = (data) => {
         }
     }
 
+    if (data.limit) {
+        limitCount = Number(data.limit);
+    }
+
     return {
         selectFields,
         whereFields,
-        orderByFields
+        orderByFields,
+        limitCount,
     }
+}
+
+const sortArray = (array, sortOptions) => {
+    const option = sortOptions[0];
+    switch(option[1]) {
+        case 'asc':
+            array.sort(function(a, b) {
+                if (a[option[0]] < b[option[0]]) return -1;
+                if (a[option[0]] > b[option[0]]) return 1;
+                return 0;
+            });
+            break;
+        case 'desc':
+            array.sort(function(a, b) {
+                if (a[option[0]] < b[option[0]]) return -1;
+                if (a[option[0]] > b[option[0]]) return 1;
+                return 0;
+            });
+            break;
+        default:
+            console.log('Invalid method');
+    }
+
+    return array;
 }
 
 const sendToResult = (result) => {
@@ -58,5 +88,6 @@ const sendToResult = (result) => {
 
 module.exports = {
     makeOptions,
+    sortArray,
     sendToResult,
 }
