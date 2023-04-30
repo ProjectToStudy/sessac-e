@@ -5,14 +5,39 @@ const service = require('../index');
 const arrayUtils = require('../../utils/array');
 const datetime = require("../../utils/datetime");
 
+const whereParser = (data) => {
+    const whereFields = [];
+
+    if (data.category) {
+        const category = [];
+        data.category.forEach((item) => {
+            category.push(Sequelize.literal(`JSON_CONTAINS(category, '${item}')`));
+        });
+
+        whereFields.push({
+            [Sequelize.Op.or]: category,
+        });
+    }
+
+    if (data.isValid) {
+        whereFields.push({
+            isValid: data.isValid[0] === 'true',
+        });
+    }
+
+    return {
+        [Sequelize.Op.and] : whereFields
+    };
+}
+
 const findAllTeams = async (data) => {
     try {
-        const {selectFields, whereFields, orderByFields} = service.makeOptions(data);
+        const {selectFields, whereFields, orderByFields, limitCount} = service.makeOptions(data);
 
-        const result = await db.teamInfo.findAll({
+        let result = await db.teamInfo.findAll({
             attributes: selectFields,
-            where: whereFields,
-            order: orderByFields,
+            where: whereParser(whereFields),
+            // order: orderByFields,
             raw: true,
         });
 
@@ -65,7 +90,11 @@ const findAllTeams = async (data) => {
             team.isNew = datetime.compareToCurrentTime(datetime.addDatetime('d', 7, team.createdAt));
         });
 
-        return service.sendToResult(result);
+        if (orderByFields) {
+            result = service.sortArray(result, orderByFields);
+        }
+
+        return service.sendToResult(result.slice(0, limitCount));
     } catch (err) {
         throw err;
     }
