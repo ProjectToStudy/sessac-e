@@ -48,25 +48,41 @@ const makeOptions = (data) => {
 }
 
 const sortArray = (array, sortOptions) => {
-    const option = sortOptions[0];
-    switch(option[1]) {
-        case 'asc':
-            array.sort(function(a, b) {
-                if (a[option[0]] < b[option[0]]) return -1;
-                if (a[option[0]] > b[option[0]]) return 1;
+    const sortFunction = {
+        number: (a, b, orderType) => {
+            if (orderType === 'asc') {
+                if (a < b) return -1;
+                if (a > b) return 1;
                 return 0;
-            });
-            break;
-        case 'desc':
-            array.sort(function(a, b) {
-                if (a[option[0]] < b[option[0]]) return -1;
-                if (a[option[0]] > b[option[0]]) return 1;
+            } else {
+                if (a > b) return -1;
+                if (a < b) return 1;
                 return 0;
-            });
-            break;
-        default:
-            console.log('Invalid method');
+            }
+        },
+        string: (a, b, orderType) => {
+            if (orderType === 'asc') {
+                return a.localeCompare(b);
+            } else {
+                return b.localeCompare(a);
+            }
+        },
+        // timestamp
+        object: (a, b, orderType) => {
+            a = new Date(a);
+            b = new Date(b);
+
+            if (orderType === 'asc') {
+                return a.getTime() - b.getTime();
+            } else {
+                return b.getTime() - a.getTime();
+            }
+        }
     }
+    const option = sortOptions[0];
+    array.sort(function(a, b) {
+        return sortFunction[typeof a[option[0]]](a[option[0]], b[option[0]], option[1]);
+    });
 
     return array;
 }
