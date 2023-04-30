@@ -90,7 +90,8 @@ const findAllTeams = async (data) => {
             team.isNew = datetime.compareToCurrentTime(datetime.addDatetime('d', 7, team.createdAt));
         });
 
-        if (orderByFields) {
+        console.log(orderByFields);
+        if (orderByFields.length > 0) {
             result = service.sortArray(result, orderByFields);
         }
 
