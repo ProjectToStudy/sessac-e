@@ -72,10 +72,9 @@ const StudyList = ({
 }) => {
     return (
         <ul className={styles.study_list}>
-            {studyList.map(
-                (item: StudyItemType, index: number) =>
-                    item.isValid && <StudyItem key={index} categoryList={categoryList} study={item} likes={likes} />,
-            )}
+            {studyList.map((item: StudyItemType, index: number) => (
+                <StudyItem key={index} categoryList={categoryList} study={item} likes={likes} />
+            ))}
         </ul>
     );
 };

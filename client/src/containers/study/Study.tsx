@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../modules';
 import { categoryListAPI } from '../../modules/study';
+import { getAccessToken } from '../../utils/cookie';
+import { userStudy } from '../../api/user';
 import { getStudy } from '../../api/study';
 import StudyComponent, { StudyItemType } from '../../components/study/Study';
-import { userStudy } from '../../api/user';
-import { getAccessToken } from '../../utils/cookie';
 
 const StudyContainer = () => {
     const dispatch = useDispatch();
