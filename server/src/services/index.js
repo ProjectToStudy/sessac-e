@@ -3,7 +3,7 @@ const makeOptions = (data) => {
     const selectFields = [];
     const whereFields = {};
     const orderByFields = [];
-    let limitCount = -1;
+    let limitCount = null;
 
     for (const [key, value] of Object.entries(data)) {
         if (!value || key === 'sort' || key === 'fields' || key === 'limit') {

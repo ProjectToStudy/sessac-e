@@ -90,12 +90,15 @@ const findAllTeams = async (data) => {
             team.isNew = datetime.compareToCurrentTime(datetime.addDatetime('d', 7, team.createdAt));
         });
 
-        console.log(orderByFields);
         if (orderByFields.length > 0) {
             result = service.sortArray(result, orderByFields);
         }
 
-        return service.sendToResult(result.slice(0, limitCount));
+        if (limitCount) {
+            result = result.slice(0, limitCount);
+        }
+
+        return service.sendToResult(result);
     } catch (err) {
         throw err;
     }
