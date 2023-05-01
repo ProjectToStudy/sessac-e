@@ -19,13 +19,21 @@ export interface StudyItemType {
     recruitStartDate: string;
     recruitEndDate: string;
 }
-const StudyItem = ({ categoryList, study, likes }: { categoryList: CategoryItemType[], study: StudyItemType, likes: number[] }) => {
+const StudyItem = ({
+    categoryList,
+    study,
+    likes,
+}: {
+    categoryList: CategoryItemType[];
+    study: StudyItemType;
+    likes: number[];
+}) => {
     const { id, name, category, imageUrl, isNew, recruitStartDate, recruitEndDate } = study;
 
     const dateFormat = (date: string) => {
         const splitDate = date.split('T')[0].split('-');
-        return `${splitDate[1]}월 ${splitDate[2]}일`
-    }
+        return `${splitDate[1]}월 ${splitDate[2]}일`;
+    };
 
     return (
         <li className={styles.item}>
@@ -35,12 +43,14 @@ const StudyItem = ({ categoryList, study, likes }: { categoryList: CategoryItemT
                 {likes.includes(id) ? <Heart /> : <EmptyHeart />}
             </div>
             <div className={styles.info}>
-                <span className={styles.category}>{categoryList[category[0] + 1].name} &gt; {categoryList[category[1] + 1].name}</span>
+                <span className={styles.category}>
+                    {categoryList[category[0] - 1].name} &gt; {categoryList[category[1] - 1].name}
+                </span>
                 <p className={styles.title}>{name}</p>
                 <span className={styles.date}>
                     {dateFormat(recruitStartDate)} ~ {dateFormat(recruitEndDate)}
                 </span>
-                <span className={styles.number}>총 0회 진행</span>
+                <span className={styles.number}>총 n회 진행</span>
                 {/*{recommend && (*/}
                 {/*    <p className={styles.recommend}>*/}
                 {/*        <b>[맞춤추천]</b> {recommend}*/}
@@ -51,30 +61,54 @@ const StudyItem = ({ categoryList, study, likes }: { categoryList: CategoryItemT
     );
 };
 
-const StudyList = ({ categoryList, studyList, likes }: { categoryList: CategoryItemType[], studyList: StudyItemType[], likes: number[] }) => {
+const StudyList = ({
+    categoryList,
+    studyList,
+    likes,
+}: {
+    categoryList: CategoryItemType[];
+    studyList: StudyItemType[];
+    likes: number[];
+}) => {
     return (
         <ul className={styles.study_list}>
             {studyList.map((item: StudyItemType, index: number) => (
-                item.isValid && <StudyItem key={index} categoryList={categoryList} study={item} likes={likes} />
+                <StudyItem key={index} categoryList={categoryList} study={item} likes={likes} />
             ))}
         </ul>
     );
 };
 
-const StudyComponent = ({ categoryList, studyList, userStudyInfo }: { categoryList: CategoryItemType[], studyList: StudyItemType[], userStudyInfo: { likes: number[], hits: number[] } }) => {
+const StudyComponent = ({
+    categoryList,
+    studyList,
+    userStudyInfo,
+}: {
+    categoryList: CategoryItemType[];
+    studyList: StudyItemType[];
+    userStudyInfo: { likes: number[]; hits: number[] };
+}) => {
     return (
         <div id="component" className={styles.component}>
             <div className={styles.filter_area}>
-                <button type="button" className={styles.sort}>최신순</button>
+                <button type="button" className={styles.sort}>
+                    최신순
+                </button>
                 <hr />
                 <ul className={styles.filter_list}>
-                    <li role="button" className={`${styles.filter_item} ${styles.active}`}>전체</li>
+                    <li role="button" className={`${styles.filter_item} ${styles.active}`}>
+                        전체
+                    </li>
                     {categoryList.map((item) => (
-                        item.type === 'purpose' && <li key={item.id} role="button" className={styles.filter_item}>{item.name}</li>
+                        <li key={item.id} role="button" className={styles.filter_item}>
+                            {item.name}
+                        </li>
                     ))}
                 </ul>
             </div>
-            {(categoryList.length && studyList.length) && <StudyList categoryList={categoryList} studyList={studyList} likes={userStudyInfo.likes} />}
+            {categoryList.length && studyList.length && (
+                <StudyList categoryList={categoryList} studyList={studyList} likes={userStudyInfo.likes} />
+            )}
         </div>
     );
 };
