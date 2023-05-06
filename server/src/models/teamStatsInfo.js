@@ -13,6 +13,11 @@ const teamStatsInfo = (sequelize, Sequelize) => {
             type: Sequelize.STRING(20),
             allowNull: false,
         },
+        isValid: {
+            type: Sequelize.BOOLEAN,
+            allowNull: false,
+            defaultValue: true,
+        },
         createdAt: {
             type: 'TIMESTAMP',
             allowNull: true,
@@ -34,7 +39,7 @@ const teamStatsInfo = (sequelize, Sequelize) => {
         indexes: [
             {
                 unique: true,
-                fields: ['userId', 'teamInfoId', 'type', 'deletedAt']
+                fields: ['userId', 'teamInfoId', 'type', 'isValid']
             },
         ],
         freezeTableName: true,

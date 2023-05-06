@@ -62,6 +62,8 @@ const teamRouter = ({ app }) => {
      *                 message: 서버 에러 발생
      */
     route.get('/categories', teamController.getCategories);
+
+    route.post('/stats', authMiddleware.verify, teamController.postStats);
 }
 
 module.exports = {
