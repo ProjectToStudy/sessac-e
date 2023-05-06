@@ -72,6 +72,21 @@ const findAllTeams = async (data) => {
             raw: true,
         });
 
+        const teamUserResult = await db.teamUserInfo.findAll({
+            attributes: [
+                'teamInfoId',
+                [Sequelize.fn('COUNT', Sequelize.col('id')), 'userCount'],
+            ],
+            where: {
+                teamInfoId: {
+                    [Sequelize.Op.in]: uniqueTeamInfoId,
+                },
+                status: 2,
+            },
+            group: 'teamInfoId',
+            raw: true,
+        });
+
         result.map((team) => {
             team.imageUrl = teamPhotoResult
                 .filter((item) => item.teamInfoId === team.id)
@@ -84,6 +99,13 @@ const findAllTeams = async (data) => {
                 .filter((item) => item.teamInfoId === team.id)
                 .reduce((acc, item) => {
                     acc += item.hitsCount;
+                    return acc;
+                }, 0);
+
+            team.userCount = teamUserResult
+                .filter((item) => item.teamInfoId === team.id)
+                .reduce((acc, item) => {
+                    acc += item.userCount;
                     return acc;
                 }, 0);
 
@@ -121,7 +143,50 @@ const findAllCategories = async (data) => {
     }
 }
 
+const postStats = async (data) => {
+    try {
+        if (!data.id || !data.type || !data.teamId) {
+            return {
+                code: 400000, // TODO: 코드 정의 필요
+            }
+        }
+
+        const statsResult = await db.teamStatsInfo.findAll({
+            where: {
+                userid: data.id,
+                type: data.type,
+                teamInfoId: data.teamId,
+                isValid: true,
+            },
+            raw: true,
+        });
+
+        if (statsResult.length > 0) {
+            return {
+                code: 400555, // TODO: 코드 정의 필요
+            }
+        }
+
+        const createFields = {
+            userId: data.id,
+            type: data.type,
+            teamInfoId: data.teamId,
+            isValid: true,
+        }
+
+        await db.teamStatsInfo.create(createFields);
+
+        return {
+            code: 200000,
+            message: 'success',
+        }
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = {
     findAllCategories,
     findAllTeams,
+    postStats,
 }

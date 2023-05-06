@@ -8,6 +8,9 @@ const errorHandler = (err, req, res) => {
 
     // TODO: message 수정하기, 정렬
     switch (code) {
+        case 400000:
+            message = '필수 파라미터가 누락되었습니다';
+            break;
         case 400301:
             message = '인증번호 전송에 실패했습니다';
             result = err.result;
@@ -31,6 +34,9 @@ const errorHandler = (err, req, res) => {
         case 400102:
             // 데이터 오류
             message = '회원정보 저장 및 호출에 실패했습니다';
+            break;
+        case 400555:
+            message = '중복된 데이터가 존재합니다';
             break;
         case 401002:
             message = '회원가입이 필요합니다';
