@@ -1,9 +1,10 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore, { Autoplay } from 'swiper';
+import SwiperCore, { Autoplay, Pagination } from 'swiper';
 import 'swiper/scss';
+import 'swiper/scss/pagination';
 import styles from '../../../styles/Home.module.scss';
 
-SwiperCore.use([Autoplay])
+SwiperCore.use([Autoplay, Pagination]);
 
 const Banner = () => {
     return (
@@ -14,15 +15,16 @@ const Banner = () => {
                 loop={true}
                 loopedSlides={1}
                 autoplay={{ delay: 2000 }}
+                pagination={{ clickable: true }}
             >
                 <SwiperSlide>
-                    <img src="" alt="banner1" />
+                    <img src="" alt="" />
                 </SwiperSlide>
                 <SwiperSlide>
-                    <img src="" alt="banner2" />
+                    <img src="" alt="" />
                 </SwiperSlide>
                 <SwiperSlide>
-                    <img src="" alt="banner3" />
+                    <img src="" alt="" />
                 </SwiperSlide>
             </Swiper>
         </div>
