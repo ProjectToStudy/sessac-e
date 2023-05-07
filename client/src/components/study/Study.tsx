@@ -16,8 +16,8 @@ export interface StudyItemType {
     category: number[];
     imageUrl: string;
     isNew: number;
-    recruitStartDate: string;
-    recruitEndDate: string;
+    startDate: string;
+    endDate: string;
 }
 
 const StudyItem = ({
@@ -29,7 +29,7 @@ const StudyItem = ({
     study: StudyItemType;
     likes: number[];
 }) => {
-    const { id, name, category, imageUrl, isNew, recruitStartDate, recruitEndDate } = study;
+    const { id, name, category, imageUrl, isNew, startDate, endDate } = study;
 
     const [isLike, setIsLike] = useState(likes.includes(id));
 
@@ -60,7 +60,7 @@ const StudyItem = ({
                 </span>
                 <p className={styles.title}>{name}</p>
                 <span className={styles.date}>
-                    {dateFormat(recruitStartDate)} ~ {dateFormat(recruitEndDate)}
+                    {dateFormat(startDate)} ~ {dateFormat(endDate)}
                 </span>
                 <span className={styles.number}>총 n회 진행</span>
                 {/*{recommend && (*/}
