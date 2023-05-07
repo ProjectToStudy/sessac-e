@@ -1,6 +1,6 @@
+import { useState } from 'react';
+import { postLike } from '../../api/study';
 import styles from '../../styles/Study.module.scss';
-import { ReactComponent as Heart } from '../../assets/study/heart.svg';
-import { ReactComponent as EmptyHeart } from '../../assets/study/empty-heart.svg';
 
 export interface CategoryItemType {
     id: number;
@@ -19,6 +19,7 @@ export interface StudyItemType {
     recruitStartDate: string;
     recruitEndDate: string;
 }
+
 const StudyItem = ({
     categoryList,
     study,
@@ -30,9 +31,20 @@ const StudyItem = ({
 }) => {
     const { id, name, category, imageUrl, isNew, recruitStartDate, recruitEndDate } = study;
 
+    const [isLike, setIsLike] = useState(likes.includes(id));
+
     const dateFormat = (date: string) => {
         const splitDate = date.split('T')[0].split('-');
         return `${splitDate[1]}월 ${splitDate[2]}일`;
+    };
+
+    const onLikeClick = async () => {
+        try {
+            const data = await postLike(id);
+            if (data.code === 200000) setIsLike((isLike) => !isLike);
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     return (
@@ -40,7 +52,7 @@ const StudyItem = ({
             <div className={styles.thumbnail_area}>
                 <img src={imageUrl} alt="" className={styles.thumbnail} />
                 {isNew && <span className={styles.new}>NEW</span>}
-                {likes.includes(id) ? <Heart /> : <EmptyHeart />}
+                <button type="button" name={isLike ? 'hate' : 'like'} onClick={onLikeClick} />
             </div>
             <div className={styles.info}>
                 <span className={styles.category}>

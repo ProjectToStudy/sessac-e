@@ -7,3 +7,15 @@
   width: 100%;
   max-width: 428px;
 }
+
+.swiper-pagination-bullet {
+  width: 4px !important;
+  height: 4px !important;
+  margin: 0 1px !important;
+  background: #DDDDDD !important;
+  opacity: 1 !important;
+}
+.swiper-pagination-bullet-active {
+  background: #474747 !important;
+  opacity: 1 !important;
+}

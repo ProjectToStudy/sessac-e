@@ -9,9 +9,26 @@
 }
 
 .header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
   width: 100%;
   height: 44px;
+  padding: 0 16px;
   background-color: white;
+
+  .search, .notification {
+    display: block;
+    width: 24px;
+    height: 24px;
+  }
+  .search {
+    background: url("../../public/images/home/search.svg") 24px;
+  }
+  .notification {
+    background: url("../../public/images/home/notification.svg") 24px;
+  }
 }
 .banner {
   display: flex;
@@ -22,7 +39,7 @@
     display: block;
     width: 100%;
     height: 250px;
-    background-color: #D9D9D9;
+    background-color: white;
   }
 }
 

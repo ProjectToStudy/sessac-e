@@ -1,12 +1,20 @@
-import styles from '../../styles/Home.module.scss';
+import { Link } from 'react-router-dom';
 import Banner from './components/Banner';
 import { Motivation, InfoSharing, Hackathon, Certificate } from '../../assets/index';
+import styles from '../../styles/Home.module.scss';
 
 const HomeComponent = () => {
     return (
         <div id="component" className={styles.component}>
             <section id="information">
-                <div className={styles.header}></div>
+                <div className={styles.header}>
+                    <Link to={'/search'}>
+                        <a className={styles.search} />
+                    </Link>
+                    <Link to={'/notification'}>
+                        <a className={styles.notification} />
+                    </Link>
+                </div>
                 <Banner />
                 <ul className={styles.category_list}>
                     <li className={styles.category_item}>
@@ -96,9 +104,6 @@ const HomeComponent = () => {
             <section id="popular" className={styles.popular}>
                 <div className={styles.title_area}>
                     <span>최근 인기 있는 스터디</span>
-                    <button type="button" name="">
-                        새로고침
-                    </button>
                 </div>
                 <ul className={styles.popular_list}>
                     {Array.from({ length: 5 }, (_, i) => (
