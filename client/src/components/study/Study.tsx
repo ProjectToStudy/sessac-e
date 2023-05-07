@@ -51,7 +51,7 @@ const StudyItem = ({
         <li className={styles.item}>
             <div className={styles.thumbnail_area}>
                 <img src={imageUrl} alt="" className={styles.thumbnail} />
-                {isNew && <span className={styles.new}>NEW</span>}
+                {isNew === 1 && <span className={styles.new}>NEW</span>}
                 <button type="button" name={isLike ? 'hate' : 'like'} onClick={onLikeClick} />
             </div>
             <div className={styles.info}>
