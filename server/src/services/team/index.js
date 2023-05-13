@@ -126,6 +126,15 @@ const findAllTeams = async (data) => {
     }
 }
 
+const postTeams = async (data) => {
+    try {
+
+
+    } catch (err) {
+        throw err;
+    }
+}
+
 const findAllCategories = async (data) => {
     try {
         const {selectFields, whereFields, orderByFields} = service.makeOptions(data);
@@ -145,7 +154,9 @@ const findAllCategories = async (data) => {
 
 const postStats = async (data) => {
     try {
-        if (!data.id || !data.type || !data.teamId) {
+        const {userId, type, teamId} = data;
+
+        if (!userId || !type || !teamId) {
             return {
                 code: 400000, // TODO: 코드 정의 필요
             }
@@ -154,10 +165,19 @@ const postStats = async (data) => {
         if (data.type === 'likes') {
             const statsResult = await db.teamStatsInfo.findAll({
                 where: {
-                    userid: data.id,
-                    type: data.type,
-                    teamInfoId: data.teamId,
-                    isValid: true,
+                    userId: {
+                        [Sequelize.Op.eq]: userId,
+                    },
+                    type: {
+                        [Sequelize.Op.eq]: type,
+                    },
+                    teamInfoId: {
+                        [Sequelize.Op.eq]: teamId,
+                    },
+                    isValid: {
+                        [Sequelize.Op.eq]: true,
+
+                    },
                 },
                 raw: true,
             });
@@ -187,8 +207,60 @@ const postStats = async (data) => {
     }
 }
 
+const patchStats = async (data) => {
+    try {
+        const {userId, id} = data;
+
+        if (!userId || !id) {
+            return {
+                code: 400000, // TODO: 코드 정의 필요
+            }
+        }
+
+        const updateFields = service.validateData(data);
+        const type = 'likes'    // update 되는 type 은 'likes' 만 가능
+
+        if (!updateFields) {
+            return {
+                code: 400111,   // data validation error
+            }
+        }
+
+        const result = await db.teamStatsInfo.update({
+            isValid: false,
+        }, {
+            where: {
+                userId: {
+                    [Sequelize.Op.eq]: userId,
+                },
+                teamInfoId: {
+                    [Sequelize.Op.eq]: id,
+                },
+                type: {
+                    [Sequelize.Op.eq]: type,
+                },
+            }
+        });
+
+        if (result[0] === 0) {
+            return {
+                code: 400222,   // update failed error
+            }
+        }
+
+        return {
+            code: 200000,
+            message: 'success',
+        };
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = {
     findAllCategories,
     findAllTeams,
+    postTeams,
     postStats,
+    patchStats,
 }

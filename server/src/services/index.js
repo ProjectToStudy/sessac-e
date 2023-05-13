@@ -1,3 +1,5 @@
+const Sequelize = require('sequelize');
+
 // 쿼리스트링 읽어서 조건 필드 생성하기
 const makeOptions = (data) => {
     const selectFields = [];
@@ -10,14 +12,25 @@ const makeOptions = (data) => {
             continue;
         }
 
-        whereFields[key] = value.split(',');
+        const valueSplit = value.split(',');
+
+        if (Array.isArray(valueSplit) && valueSplit.length > 1) {
+            whereFields[key] = {
+                [Sequelize.Op.in]: valueSplit,
+            };
+            continue;
+        }
+
+        whereFields[key] = {
+            [Sequelize.Op.eq]: value,
+        }
     }
 
     if (data.fields) {
         const selectColumns = data.fields.split(',');
 
         for (const column of selectColumns) {
-
+            selectFields.push(column);
         }
     } else {
         selectFields.push('*');
@@ -108,6 +121,10 @@ const validateData = (data) => {
     // 취약 데이터가 있으면 false, 없으면 true 반환
     try {
         for(const input of Object.values(data)) {
+            if (typeof input !== 'string') {
+                continue;
+            }
+
             // <script> 태그 필터링
             if (input.match(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi)) {
                 return false;

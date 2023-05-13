@@ -14,6 +14,20 @@ const getTeams = async (req, res, next) => {
     }
 }
 
+const postTeams = async (req, res, next) => {
+    try {
+        const result = await teamService.postTeams({userId: req.user.id, ...req.body});
+
+        if (result.message !== 'success') {
+            return next(result);
+        }
+
+        return res.status(200).json(result);
+    } catch (err) {
+        return next(err);
+    }
+}
+
 const getCategories = async (req, res, next) => {
     try {
         const result = await teamService.findAllCategories(req.query);
@@ -30,7 +44,21 @@ const getCategories = async (req, res, next) => {
 
 const postStats = async (req, res, next) => {
     try {
-        const result = await teamService.postStats({...req.user, ...req.body});
+        const result = await teamService.postStats({userId: req.user.id, ...req.body});
+
+        if (result.message !== 'success') {
+            return next(result);
+        }
+
+        return res.status(200).json(result);
+    } catch (err) {
+        return next(err);
+    }
+}
+
+const patchStats = async (req, res, next) => {
+    try {
+        const result = await teamService.patchStats({userId: req.user.id, ...req.body, ...req.params});
 
         if (result.message !== 'success') {
             return next(result);
@@ -45,5 +73,7 @@ const postStats = async (req, res, next) => {
 module.exports = {
     getCategories,
     getTeams,
+    postTeams,
     postStats,
+    patchStats,
 }
