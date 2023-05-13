@@ -102,8 +102,33 @@ const sendToResult = (result) => {
     }
 }
 
+// create, update 시 데이터 유효성 검사
+const validateData = (data) => {
+    // data 객체의 각 항목 하나하나가 sql 취약 데이터인지 검사
+    // 취약 데이터가 있으면 false, 없으면 true 반환
+    try {
+        for(const input of Object.values(data)) {
+            // <script> 태그 필터링
+            if (input.match(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi)) {
+                return false;
+            }
+
+            // on으로 시작하는 이벤트 핸들러 필터링
+            if (input.match(/on\w+="[^"]+"/g)) {
+                return false;
+            }
+        }
+
+        return data;
+    }
+    catch (err) {
+        throw err;
+    }
+}
+
 module.exports = {
     makeOptions,
     sortArray,
     sendToResult,
+    validateData,
 }

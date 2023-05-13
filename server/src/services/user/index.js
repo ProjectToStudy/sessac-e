@@ -91,12 +91,20 @@ const getUserTeamsInfo = async (data) => {
 }
 
 const updateUserInfo = async (user, data) => {
+
     try {
+        data = service.validateData(data);
+
+        if (!data) {
+            return {
+                code: 400111, // data validation error
+            }
+        }
+
         await db.userAdditionalInfo.update(data, {
             where: {
                 userRequiredInfoId: user.id,
-            },
-            raw: true,
+            }
         });
 
         return {

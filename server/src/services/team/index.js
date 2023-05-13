@@ -151,19 +151,21 @@ const postStats = async (data) => {
             }
         }
 
-        const statsResult = await db.teamStatsInfo.findAll({
-            where: {
-                userid: data.id,
-                type: data.type,
-                teamInfoId: data.teamId,
-                isValid: true,
-            },
-            raw: true,
-        });
+        if (data.type === 'likes') {
+            const statsResult = await db.teamStatsInfo.findAll({
+                where: {
+                    userid: data.id,
+                    type: data.type,
+                    teamInfoId: data.teamId,
+                    isValid: true,
+                },
+                raw: true,
+            });
 
-        if (statsResult.length > 0) {
-            return {
-                code: 400555, // TODO: 코드 정의 필요
+            if (statsResult.length > 0) {
+                return {
+                    code: 400555, // TODO: 코드 정의 필요
+                }
             }
         }
 
