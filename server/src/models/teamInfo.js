@@ -7,7 +7,7 @@ const teamInfo = (sequelize, Sequelize) => {
             allowNull: false,
         },
         name: {
-            type: Sequelize.STRING(20),
+            type: Sequelize.STRING(22),
             allowNull: false,
         },
         category: {
@@ -29,6 +29,10 @@ const teamInfo = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: false,
             defaultValue: 2,
+        },
+        sessionCount: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
         },
         isApproval: {
             type: Sequelize.BOOLEAN,
@@ -67,19 +71,22 @@ const teamInfo = (sequelize, Sequelize) => {
             defaultValue: true,
         },
         createdAt: {
-            type: 'TIMESTAMP',
+            type: Sequelize.DATE,
             allowNull: true,
             defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         },
         updatedAt: {
-            type: 'TIMESTAMP',
+            type: Sequelize.DATE,
             allowNull: true,
+            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
             onUpdate: Sequelize.literal('CURRENT_TIMESTAMP'),
         },
     }, {
         charset: 'utf8',
         collate: 'utf8_general_ci',
-        timestamps: false,
+        timestamps: true,
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
         freezeTableName: true,
     });
 
