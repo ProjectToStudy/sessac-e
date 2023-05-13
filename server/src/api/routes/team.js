@@ -4,12 +4,13 @@ const route = express.Router();
 
 const teamController = require('../../controllers/team');
 const authMiddleware = require('../../middleware/auth');
+const validationMiddleware = require('../../middleware/validation');
 
 const teamRouter = ({ app }) => {
     app.use('/api/v1/teams', route);
 
     route.get('', teamController.getTeams);
-    route.post('', teamController.postTeams);
+    route.post('', authMiddleware.verify, validationMiddleware.validationPostTeams, teamController.postTeams);
 
     route.get('/categories', teamController.getCategories);
 

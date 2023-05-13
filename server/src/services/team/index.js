@@ -127,10 +127,35 @@ const findAllTeams = async (data) => {
 }
 
 const postTeams = async (data) => {
+    // 트랜잭션 시작
+    const transaction = await db.sequelize.transaction();
+
     try {
+        const {userId, userPhone, image, ...rest} = data;
 
+        const teamResult = await db.teamInfo.create({
+            createdUserId: userId,
+            ...rest
+        }, {transaction});
 
+        const insertImageData = image.map((item) => {
+            item.teamInfoId = teamResult.id;
+            return item;
+        });
+
+        await db.teamPhotoInfo.bulkCreate(
+            insertImageData,
+            {transaction}
+        );
+
+        // 트랜잭션 커밋
+        await transaction.commit();
+
+        return service.sendToResult(teamResult.id);
     } catch (err) {
+        // 트랜잭션 롤백
+        console.log('롤백');
+        await transaction.rollback();
         throw err;
     }
 }

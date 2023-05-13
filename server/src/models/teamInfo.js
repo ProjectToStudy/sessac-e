@@ -7,7 +7,7 @@ const teamInfo = (sequelize, Sequelize) => {
             allowNull: false,
         },
         name: {
-            type: Sequelize.STRING(20),
+            type: Sequelize.STRING(22),
             allowNull: false,
         },
         category: {
@@ -29,6 +29,10 @@ const teamInfo = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: false,
             defaultValue: 2,
+        },
+        sessionCount: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
         },
         isApproval: {
             type: Sequelize.BOOLEAN,

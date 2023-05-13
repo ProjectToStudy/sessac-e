@@ -70,7 +70,6 @@ const getUserInfo = async (data) => {
         });
 
         teamStatsResult.map((team) => {
-            console.log(team);
             if (team.type === 'likes') {
                 result.likes.push(team.teamInfoId);
             }
