@@ -8,6 +8,11 @@ const datetime = require("../../utils/datetime");
 const whereParser = (data) => {
     const whereFields = [];
 
+    for (const [key, value] of Object.entries(data)) {
+        const symbolProp = Object.getOwnPropertySymbols(value)[0]; // 첫 번째 Symbol 속성에 접근
+        data[key] = value[symbolProp];
+    }
+
     if (data.category) {
         const category = [];
         data.category.forEach((item) => {
@@ -21,7 +26,7 @@ const whereParser = (data) => {
 
     if (data.isValid) {
         whereFields.push({
-            isValid: data.isValid[0] === 'true',
+            isValid: data.isValid === 'true',
         });
     }
 

@@ -24,6 +24,10 @@ const makeOptions = (data) => {
         whereFields[key] = {
             [Sequelize.Op.eq]: value,
         }
+
+        // whereFields[key] = {
+        //     [Sequelize.Op.in]: valueSplit,
+        // };/
     }
 
     if (data.fields) {
