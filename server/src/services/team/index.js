@@ -220,9 +220,9 @@ const postStats = async (data) => {
         }
 
         const createFields = {
-            userId: data.id,
-            type: data.type,
-            teamInfoId: data.teamId,
+            userId,
+            type,
+            teamInfoId: teamId,
             isValid: true,
         }
 
