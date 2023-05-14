@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { postLike } from '../../api/study';
+import { postLike, patchLike } from '../../api/study';
 import styles from '../../styles/Study.module.scss';
 
 export interface CategoryItemType {
@@ -40,7 +40,7 @@ const StudyItem = ({
 
     const onLikeClick = async () => {
         try {
-            const data = await postLike(id);
+            const data = !isLike ? await postLike(id) : await patchLike(id);
             if (data.code === 200000) setIsLike((isLike) => !isLike);
         } catch (e) {
             console.log(e);

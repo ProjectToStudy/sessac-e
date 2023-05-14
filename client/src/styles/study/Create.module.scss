@@ -3,7 +3,7 @@
 .component {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 56px - env(safe-area-inset-bottom));
+  height: calc(100dvh - 56px - env(safe-area-inset-bottom));
 
   .title_area {
     position: relative;
@@ -301,7 +301,7 @@
   height: 100vh;
   padding-top: 10px;
   background-color: white;
-  z-index: 2;
+  z-index: 11;
 
   .title_area {
     display: flex;

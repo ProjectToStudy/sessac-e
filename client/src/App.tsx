@@ -1,6 +1,9 @@
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { RootState } from './modules';
+import { userInfoAPI } from './modules/userInfo';
+import { getAccessToken } from './utils/cookie';
 import { Main, Join, JoinPlanting, Home, Study, MyPage, StudyCreate, MyStudy } from './pages/index';
 import { Header, Navigation } from './components/atoms';
 import './App.css';
@@ -21,12 +24,19 @@ const headerInfoList: { [key: string]: { title: string; isSearch: boolean } } = 
 };
 
 const App = () => {
+    const dispatch = useDispatch();
     const location = useLocation();
 
     const { isSigning }: any = useSelector((state: RootState) => state.user);
 
     const noHeaderPages = ['/', '/join', '/login', '/add/1', '/add/2', '/add/3', '/add/4', '/home', '/study/create'];
     const noNavPages = ['/', '/join', '/login', '/add/1', '/add/2', '/add/3', '/add/4', '/study/create'];
+
+    useEffect(() => {
+        if (getAccessToken()) {
+            dispatch(userInfoAPI());
+        }
+    }, []);
 
     return (
         <>

@@ -11,3 +11,13 @@ export const postLike = async (id: number) => {
     );
     return data;
 };
+export const patchLike = async (id: number) => {
+    const { data } = await Axios.patch(
+        `teams/stats/${id}`,
+        {},
+        {
+            headers: { Authorization: `Bearer ${getAccessToken()}` },
+        },
+    );
+    return data;
+};
