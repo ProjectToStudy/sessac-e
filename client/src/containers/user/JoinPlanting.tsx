@@ -14,7 +14,7 @@ const JoinPlantingContainer = ({ screenState }: { screenState: number }) => {
     const [isActive, setIsActive] = useState({ career: false, purpose: false });
     const [selected, setSelected] = useState<{ [key: string]: string[] }>({ career: [], purpose: [] });
 
-    const handleOmissionClick = () => navigate('/home');
+    const handleOmissionClick = () => window.location.replace('/home');
 
     /** 페이지 화면 핸들러 함수
      * 다음 페이지로 전환
@@ -25,7 +25,7 @@ const JoinPlantingContainer = ({ screenState }: { screenState: number }) => {
         else {
             dispatch(updateAPI({ ...selected, etc: '' }));
         }
-    }
+    };
 
     const handleItemClick = (e: React.MouseEvent<HTMLLIElement>) => {
         const category = e.currentTarget.dataset.name;

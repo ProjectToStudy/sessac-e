@@ -15,7 +15,7 @@ export function* userInfoSaga() {
 export interface ResponseType {
     user: {
         id: number;
-        career: string;
+        career: string[];
         purpose: string[];
         createdAt: string;
         updatedAt: string;
@@ -36,9 +36,18 @@ const initialState: ResponseType = {
 
 const userInfo = handleActions(
     {
-        [USER_SUCCESS]: (state: ResponseType = initialState, { payload: user }: { payload: ResponseType['user'] }) => ({
+        [USER_SUCCESS]: (
+            state: ResponseType = initialState,
+            {
+                payload: data,
+            }: {
+                payload: {
+                    result: ResponseType['user'];
+                };
+            },
+        ) => ({
             ...state,
-            user,
+            user: data.result,
             userError: null,
         }),
         [USER_FAILURE]: (

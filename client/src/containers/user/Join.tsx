@@ -77,7 +77,7 @@ const JoinContainer = () => {
         if (login) {
             setAccessToken(login.result.accessToken);
             dispatch(initializeKey('login'));
-            navigate('/home');
+            window.location.replace('/home');
         }
         if (loginError) {
             if (loginError.code === 401002) setIsTermsState(true);

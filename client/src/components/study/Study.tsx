@@ -1,50 +1,32 @@
-import { useState } from 'react';
-import { postLike, patchLike } from '../../api/study';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../modules';
+import LikeBtn from '../atoms/LikeBtn';
 import styles from '../../styles/Study.module.scss';
-
-export interface CategoryItemType {
-    id: number;
-    type: string;
-    name: string;
-    isValid: boolean;
-}
 
 export interface StudyItemType {
     id: number;
     isValid: number;
     name: string;
+    description: string;
     category: number[];
+    channel: number[];
     imageUrl: string;
     isNew: number;
     startDate: string;
     endDate: string;
 }
 
-const StudyItem = ({
-    categoryList,
-    study,
-    likes,
-}: {
-    categoryList: CategoryItemType[];
-    study: StudyItemType;
-    likes: number[];
-}) => {
+const StudyItem = ({ study }: { study: StudyItemType }) => {
     const { id, name, category, imageUrl, isNew, startDate, endDate } = study;
 
-    const [isLike, setIsLike] = useState(likes.includes(id));
+    const { user }: any = useSelector((state: RootState) => state.userInfo);
+    const { likes } = user;
+
+    const { categoryList }: any = useSelector((state: RootState) => state.study);
 
     const dateFormat = (date: string) => {
         const splitDate = date.split('T')[0].split('-');
         return `${splitDate[1]}월 ${splitDate[2]}일`;
-    };
-
-    const onLikeClick = async () => {
-        try {
-            const data = !isLike ? await postLike(id) : await patchLike(id);
-            if (data.code === 200000) setIsLike((isLike) => !isLike);
-        } catch (e) {
-            console.log(e);
-        }
     };
 
     return (
@@ -52,11 +34,12 @@ const StudyItem = ({
             <div className={styles.thumbnail_area}>
                 <img src={imageUrl} alt="" className={styles.thumbnail} />
                 {isNew === 1 && <span className={styles.new}>NEW</span>}
-                <button type="button" name={isLike ? 'hate' : 'like'} onClick={onLikeClick} />
+                <LikeBtn id={id} likes={likes} />
             </div>
             <div className={styles.info}>
                 <span className={styles.category}>
-                    {categoryList[category[0] - 1].name} &gt; {categoryList[category[1] - 1].name}
+                    {categoryList.filter((c: { id: number }) => c.id === category[0])[0].name} &gt;{' '}
+                    {categoryList.filter((c: { id: number }) => c.id === category[1])[0].name}
                 </span>
                 <p className={styles.title}>{name}</p>
                 <span className={styles.date}>
@@ -73,33 +56,19 @@ const StudyItem = ({
     );
 };
 
-const StudyList = ({
-    categoryList,
-    studyList,
-    likes,
-}: {
-    categoryList: CategoryItemType[];
-    studyList: StudyItemType[];
-    likes: number[];
-}) => {
+const StudyList = ({ studyList }: { studyList: StudyItemType[] }) => {
     return (
         <ul className={styles.study_list}>
             {studyList.map((item: StudyItemType, index: number) => (
-                <StudyItem key={index} categoryList={categoryList} study={item} likes={likes} />
+                <StudyItem key={index} study={item} />
             ))}
         </ul>
     );
 };
 
-const StudyComponent = ({
-    categoryList,
-    studyList,
-    userStudyInfo,
-}: {
-    categoryList: CategoryItemType[];
-    studyList: StudyItemType[];
-    userStudyInfo: { likes: number[]; hits: number[] };
-}) => {
+const StudyComponent = ({ studyList }: { studyList: StudyItemType[] }) => {
+    const { categoryList }: any = useSelector((state: RootState) => state.study);
+
     return (
         <div id="component" className={styles.component}>
             <div className={styles.filter_area}>
@@ -111,16 +80,14 @@ const StudyComponent = ({
                     <li role="button" className={`${styles.filter_item} ${styles.active}`}>
                         전체
                     </li>
-                    {categoryList.map((item) => (
+                    {categoryList.map((item: { id: number; name: string }) => (
                         <li key={item.id} role="button" className={styles.filter_item}>
                             {item.name}
                         </li>
                     ))}
                 </ul>
             </div>
-            {categoryList.length && studyList.length && (
-                <StudyList categoryList={categoryList} studyList={studyList} likes={userStudyInfo.likes} />
-            )}
+            {categoryList.length && studyList.length && <StudyList studyList={studyList} />}
         </div>
     );
 };
