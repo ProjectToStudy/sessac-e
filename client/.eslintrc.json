@@ -29,6 +29,7 @@
         "comma-dangle": "off",
         "spaced-comment": "off",
         "multiline-ternary": "off",
+        "generator-star-spacing": "off",
         "@typescript-eslint/semi": "off",
         "@typescript-eslint/indent": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
@@ -38,6 +39,7 @@
         "@typescript-eslint/member-delimiter-style": "off",
         "@typescript-eslint/restrict-template-expressions": "off",
         "@typescript-eslint/strict-boolean-expressions": "off",
+        "@typescript-eslint/space-before-function-paren": "off",
         "react/react-in-jsx-scope": "off",
         "react/prop-types": "off",
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }], // jsx 사용 가능 확장자 설정
