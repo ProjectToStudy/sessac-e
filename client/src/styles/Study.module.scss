@@ -106,19 +106,6 @@
     letter-spacing: -0.5px;
     color: var(--primary);
   }
-  & button[name=like], & button[name=hate] {
-    position: absolute;
-    right: 8px;
-    bottom: 8px;
-    width: 20px;
-    height: 17px;
-  }
-  & button[name=like] {
-    background: url("../../public/images/study/empty-heart.svg") 20px 17px;
-  }
-  & button[name=hate] {
-    background: url("../../public/images/study/heart.svg") 20px 17px;
-  }
 }
 
 .info {

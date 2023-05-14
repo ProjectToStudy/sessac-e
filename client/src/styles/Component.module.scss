@@ -205,3 +205,17 @@ header {
   background: url("../../public/images/arrow-back.svg");
   background-size: 46px;
 }
+
+.like_btn {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  width: 20px;
+  height: 17px;
+  &[name=like] {
+    background: url("../../public/images/study/empty-heart.svg") 20px 17px;
+  }
+  &[name=hate] {
+    background: url("../../public/images/study/heart.svg") 20px 17px;
+  }
+}
