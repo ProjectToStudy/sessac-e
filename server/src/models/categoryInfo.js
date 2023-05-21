@@ -19,19 +19,22 @@ const categoryInfo = (sequelize, Sequelize) => {
             defaultValue: true,
         },
         createdAt: {
-            type: 'TIMESTAMP',
-            allowNull: true,
+            type: Sequelize.DATE,
+            allowNull: false,
             defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         },
         updatedAt: {
-            type: 'TIMESTAMP',
-            allowNull: true,
+            type: Sequelize.DATE,
+            allowNull: false,
+            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
             onUpdate: Sequelize.literal('CURRENT_TIMESTAMP'),
         },
     }, {
         charset: 'utf8',
         collate: 'utf8_general_ci',
-        timestamps: false,
+        timestamps: true,
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
         freezeTableName: true,
     });
 

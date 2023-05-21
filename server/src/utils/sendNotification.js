@@ -1,6 +1,7 @@
 // sms 전송과 관련된 모듈
 const request = require('request');
 const CryptoJS = require('crypto-js');
+const config = require('../config');
 
 async function callApi(uri, method, body, headers) {
     let requestData = {};
@@ -24,9 +25,9 @@ async function callApi(uri, method, body, headers) {
 async function sendSms(params) {
     // 추후 환경변수로 분리
     const now = Date.now().toString();
-    const accessKey = 'NT7PWRBdA6pR1YtOe0Ei';
-    const secretKey = 'vfM5K5jaRReABjImZ2LHaoCOUTXZcoML2tP0aFzM';
-    const serviceId = 'ncp:sms:kr:260595168732:sessac-e';
+    const accessKey = config.sms.accessKey || '';
+    const secretKey = config.sms.secretKey || '';
+    const serviceId = config.sms.serviceId || '';
     const uri = `https://sens.apigw.ntruss.com/sms/v2/services/${serviceId}/messages`;
     const signature = makeSignature(now, accessKey, secretKey, serviceId);
 

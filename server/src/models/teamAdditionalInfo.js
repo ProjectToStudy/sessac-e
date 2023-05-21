@@ -15,19 +15,22 @@ const teamAdditionalInfo = (sequelize, Sequelize) => {
         },
         // @TODO: 우대사항, 질문사항 어떤 방식으로 추가되는지 논의 필요
         createdAt: {
-            type: 'TIMESTAMP',
+            type: Sequelize.DATE,
             allowNull: true,
             defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         },
         updatedAt: {
-            type: 'TIMESTAMP',
+            type: Sequelize.DATE,
             allowNull: true,
+            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
             onUpdate: Sequelize.literal('CURRENT_TIMESTAMP'),
         },
     }, {
         charset: 'utf8',
         collate: 'utf8_general_ci',
-        timestamps: false,
+        timestamps: true,
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
         freezeTableName: true,
     });
 

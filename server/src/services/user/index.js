@@ -4,6 +4,7 @@ const redisClient = require('../../utils/redis');
 const send = require("../../utils/sendNotification");
 const datetime = require('../../utils/datetime');
 const service = require('../index');
+const Sequelize = require('sequelize');
 
 const getUser = async (data) => {
     const phone = data.phone.replace(/ /g, '');
@@ -37,7 +38,9 @@ const getUserInfo = async (data) => {
     try {
         const result = await db.userAdditionalInfo.findOne({
             where: {
-                userRequiredInfoId: data.id,
+                userRequiredInfoId: {
+                    [Sequelize.Op.eq]: data.id
+                },
             },
             raw: true,
         });
@@ -48,28 +51,20 @@ const getUserInfo = async (data) => {
             };
         }
 
-        return {
-            code: 200000,
-            message: 'success',
-            result,
-        };
-
-    } catch (err) {
-        throw err;
-    }
-}
-
-const getUserTeamsInfo = async (data) => {
-    try {
-        const result = {
-            likes: [],
-            hits: []
-        };
+        result['likes'] = [];
+        result['hits'] = [];
 
         const teamStatsResult = await db.teamStatsInfo.findAll({
             where: {
-                userId: data.id,
-                deletedAt: null
+                userId: {
+                    [Sequelize.Op.eq]: data.id
+                },
+                isValid: {
+                    [Sequelize.Op.eq]: true
+                },
+                deletedAt: {
+                    [Sequelize.Op.eq]: null
+                }
             },
             raw: true,
         });
@@ -84,6 +79,52 @@ const getUserTeamsInfo = async (data) => {
             }
         });
 
+        result.hits = [...new Set(result.hits)];
+
+        return {
+            code: 200000,
+            message: 'success',
+            result,
+        };
+    } catch (err) {
+        throw err;
+    }
+}
+
+const getUserTeamsInfo = async (data) => {
+    try {
+        const result = {
+            likes: [],
+            hits: []
+        };
+
+        const teamStatsResult = await db.teamStatsInfo.findAll({
+            where: {
+                userId: {
+                    [Sequelize.Op.eq]: data.id
+                },
+                isValid: {
+                    [Sequelize.Op.eq]: true
+                },
+                deletedAt: {
+                    [Sequelize.Op.eq]: null
+                }
+            },
+            raw: true,
+        });
+
+        teamStatsResult.map((team) => {
+            if (team.type === 'likes') {
+                result.likes.push(team.teamInfoId);
+            }
+
+            if (team.type === 'hits') {
+                result.hits.push(team.teamInfoId);
+            }
+        });
+
+        result.hits = [...new Set(result.hits)];
+
         return service.sendToResult(result);
     } catch (err) {
         throw err;
@@ -91,12 +132,20 @@ const getUserTeamsInfo = async (data) => {
 }
 
 const updateUserInfo = async (user, data) => {
+
     try {
+        data = service.validateData(data);
+
+        if (!data) {
+            return {
+                code: 400111, // data validation error
+            }
+        }
+
         await db.userAdditionalInfo.update(data, {
             where: {
                 userRequiredInfoId: user.id,
-            },
-            raw: true,
+            }
         });
 
         return {

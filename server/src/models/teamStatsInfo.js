@@ -19,29 +19,32 @@ const teamStatsInfo = (sequelize, Sequelize) => {
             defaultValue: true,
         },
         createdAt: {
-            type: 'TIMESTAMP',
+            type: Sequelize.DATE,
             allowNull: true,
             defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
         },
         updatedAt: {
-            type: 'TIMESTAMP',
+            type: Sequelize.DATE,
             allowNull: true,
+            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
             onUpdate: Sequelize.literal('CURRENT_TIMESTAMP')
         },
         deletedAt: {
-            type: 'TIMESTAMP',
+            type: Sequelize.DATE,
             allowNull: true,
         },
     }, {
         charset: 'utf8',
         collate: 'utf8_general_ci',
-        timestamps: false,
-        indexes: [
-            {
-                unique: true,
-                fields: ['userId', 'teamInfoId', 'type', 'isValid']
-            },
-        ],
+        timestamps: true,
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
+        // indexes: [
+        //     {
+        //         unique: true,
+        //         fields: ['userId', 'teamInfoId', 'type', 'isValid']
+        //     },
+        // ],
         freezeTableName: true,
     });
     //

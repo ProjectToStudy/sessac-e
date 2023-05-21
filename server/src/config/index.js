@@ -16,4 +16,9 @@ module.exports = {
         port: process.env.REDIS_PORT,
     },
     secret: process.env.SECRET,
+    sms: {
+        accessKey: process.env.SMS_ACCESS_KEY,
+        secretKey: process.env.SMS_SECRET_KEY,
+        serviceId: process.env.SMS_SERVICE_ID,
+    }
 };
