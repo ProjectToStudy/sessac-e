@@ -19,9 +19,6 @@ export interface StudyItemType {
 const StudyItem = ({ study }: { study: StudyItemType }) => {
     const { id, name, category, imageUrl, isNew, startDate, endDate } = study;
 
-    const { user }: any = useSelector((state: RootState) => state.userInfo);
-    const { likes } = user;
-
     const { categoryList }: any = useSelector((state: RootState) => state.study);
 
     const dateFormat = (date: string) => {
@@ -34,7 +31,7 @@ const StudyItem = ({ study }: { study: StudyItemType }) => {
             <div className={styles.thumbnail_area}>
                 <img src={imageUrl} alt="" className={styles.thumbnail} />
                 {isNew === 1 && <span className={styles.new}>NEW</span>}
-                <LikeBtn id={id} likes={likes} />
+                <LikeBtn id={id} />
             </div>
             <div className={styles.info}>
                 <span className={styles.category}>
