@@ -1,11 +1,11 @@
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { RootState } from '../../modules';
 import Banner from './components/Banner';
+import LikeBtn from '../atoms/LikeBtn';
+import { StudyItemType } from '../study/Study';
 import { Motivation, InfoSharing, Hackathon, Certificate } from '../../assets/index';
 import styles from '../../styles/Home.module.scss';
-import { StudyItemType } from '../study/Study';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../modules';
-import LikeBtn from '../atoms/LikeBtn';
 
 interface Props {
     interestStudyList: StudyItemType[];
@@ -14,19 +14,14 @@ interface Props {
 
 const HomeComponent = ({ interestStudyList, popularStudyList }: Props) => {
     const { categoryList }: any = useSelector((state: RootState) => state.study);
-    const { user }: any = useSelector((state: RootState) => state.userInfo);
 
     return (
         <div id="container">
             <div id="component" className={styles.component}>
                 <section id="information">
                     <div className={styles.header}>
-                        <Link to={'/search'}>
-                            <a className={styles.search} />
-                        </Link>
-                        <Link to={'/notification'}>
-                            <a className={styles.notification} />
-                        </Link>
+                        <Link to={'/search'} className={styles.search} />
+                        <Link to={'/notification'} className={styles.notification} />
                     </div>
                     <Banner />
                     <ul className={styles.category_list}>
@@ -74,7 +69,7 @@ const HomeComponent = ({ interestStudyList, popularStudyList }: Props) => {
                                         <span className={styles.on_n_off}>
                                             {item.channel[0] ? '온라인' : ''} {item.channel[1] ? '오프라인' : ''}
                                         </span>
-                                        <LikeBtn id={item.id} likes={user.likes} />
+                                        <LikeBtn id={item.id} />
                                     </div>
                                     <ul className={styles.category}>
                                         {item.category.map((category, index) => (
@@ -97,15 +92,17 @@ const HomeComponent = ({ interestStudyList, popularStudyList }: Props) => {
                             </button>
                         </div>
                         <ul className={styles.recommended_list}>
-                            {Array.from({ length: 3 }, (_, i) => (
-                                <li key={i} className={styles.active_item}>
+                            {popularStudyList?.map((item, index) => (
+                                <li key={index} className={styles.active_item}>
                                     <div className={styles.image_area}>
-                                        <img src="" alt="thumbnail" />
-                                        <span className={styles.on_n_off}>온라인</span>
-                                        <span className={styles.like}>♡</span>
+                                        <img src={item.imageUrl} alt="thumbnail" />
+                                        <span className={styles.on_n_off}>
+                                            {item.channel[0] ? '온라인' : ''} {item.channel[1] ? '오프라인' : ''}
+                                        </span>
+                                        <LikeBtn id={item.id} />
                                     </div>
                                     <span className={styles.phrase}>
-                                        3회차 돌파! 많은 새싹님들이 이 스터디를 지원했어요.
+                                        n회차 돌파! 많은 새싹님들이 이 스터디를 지원했어요.
                                     </span>
                                 </li>
                             ))}

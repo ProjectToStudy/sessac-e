@@ -4,8 +4,13 @@ import * as userAPI from '../api/user';
 import { takeLatest } from 'redux-saga/effects';
 
 const [USER, USER_SUCCESS, USER_FAILURE] = createRequestActionTypes('userInfo/user');
+const UPDATE_USER = 'user/UPDATE_USER';
 
 export const userInfoAPI = createAction(USER);
+export const updateUser = createAction(UPDATE_USER, ({ key, value }: { key: string; value: number[] }) => ({
+    key,
+    value,
+}));
 
 const userSaga = createRequestSaga(USER, userAPI.userInfo);
 export function* userInfoSaga() {
@@ -54,6 +59,10 @@ const userInfo = handleActions(
             state: ResponseType = initialState,
             { payload: error }: { payload: ResponseType['userError'] },
         ) => ({ ...state, userError: error }),
+        [UPDATE_USER]: (
+            state: ResponseType = initialState,
+            { payload: { key, value } }: { payload: { key: string; value: number[] } },
+        ) => ({ ...state, user: { ...state.user, [key]: value } }),
     },
     initialState,
 );

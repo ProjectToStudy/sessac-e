@@ -62,8 +62,11 @@
       &.active {
         border: 1px solid var(--primary);
         background-color: white;
-        font-weight: 600;
-        color: var(--primary);
+
+        & button {
+          font-weight: 600;
+          color: var(--primary);
+        }
       }
     }
   }
