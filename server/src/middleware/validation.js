@@ -1,6 +1,19 @@
 const Joi = require('joi');
 
-const validationPostTeams = (req, res, next) => {
+const fileMiddleware = require('./file');
+
+// formData 유효성 검사
+const validationPostTeams = async (req, res, next) => {
+    const formData = await fileMiddleware.parseFormData(req, res);
+
+    if (formData.field.category && typeof formData.field.category === 'string') {
+        formData.field.category = JSON.parse(formData.field.category);
+    }
+
+    if (formData.field.channel && typeof formData.field.channel === 'string') {
+        formData.field.channel = JSON.parse(formData.field.channel);
+    }
+
     const schema = Joi.object({
         userId: Joi.number().required(),
         userPhone: Joi.string().required(),
@@ -17,16 +30,26 @@ const validationPostTeams = (req, res, next) => {
         isRecruit: Joi.boolean().default(false), // 기간 종료 후 추가 모집 여부
         startDate: Joi.date().required(),
         endDate: Joi.date().required(),
-        image: Joi.array().items(
-            Joi.object({
-                imageUrl: Joi.string().required(),
-                sortNo: Joi.number().required(),
-            })
-        ).required().min(1),
+        // image: Joi.array().items(
+        //     Joi.object({
+        //         imageUrl: Joi.string().required(),
+        //         sortNo: Joi.number().required(),
+        //     })
+        // ).required().min(1),
     }).required();
 
-    const validData = checkValidation(schema, req, res);
-    if (validData) next();
+    console.log(formData);
+
+    const validData = await checkValidation(schema, {body: formData.field, user: req.user}, res);
+    if (validData) {
+        req.fileData = {
+            body: formData.field,
+            user: req.user,
+            files: formData.files,
+        };
+
+        next();
+    }
 }
 
 const checkValidation = async (schema, req, res) => {

@@ -4,6 +4,7 @@ const route = express.Router();
 
 const teamController = require('../../controllers/team');
 const authMiddleware = require('../../middleware/auth');
+const fileMiddleware = require('../../middleware/file');
 const validationMiddleware = require('../../middleware/validation');
 
 const teamRouter = ({ app }) => {
