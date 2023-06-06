@@ -92,15 +92,17 @@ const HomeComponent = ({ interestStudyList, popularStudyList }: Props) => {
                             </button>
                         </div>
                         <ul className={styles.recommended_list}>
-                            {Array.from({ length: 3 }, (_, i) => (
-                                <li key={i} className={styles.active_item}>
+                            {popularStudyList?.map((item, index) => (
+                                <li key={index} className={styles.active_item}>
                                     <div className={styles.image_area}>
-                                        <img src="" alt="thumbnail" />
-                                        <span className={styles.on_n_off}>온라인</span>
-                                        <span className={styles.like}>♡</span>
+                                        <img src={item.imageUrl} alt="thumbnail" />
+                                        <span className={styles.on_n_off}>
+                                            {item.channel[0] ? '온라인' : ''} {item.channel[1] ? '오프라인' : ''}
+                                        </span>
+                                        <LikeBtn id={item.id} />
                                     </div>
                                     <span className={styles.phrase}>
-                                        3회차 돌파! 많은 새싹님들이 이 스터디를 지원했어요.
+                                        n회차 돌파! 많은 새싹님들이 이 스터디를 지원했어요.
                                     </span>
                                 </li>
                             ))}
