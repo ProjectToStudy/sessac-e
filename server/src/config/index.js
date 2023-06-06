@@ -20,5 +20,9 @@ module.exports = {
         accessKey: process.env.SMS_ACCESS_KEY,
         secretKey: process.env.SMS_SECRET_KEY,
         serviceId: process.env.SMS_SERVICE_ID,
+    },
+    s3: {
+        accessKey: process.env.S3_ACCESS_KEY,
+        secretKey: process.env.S3_SECRET_KEY,
     }
 };

@@ -1,4 +1,5 @@
 const teamService = require('../services/team');
+const bodyParser = require("body-parser");
 
 const getTeams = async (req, res, next) => {
     try {
@@ -15,8 +16,10 @@ const getTeams = async (req, res, next) => {
 }
 
 const postTeams = async (req, res, next) => {
+    console.log('postTeams');
     try {
-        const result = await teamService.postTeams({userId: req.user.id, ...req.body});
+        // const result = await teamService.postTeams({userId: req.user.id, ...req.body});
+        const result = await teamService.postTeams(req.fileData);
 
         if (result.message !== 'success') {
             return next(result);

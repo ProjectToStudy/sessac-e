@@ -3,7 +3,8 @@ const Sequelize = require('sequelize');
 const db = require('../../models');
 const service = require('../index');
 const arrayUtils = require('../../utils/array');
-const datetime = require("../../utils/datetime");
+const datetime = require('../../utils/datetime');
+const file = require('../../utils/file');
 
 const whereParser = (data) => {
     const whereFields = [];
@@ -132,15 +133,31 @@ const findAllTeams = async (data) => {
 }
 
 const postTeams = async (data) => {
+    const {body, user, files} = data;
+
     // 트랜잭션 시작
     const transaction = await db.sequelize.transaction();
 
     try {
-        const {userId, userPhone, image, ...rest} = data;
+        const fileResult = await file.uploadFile(files);
+
+        if (!fileResult.success) {
+            return {
+                code: 400000,
+                message: '이미지 저장 실패',
+            }
+        }
+
+        console.log(fileResult.successFileArray);
+
+        const userId = user.id;
+        const userPhone = user.phone;
+        const image = fileResult.successFileArray;
+        // const {userId, userPhone, image, ...rest} = data;
 
         const teamResult = await db.teamInfo.create({
             createdUserId: userId,
-            ...rest
+            ...body
         }, {transaction});
 
         const insertImageData = image.map((item) => {
