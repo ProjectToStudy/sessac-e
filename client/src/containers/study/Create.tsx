@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import CreateComponent from '../../components/study/Create';
-import CategoryBS from '../../components/study/components/CategoryBS';
-import DetailP from '../../components/study/components/DetailP';
+import CreateComponent from 'components/study/Create';
+import CategoryBS from 'components/study/components/CategoryBS';
+import DetailP from 'components/study/DetailP';
 
 const CreateContainer = () => {
     const [photoUrlList, setPhotoUrlList] = useState<string[]>([]);

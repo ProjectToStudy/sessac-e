@@ -1,27 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styles from '../../../styles/study/Create.module.scss';
-
-const CallOut = () => {
-    return (
-        <div className={styles.callout}>
-            <div className={styles.example}>
-                <span>이런 형태로 내용을 추가 할 수 있어요!</span>
-                <span>이곳에 내용을 추가하게 되면</span>
-                <span>내용이 강조되어 보일 수 있어요</span>
-                <span>참여조건, 사전숙지사항 등을 강조해보세요.</span>
-            </div>
-            <input type="text" placeholder="제목을 입력해주세요." className={styles.title_input} />
-        </div>
-    );
-};
-
-const Authentication = () => {
-    return (
-        <div className={styles.authentication}>
-            <p>스터디 인증방법</p>
-        </div>
-    );
-};
+import styles from 'styles/study/Create.module.scss';
 
 const SetDuration = () => {
     const day = ['일', '월', '화', '수', '목', '금', '토'];
@@ -31,7 +9,7 @@ const SetDuration = () => {
     const [first, setFirst] = useState<number>(0);
     const [last, setLast] = useState<number>(0);
 
-    // const [duration, setDuration] = useState<{ first: Date | null; end: Date | null }>({ first: null, end: null });
+    const [duration, setDuration] = useState<{ first: string | null; end: string | null }>({ first: null, end: null });
 
     const handleMonth = (type: string) => {
         if (!now) return;
@@ -48,10 +26,17 @@ const SetDuration = () => {
     };
 
     const getDuration = (e: React.MouseEvent<HTMLButtonElement>) => {
-        console.log(e.target);
-        // if (!now) return;
-        // if (!duration.first) setDuration({ first: new Date(now.getFullYear(), now.getMonth(), day), end: null });
-        // else setDuration({ ...duration, end: new Date(now.getFullYear(), now.getMonth(), day) });
+        if (!now) return;
+
+        const { value } = e.target as HTMLButtonElement;
+
+        if (!duration.first) {
+            setDuration({ first: `${now.getFullYear()}-${now.getMonth() + 1}-${value}`, end: null });
+        } else {
+            if (duration.end) {
+                setDuration({ first: `${now.getFullYear()}-${now.getMonth() + 1}-${value}`, end: null });
+            } else setDuration({ ...duration, end: `${now.getFullYear()}-${now.getMonth() + 1}-${value}` });
+        }
     };
 
     useEffect(() => {
@@ -95,6 +80,7 @@ const SetDuration = () => {
                                           (month === today.getMonth() + 1 && index2 - first + 1 < today.getDate()) ||
                                           month <= today.getMonth()
                                       }
+                                      value={index2 - first + 1 > 0 ? index2 - first + 1 : ''}
                                   >
                                       {index2 - first + 1 > 0 ? index2 - first + 1 : ''}
                                   </button>
@@ -106,6 +92,11 @@ const SetDuration = () => {
                                           (month === today.getMonth() + 1 &&
                                               7 * (index - 1) + index2 + 8 - first < today.getDate()) ||
                                           month <= today.getMonth()
+                                      }
+                                      value={
+                                          last >= 7 * (index - 1) + index2 + 8 - first
+                                              ? 7 * (index - 1) + index2 + 8 - first
+                                              : ''
                                       }
                                       onClick={getDuration}
                                   >
@@ -121,43 +112,4 @@ const SetDuration = () => {
     );
 };
 
-const DetailP = () => {
-    const [page, setPage] = useState(0);
-
-    const handleNextPage = () => setPage((page) => page + 1);
-    const handlePrevPage = (index: number) => setPage(index);
-
-    return (
-        <div className={styles.detail}>
-            <div className={`${styles.title_area} ${page > 0 ? styles.line : ''}`}>
-                <p className={styles.title}>콜아웃</p>
-                {page > 0 && <button type="button" name="arrow" onClick={() => handlePrevPage(0)} />}
-            </div>
-            {page > 0 && (
-                <div className={`${styles.title_area} ${page > 1 ? styles.line : ''}`}>
-                    <p className={styles.title}>인증방법</p>
-                    {page > 1 && <button type="button" name="arrow" onClick={() => handlePrevPage(1)} />}
-                </div>
-            )}
-            {page > 1 && (
-                <div className={`${styles.title_area} ${page > 2 ? styles.line : ''}`}>
-                    <p className={styles.title}>스터디 기간 설정</p>
-                    {page > 2 && <button type="button" name="arrow" onClick={() => handlePrevPage(2)} />}
-                </div>
-            )}
-            {page === 0 && <CallOut />}
-            {page === 1 && <Authentication />}
-            {page === 2 && <SetDuration />}
-            <div className={styles.btn_area}>
-                <button type="button" name="next" onClick={handleNextPage} className={styles.next_btn}>
-                    다음으로
-                </button>
-                <button type="button" name="omission" className={styles.omission}>
-                    생략하기
-                </button>
-            </div>
-        </div>
-    );
-};
-
-export default DetailP;
+export default SetDuration;
