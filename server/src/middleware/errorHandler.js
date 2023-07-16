@@ -4,7 +4,7 @@ const errorHandler = (err, req, res) => {
     let message;
     let result = err.result ? err.result : err;
     const code = err.code ? err.code : 500000;
-    const returnCode = parseInt(code.toString().substring(0, 3));
+    let returnCode = parseInt(code.toString().substring(0, 3));
 
     // TODO: message 수정하기, 정렬
     switch (code) {
@@ -46,6 +46,10 @@ const errorHandler = (err, req, res) => {
             break;
         case 404000:
             message = '존재하지 않는 URL 입니다';
+            break;
+        case 400666:
+            message = '데이터가 존재하지 않습니다';
+            returnCode = 200;
             break;
         default:
             message = err.message ? err.message : '서버 에러가 발생했습니다';

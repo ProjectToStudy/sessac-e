@@ -11,6 +11,7 @@ const teamRouter = ({ app }) => {
     app.use('/api/v1/teams', route);
 
     route.get('', teamController.getTeams);
+    route.get('/:id', teamController.getTeamsInfo);
     route.post('', authMiddleware.verify, validationMiddleware.validationPostTeams, teamController.postTeams);
 
     route.get('/categories', teamController.getCategories);
