@@ -132,6 +132,34 @@ const findAllTeams = async (data) => {
     }
 }
 
+const findTeamsById = async (data) => {
+    try {
+        // const {selectFields, whereFields, orderByFields, limitCount} = service.makeOptions(data);
+        const {id} = data;
+
+        if (!id) {
+            return {
+                code: 400000,
+            }
+        }
+
+        const result = await db.teamInfo.findOne({
+            where: {
+                id: {
+                    [Sequelize.Op.eq]: data.id,
+                },
+            },
+            raw: true,
+        });
+
+        console.log(result);
+
+        return service.sendToResult(result);
+    } catch (err) {
+        throw err;
+    }
+}
+
 const postTeams = async (data) => {
     const {body, user, files} = data;
 
@@ -307,6 +335,7 @@ const patchStats = async (data) => {
 module.exports = {
     findAllCategories,
     findAllTeams,
+    findTeamsById,
     postTeams,
     postStats,
     patchStats,

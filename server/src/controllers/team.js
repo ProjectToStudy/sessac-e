@@ -14,6 +14,19 @@ const getTeams = async (req, res, next) => {
         return next(err);
     }
 }
+const getTeamsInfo = async  (req, res, next) => {
+    try {
+        const result = await teamService.findTeamsById(req.params);
+
+        if (result.message !== 'success') {
+            return next(result);
+        }
+
+        return res.status(200).json(result);
+    } catch (err) {
+        return next(err);
+    }
+}
 
 const postTeams = async (req, res, next) => {
     console.log('postTeams');
@@ -76,6 +89,7 @@ const patchStats = async (req, res, next) => {
 module.exports = {
     getCategories,
     getTeams,
+    getTeamsInfo,
     postTeams,
     postStats,
     patchStats,
