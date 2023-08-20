@@ -20,6 +20,8 @@ const validationPostTeams = async (req, res, next) => {
             userPhone: Joi.string().required(),
             name: Joi.string().required().max(22),
             description: Joi.string().required(),
+            callOutTitle: Joi.string().allow('').required(),
+            callOutContents: Joi.string().allow('').required(),
             capacity: Joi.number().required(),
             sessionCount: Joi.number().integer().min(1).required(), // 진행 횟수
             isApproval: Joi.boolean().default(false), // 승인제 여부
