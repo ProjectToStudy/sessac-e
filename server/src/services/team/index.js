@@ -181,11 +181,17 @@ const postTeams = async (data) => {
         const userId = user.id;
         const userPhone = user.phone;
         const image = fileResult.successFileArray;
-        // const {userId, userPhone, image, ...rest} = data;
+        const {callOutTitle, callOutContents, ...rest} = body;
 
         const teamResult = await db.teamInfo.create({
             createdUserId: userId,
-            ...body
+            ...rest
+        }, {transaction});
+
+        await db.teamAdditionalInfo.create({
+            teamInfoId: teamResult.id,
+            callOutTitle,
+            callOutContents,
         }, {transaction});
 
         const insertImageData = image.map((item) => {

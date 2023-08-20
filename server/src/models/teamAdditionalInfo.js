@@ -7,7 +7,13 @@ const teamAdditionalInfo = (sequelize, Sequelize) => {
             allowNull: false,
             defaultValue: '',
         },
-        callOut: {
+        callOutTitle: {
+            // @TODO: 상세정보 길이 논의 필요
+            type: Sequelize.STRING(100),
+            allowNull: false,
+            defaultValue: '',
+        },
+        callOutContents: {
             // @TODO: 상세정보 길이 논의 필요
             type: Sequelize.STRING(500),
             allowNull: false,
