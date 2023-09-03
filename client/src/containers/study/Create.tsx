@@ -1,31 +1,17 @@
 import React, { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { CreateStudyState } from '../../recoil/study';
 import CreateComponent from 'components/study/Create';
 import CategoryBS from 'components/study/components/CategoryBS';
 import DetailP from 'components/study/DetailP';
 
 const CreateContainer = () => {
-    const [photoUrlList, setPhotoUrlList] = useState<string[]>([]);
-    const [value, setValue] = useState<{ [key in string]: string }>({});
+    const [value, setValue] = useRecoilState(CreateStudyState);
+    const { category } = value;
 
     const [isCategoryOpen, setIsCategoryOpen] = useState<boolean>(false);
     const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false);
     const [select, setSelect] = useState<string>('job');
-    const [selectItem, setSelectItem] = useState<{ [key in string]: string[] }>({ job: [], purpose: [] });
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { files } = e.target;
-        if (!files) return;
-        setPhotoUrlList((photoUrlList) => [...photoUrlList, URL.createObjectURL(files[0])]);
-    };
-
-    const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name } = e.target as HTMLInputElement;
-        setValue({ ...value, [name]: e.target.value });
-    };
-
-    const handleDeleteClick = (key: string) => {
-        setValue({ ...value, [key]: '' });
-    };
 
     const handleSelectClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         const { name } = e.target as HTMLButtonElement;
@@ -34,32 +20,29 @@ const CreateContainer = () => {
 
     const handleSelectItemClick = (e: React.MouseEvent<HTMLLIElement>) => {
         const { dataset } = e.target as HTMLLIElement;
-        const { value } = dataset;
-        if (!value) return;
-        if (!selectItem[select].includes(value)) {
-            setSelectItem({ ...selectItem, [select]: [...selectItem[select], value] });
-        } else setSelectItem({ ...selectItem, [select]: selectItem[select].filter((item) => item !== value) });
+        if (!dataset.value) return;
+
+        if (!category.includes(Number(dataset.value))) {
+            setValue({ ...value, category: [...value.category, Number(dataset.value)] });
+        } else {
+            setValue({ ...value, category: value.category.filter((item) => item !== Number(dataset.value)) });
+        }
     };
 
     const handleResetSelectClick = () => {
-        setSelectItem({ job: [], purpose: [] });
+        setValue({ ...value, category: [] });
     };
 
     return (
         <div id="container">
             <CreateComponent
-                thumbnailList={photoUrlList}
-                value={value}
-                onFileChange={handleFileChange}
-                onTextChange={handleTextChange}
-                onDelClick={handleDeleteClick}
                 onCategoryClick={() => setIsCategoryOpen(true)}
                 onDetailClick={() => setIsDetailOpen(true)}
             />
             {isCategoryOpen && (
                 <CategoryBS
                     select={select}
-                    selectItem={selectItem}
+                    selectItem={value.category}
                     onSelectClick={handleSelectClick}
                     onSelectItemClick={handleSelectItemClick}
                     onResetClick={handleResetSelectClick}

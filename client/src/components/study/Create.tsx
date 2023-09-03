@@ -1,33 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { CreateStudyState } from '../../recoil/study';
 import styles from '../../styles/study/Create.module.scss';
 
 interface Props {
-    thumbnailList: string[];
-    value: { [key in string]: string };
-    onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onTextChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onDelClick: (key: string) => void;
     onCategoryClick: () => void;
     onDetailClick: () => void;
 }
 
-const CreateComponent = ({
-    thumbnailList,
-    value,
-    onFileChange,
-    onTextChange,
-    onDelClick,
-    onCategoryClick,
-    onDetailClick,
-}: Props) => {
-    const { title } = value;
+const CreateComponent = ({ onCategoryClick, onDetailClick }: Props) => {
+    const [value, setValue] = useRecoilState(CreateStudyState);
+    const { name } = value;
+
+    const [thumbnailList, setThumbnailList] = useState<string[]>([]);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { files } = e.target;
+        if (!files) return;
+        setValue({ ...value, image: [...value.image, files[0]] });
+        setThumbnailList((thumbnailList) => [...thumbnailList, URL.createObjectURL(files[0])]);
+    };
+
+    const handleTextChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name } = e.target as HTMLInputElement;
+        setValue({ ...value, [name]: e.target.value });
+    };
+
+    const handleDeleteClick = (key: string) => {
+        setValue({ ...value, [key]: '' });
+    };
 
     return (
         <div id="component" className={styles.component}>
             <ul className={styles.photo_list}>
                 <li className={styles.photo_item}>
                     <label htmlFor="file">
-                        <input type="file" id="file" accept="image/*" onChange={onFileChange} />
+                        <input type="file" id="file" accept="image/*" onChange={handleFileChange} />
                     </label>
                 </li>
                 {thumbnailList.map((item, index) => (
@@ -43,12 +51,14 @@ const CreateComponent = ({
             <div className={styles.title_area}>
                 <input
                     type="text"
-                    name="title"
-                    value={title}
-                    onChange={onTextChange}
+                    name="name"
+                    value={name}
+                    onChange={handleTextChange}
                     placeholder="스터디 제목을 입력해주세요."
                 />
-                {title && title !== '' && <button type="button" name="delete" onClick={() => onDelClick('title')} />}
+                {name && name !== '' && (
+                    <button type="button" name="delete" onClick={() => handleDeleteClick('title')} />
+                )}
             </div>
             <div className={styles.on_off_area}>
                 <label htmlFor="online">
@@ -68,7 +78,12 @@ const CreateComponent = ({
                 <span>상세조건 설정하기</span>
                 <button type="button" onClick={onDetailClick} />
             </div>
-            <textarea placeholder="내용 입력" className={styles.textarea} />
+            <textarea
+                name="description"
+                placeholder="내용 입력"
+                onChange={handleTextChange}
+                className={styles.textarea}
+            />
         </div>
     );
 };

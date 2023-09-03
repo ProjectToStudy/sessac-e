@@ -5,13 +5,31 @@ import SetDuration from './SetDuration';
 import Approval from './Approval';
 import SetNumber from './SetNumber';
 import styles from 'styles/study/Create.module.scss';
+import { createStudyAPI } from '../../../api/study';
+import { useRecoilValue } from 'recoil';
+import { CreateStudyState } from '../../../recoil/study';
 
 const screenList = ['콜아웃', '인증방법', '스터디 기간 설정', '승인 방법', '인원 설정'];
 
 const DetailP = () => {
+    const value = useRecoilValue(CreateStudyState);
     const [page, setPage] = useState(0);
 
-    const handleNextPage = () => setPage((page) => page + 1);
+    const postStudy = createStudyAPI(value);
+
+    const createStudy = async () => {
+        try {
+            const data = postStudy.mutateAsync();
+            console.log(data);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const handleNextPage = () => {
+        if (page < 4) setPage((page) => page + 1);
+        else createStudy();
+    };
     const handlePrevPage = (index: number) => setPage(index);
 
     return (
@@ -19,7 +37,7 @@ const DetailP = () => {
             {screenList.map(
                 (item, index) =>
                     page >= index && (
-                        <div className={`${styles.title_area} ${page > index ? styles.line : ''}`}>
+                        <div key={index} className={`${styles.title_area} ${page > index ? styles.line : ''}`}>
                             <p className={styles.title}>{item}</p>
                             {page > index && (
                                 <button type="button" name="arrow" onClick={() => handlePrevPage(index)} />

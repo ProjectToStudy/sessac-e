@@ -1,35 +1,22 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../modules';
 import styles from '../../../styles/study/Create.module.scss';
 
 interface Props {
     select: string;
-    selectItem: { [key in string]: string[] };
+    selectItem: number[];
     onSelectClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
     onSelectItemClick: (e: React.MouseEvent<HTMLLIElement>) => void;
     onResetClick: () => void;
     onClose: () => void;
 }
 
-const tags = {
-    1: '학생',
-    2: '예술직종',
-    3: '일반사무직',
-    4: 'IT직종',
-    5: '전문직',
-    6: '취업준비',
-    7: '크리에이터',
-    8: '교육직',
-    9: '기타',
-    10: '취업준비',
-    11: '자격증',
-    12: '학업',
-    13: '정보공유',
-    14: '해커톤',
-    15: '동기부여',
-    16: '기타',
-};
-
 const CategoryBS = ({ select, selectItem, onSelectClick, onSelectItemClick, onResetClick, onClose }: Props) => {
+    // @ts-expect-error
+    const { categoryList }: { categoryList: Array<{ id: number; name: string; category: string; type: string }> } =
+        useSelector((state: RootState) => state.study);
+
     return (
         <div className={styles.background} onClick={onClose}>
             <div className={styles.bottom_sheet} onClick={(e) => e.stopPropagation()}>
@@ -53,32 +40,27 @@ const CategoryBS = ({ select, selectItem, onSelectClick, onSelectItemClick, onRe
                         </button>
                     </div>
                     <ul className={styles.tag_list}>
-                        {(select === 'job' ? Object.values(tags).slice(0, 9) : Object.values(tags).slice(9)).map(
-                            (item, index) => (
+                        {categoryList
+                            .filter((i) => i.type === (select === 'job' ? 'career' : 'purpose'))
+                            .map((item, index) => (
                                 <li
                                     key={index}
-                                    data-value={item}
+                                    data-value={item.id}
                                     onClick={onSelectItemClick}
                                     className={`${styles.tag_item} ${
-                                        selectItem[select].includes(item) ? styles.active : ''
+                                        selectItem.includes(item.id) ? styles.active : ''
                                     }`}
                                 >
-                                    {item}
+                                    {item.name}
                                 </li>
-                            ),
-                        )}
+                            ))}
                     </ul>
                 </div>
                 <div className={styles.bottom}>
                     <button type="button" name="reset" onClick={onResetClick}>
                         카테고리 재설정
                     </button>
-                    <button
-                        type="button"
-                        name="add"
-                        disabled={!(selectItem.job.length || selectItem.purpose.length)}
-                        onClick={onClose}
-                    >
+                    <button type="button" name="add" disabled={!selectItem.length} onClick={onClose}>
                         조건 추가하기
                     </button>
                 </div>

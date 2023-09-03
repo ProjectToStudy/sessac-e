@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { CreateStudyState } from '../../../recoil/study';
 import styles from 'styles/study/Create.module.scss';
 
 const SetDuration = () => {
+    const [value, setValue] = useRecoilState(CreateStudyState);
+
     const day = ['일', '월', '화', '수', '목', '금', '토'];
     const [today, setToday] = useState<Date>();
     const [now, setNow] = useState<Date>();
@@ -54,6 +58,18 @@ const SetDuration = () => {
     useEffect(() => {
         if (month) makeCalendar();
     }, [month]);
+
+    useEffect(() => {
+        if (duration.first && duration.end) {
+            setValue({
+                ...value,
+                startDate: duration.first,
+                recruitStartDate: duration.first,
+                endDate: duration.end,
+                recruitEndDate: duration.end,
+            });
+        }
+    }, [duration]);
 
     if (!today || !now || !month) return <></>;
 
